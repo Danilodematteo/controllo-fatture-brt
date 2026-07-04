@@ -47,6 +47,8 @@ export default function Home() {
   const [fData, setFData] = useState("");
   const [draftRows, setDraftRows] = useState([]);
   const [pesoBatch, setPesoBatch] = useState(null); // {done, total, running}
+  const [manualOpenId, setManualOpenId] = useState(null);
+  const [manualQuery, setManualQuery] = useState("");
   const verifyStopRef = useRef(false);
   const [unparsedLines, setUnparsedLines] = useState([]);
   const [status, setStatus] = useState("");
@@ -195,6 +197,19 @@ export default function Home() {
     };
     await Promise.all(Array.from({ length: Math.min(CONCORRENZA_VERIFICA, lista.length) }, worker));
     setPesoBatch((b) => (b ? { ...b, running: false } : b));
+  }
+
+  function toggleManualPick(rowId) {
+    setManualOpenId((id) => (id === rowId ? null : rowId));
+    setManualQuery("");
+  }
+
+  function pickManualProduct(rowId, prodotto) {
+    setDraftRows((rows) => rows.map((r) => (r.id === rowId
+      ? { ...r, pesoReale: prodotto.peso, prodottoListino: prodotto.descrizione, pesoStato: "trovato", pesoManuale: true }
+      : r)));
+    setManualOpenId(null);
+    setManualQuery("");
   }
 
   function fermaVerifica() {
@@ -511,14 +526,41 @@ export default function Home() {
                                 {r.pesoStato === "idle" && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>in coda…</span>}
                                 {r.pesoStato === "loading" && <span className="mini-spinner"></span>}
                                 {r.pesoStato === "nontrovato" && (
-                                  <button className="btn-tiny" onClick={() => verificaPeso(r.id, r.nominativo)}>Riprova</button>
+                                  <div style={{ display: "flex", gap: 4 }}>
+                                    <button className="btn-tiny" onClick={() => verificaPeso(r.id, r.nominativo)}>Riprova</button>
+                                  </div>
                                 )}
                                 {r.pesoStato === "trovato" && (
                                   <div className="peso-cell">
                                     <span className={pesoSospetto ? "pill amber" : "pill teal"}>{fmtKg(r.pesoReale)}</span>
+                                    {r.pesoManuale && <span className="pill grey">manuale</span>}
                                     <small>{r.prodottoListino}</small>
                                   </div>
                                 )}
+                                <div>
+                                  <button className="link" style={{ fontSize: 10.5 }} onClick={() => toggleManualPick(r.id)}>
+                                    {manualOpenId === r.id ? "annulla" : "ordine dal gestionale? seleziona a mano"}
+                                  </button>
+                                  {manualOpenId === r.id && (
+                                    <div style={{ position: "relative", marginTop: 4 }}>
+                                      <input value={manualQuery} onChange={(e) => setManualQuery(e.target.value)}
+                                        placeholder="cerca materasso…" style={{ width: 160 }} autoFocus />
+                                      {manualQuery.trim().length >= 2 && (
+                                        <div style={{ position: "absolute", zIndex: 20, background: "#fff", border: "1px solid var(--line)", borderRadius: 8, maxHeight: 180, overflowY: "auto", width: 240, boxShadow: "0 4px 12px rgba(0,0,0,.08)" }}>
+                                          {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).slice(0, 8).map((p) => (
+                                            <div key={pesoKey(p)} style={{ padding: "6px 10px", fontSize: 11.5, cursor: "pointer", borderBottom: "1px solid var(--line)" }}
+                                              onClick={() => pickManualProduct(r.id, p)}>
+                                              {p.descrizione} — <b>{p.peso} kg</b>
+                                            </div>
+                                          ))}
+                                          {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).length === 0 && (
+                                            <div style={{ padding: "6px 10px", fontSize: 11.5, color: "var(--ink-soft)" }}>Nessun prodotto trovato — aggiungilo prima in "Pesi prodotti".</div>
+                                          )}
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
                               </td>
                               <td>
                                 <select value={r.tipo} onChange={(e) => updateDraftRow(r.id, "tipo", e.target.value)} style={{ width: 118 }}>
@@ -791,23 +833,60 @@ export default function Home() {
 
         {activeTab === "guida" && (
           <section className="active">
-            <h2 className="sec-title">Guida rapida</h2>
-            <p className="sec-note">Come usare l'app ogni settimana, passo per passo.</p>
+            <h2 className="sec-title">Guida completa</h2>
+            <p className="sec-note">Come funziona l'app, passo per passo e concetto per concetto.</p>
+
+            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "8px 0 14px" }}>Il percorso settimanale</h3>
             {[
-              ["1", "Carica la fattura", "Vai su \"+ Aggiungi fattura\" e carica il PDF che arriva da BRT via mail. L'app legge da sola numero fattura, data e tutte le spedizioni."],
-              ["2", "Controlla le righe rosse", "Prezzo più alto di almeno 0,50€ rispetto al tariffario. Correggi o aggiungi a mano se qualcosa non è stato letto bene."],
-              ["3", "Il peso reale si verifica da sola", "Appena carichi il PDF, l'app parte in automatico a controllare il peso reale di ogni riga (cerca l'ordine su WooCommerce e confronta col listino). Su fatture grandi può richiedere diversi minuti — vedi una barra di avanzamento, e puoi continuare a lavorare nel frattempo."],
-              ["4", "Se un prodotto risulta \"non trovato\"", "Vai sulla tab \"Pesi prodotti\", cerca il nome del materasso e aggiungilo (o correggine il peso se è sbagliato). Da quel momento l'app lo riconoscerà sempre."],
-              ["5", "Spunta ritardi, giacenze e consegne al piano", "Nella colonna \"Tipo\", confrontando col gestionale."],
-              ["6", "Salva in archivio", "La trovi sempre nella tab \"Archivio\", raggruppata per settimana."],
-              ["7", "Genera la mail per Daniele", "Scegli la fattura, premi \"Genera testo\", copia o apri direttamente in Mail."],
-              ["8", "Quando arriva la nota di credito", "Vai su \"Da verificare\" e spunta \"Nota credito ricevuta\"."],
+              ["1", "Carica la fattura", "Vai su \"+ Aggiungi fattura\" e carica il PDF che arriva da BRT via mail. L'app legge da sola numero fattura, data e tutte le spedizioni (numero, cliente, CAP, peso dichiarato, importo)."],
+              ["2", "Controlla le righe rosse", "Sono le spedizioni con un prezzo più alto di almeno 0,50€ rispetto a quanto previsto dal tariffario contrattuale, calcolato sul peso che BRT ha dichiarato. Se qualche riga non è stata letta bene dal PDF, correggila o aggiungila a mano con \"+ Aggiungi o correggi una riga a mano\"."],
+              ["3", "Il peso reale si verifica da sola", "Appena carichi il PDF, l'app parte in automatico e controlla il peso reale di ogni riga: cerca l'ordine del cliente su WooCommerce, trova il materasso comprato e lo confronta col listino pesi. Su fatture grandi (300+ righe) può richiedere anche 10-15 minuti perché il sito risponde lentamente — vedi una barra di avanzamento e puoi continuare a lavorare nel frattempo, si aggiorna da sola."],
+              ["4", "Ordini fatti nel gestionale (non sul sito)", "Se un cliente ha ordinato direttamente tramite il gestionale invece che dal sito, l'app non lo trova su WooCommerce e la riga resta \"non trovata\". In questo caso clicca \"ordine dal gestionale? seleziona a mano\" sotto la riga, cerca il materasso giusto nella lista che compare e selezionalo: il peso reale viene impostato subito, con l'etichetta \"manuale\" per ricordarti che non è stato trovato in automatico."],
+              ["5", "Se un prodotto risulta introvabile anche a mano", "Vai sulla tab \"Pesi prodotti\", cerca il nome del materasso: se manca dal listino, aggiungilo tu con nome e peso. Da quel momento sarà sempre disponibile, sia per la ricerca automatica che per quella manuale."],
+              ["6", "Spunta ritardi, giacenze e consegne al piano", "Nella colonna \"Tipo\" di ogni riga, confrontando col gestionale (vedi sotto \"Cosa significa ogni etichetta\")."],
+              ["7", "Salva in archivio", "La trovi sempre nella tab \"Archivio\", raggruppata per settimana."],
+              ["8", "Genera la mail per Daniele", "Vai su \"Email a Daniele\", scegli la fattura (o \"tutte le anomalie non risolte\"), premi \"Genera testo\": esce già divisa nelle sezioni giuste (prezzi da rivedere, ritardi/annullamenti, giacenze, consegne al piano). Copiala o aprila direttamente in Mail."],
+              ["9", "Quando arriva la nota di credito", "Vai su \"Da verificare\" e spunta \"Nota credito ricevuta\" sulla riga risolta. Sparisce dal contatore delle cose in sospeso."],
             ].map(([num, title, text]) => (
               <div className="guide-step" key={num}>
                 <div className="num">{num}</div>
                 <div><h4>{title}</h4><p>{text}</p></div>
               </div>
             ))}
+
+            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Peso dichiarato vs peso reale — perché sono due cose diverse</h3>
+            <p className="sec-note">
+              La colonna "Peso" è quella che <b>BRT dichiara</b> per calcolare il prezzo del trasporto. Per contratto, se un pacco è
+              voluminoso ma leggero (come un materasso arrotolato), BRT può calcolare un peso "virtuale" fino a 150 kg per metro cubo,
+              anche se il prodotto reale pesa molto meno. Per questo un'"anomalia prezzo" a 0 non basta da sola a dire che tutto sia in regola:
+              vuol dire solo che il prezzo torna rispetto al peso che BRT ha dichiarato, non che quel peso dichiarato sia onesto.
+              La colonna "Peso reale" (verificata da sola o a mano) ti dice invece quanto pesa davvero il materasso comprato, preso dal listino —
+              confrontando le due cifre puoi giudicare se il peso dichiarato da BRT è ragionevole o gonfiato.
+            </p>
+
+            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Cosa significa ogni etichetta "Tipo"</h3>
+            <p className="sec-note">
+              <b>Ritardo</b>: la consegna ha superato i tempi contrattuali (24/48h terraferma, 48/72h isole) — lo sai solo tu dal tuo tracciamento manuale, la fattura BRT non lo dice.<br />
+              <b>Annullata / rimborsata</b>: l'ordine è stato annullato o il cliente rimborsato per un disagio.<br />
+              <b>Giacenza</b>: importo certo da stornare, sempre incluso nella mail di nota di credito.<br />
+              <b>Piano non eseguita</b>: il cliente ha pagato la consegna al piano ma BRT non l'ha eseguita — va anche registrata nel gestionale/file resi per il rimborso al cliente.<br />
+              <b>Piano non richiesta da noi</b>: il cliente l'ha chiesta direttamente al corriere alla consegna, non tramite voi — si contesta comunque l'addebito a Daniele.
+            </p>
+
+            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Il codice "P" accanto al numero spedizione</h3>
+            <p className="sec-note">
+              Significa che BRT ha addebitato un supplemento per consegna al piano su quella spedizione. L'app lo segnala da sola leggendo il PDF —
+              tocca a te controllare nel gestionale se quella consegna al piano era stata davvero richiesta ed eseguita (vedi etichette sopra).
+            </p>
+
+            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Le altre tab</h3>
+            <p className="sec-note">
+              <b>Archivio</b>: tutte le fatture salvate, raggruppate per settimana, sola lettura.<br />
+              <b>Da verificare</b>: elenco di tutte le righe con un'anomalia di prezzo o un'etichetta "Tipo" assegnata, con la spunta "Nota credito ricevuta" per tenere traccia di cosa è ancora aperto.<br />
+              <b>Tariffario</b>: le tariffe di trasporto BRT per fascia di peso e zona — da aggiornare solo quando cambia il contratto (di solito a gennaio).<br />
+              <b>Pesi prodotti</b>: il listino con nome e peso reale di ogni materasso, usato per il confronto. Cercalo, correggilo, aggiungine di nuovi liberamente.<br />
+              <b>Email a Daniele</b>: genera il testo della mail di contestazione, pronto da copiare o aprire in Mail.
+            </p>
           </section>
         )}
 
