@@ -415,14 +415,6 @@ export default function Home() {
 
   function generateEmail(invoicesOverride) {
     const relevant = invoicesOverride || (emailInvoiceId === "__all__" ? invoices : invoices.filter((i) => i.id === emailInvoiceId));
-    let subject;
-    if (invoicesOverride && invoicesOverride.length === 1) {
-      subject = `Fattura BRT n. ${invoicesOverride[0].numero} del ${invoicesOverride[0].data} — richiesta verifica`;
-    } else {
-      subject = emailInvoiceId === "__all__"
-        ? "Richiesta verifica prezzi e storni — spedizioni in sospeso"
-        : (() => { const inv = invoices.find((i) => i.id === emailInvoiceId); return inv ? `Fattura BRT n. ${inv.numero} del ${inv.data} — richiesta verifica` : ""; })();
-    }
 
     const priceLines = [], ritardoLines = [], giacenzaLines = [], pianoLines = [];
     let totaleDaRecuperare = 0;
@@ -443,6 +435,9 @@ export default function Home() {
     }
 
     const nomiFatture = [...new Set(relevant.map((i) => i.numero))];
+    const subject = nomiFatture.length === 1
+      ? `Fattura BRT n. ${nomiFatture[0]} — richiesta verifica prezzi`
+      : `Fatture BRT n. ${nomiFatture.join(", ")} — richiesta verifica prezzi`;
     const introFattura = nomiFatture.length === 1
       ? `ho controllato la fattura ${nomiFatture[0]}${relevant[0]?.data ? ` del ${relevant[0].data}` : ""} e ci sono da rivedere queste spedizioni`
       : `ho controllato le fatture ${nomiFatture.join(", ")} e ci sono da rivedere queste spedizioni`;
@@ -455,7 +450,7 @@ export default function Home() {
     if (priceLines.length) {
       body += `\nRiepilogo: ${priceLines.length} spedizioni da rivedere, totale da recuperare ${fmt2(totaleDaRecuperare)}€.\n`;
     }
-    body += "\nAttendiamo nota credito, grazie.\nSaluti,\nAnna";
+    body += "\nAttendiamo nota credito, grazie.\nSaluti";
     setEmailText(body);
     setEmailSubject(subject);
   }
