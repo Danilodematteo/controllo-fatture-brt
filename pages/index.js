@@ -152,6 +152,21 @@ export default function Home() {
     }
   }
 
+  function applyPesoReale(rowId, pesoReale, prodottoListino, manuale) {
+    setDraftRows((rows) => rows.map((r) => {
+      if (r.id !== rowId) return r;
+      const attesoReale = calcAtteso(pesoReale, r.zona, tariff);
+      const diffReale = r.fatturato - attesoReale;
+      return {
+        ...r,
+        pesoReale, prodottoListino, pesoManuale: !!manuale, pesoStato: "trovato", candidati: null,
+        pesoDichiarato: r.pesoDichiarato ?? r.peso,
+        attesoDichiarato: r.attesoDichiarato ?? r.atteso,
+        atteso: attesoReale, diff: diffReale, flag: diffReale >= 0.5,
+      };
+    }));
+  }
+
   async function verificaPeso(rowId, nominativo) {
     setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "loading" } : r)));
     if (!nominativo) {
@@ -171,11 +186,11 @@ export default function Home() {
         setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r)));
         return;
       }
-      const pesoTotale = prodotti.reduce((s, p) => s + (p.pesoReale || 0) * (p.quantita || 1), 0);
-      const nomi = prodotti.map((p) => p.prodottoListino).join(", ");
-      setDraftRows((rows) =>
-        rows.map((r) => (r.id === rowId ? { ...r, pesoReale: pesoTotale, prodottoListino: nomi, pesoStato: "trovato" } : r))
-      );
+      if (prodotti.length === 1) {
+        applyPesoReale(rowId, (prodotti[0].pesoReale || 0) * (prodotti[0].quantita || 1), prodotti[0].prodottoListino, false);
+      } else {
+        setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "ambiguo", candidati: prodotti } : r)));
+      }
     } catch (e) {
       setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r)));
     }
@@ -205,9 +220,7 @@ export default function Home() {
   }
 
   function pickManualProduct(rowId, prodotto) {
-    setDraftRows((rows) => rows.map((r) => (r.id === rowId
-      ? { ...r, pesoReale: prodotto.peso, prodottoListino: prodotto.descrizione, pesoStato: "trovato", pesoManuale: true }
-      : r)));
+    applyPesoReale(rowId, prodotto.peso, prodotto.descrizione, true);
     setManualOpenId(null);
     setManualQuery("");
   }
@@ -481,9 +494,8 @@ export default function Home() {
 
                 <div className="card">
                   <p className="sec-note" style={{ marginBottom: 12 }}>
-                    Il "Peso" qui sotto è quello <b>dichiarato da BRT</b> per calcolare il prezzo — per contratto può essere più alto del peso vero
-                    se il pacco è voluminoso. Un'"anomalia prezzo" a 0 significa solo che il prezzo torna rispetto a quel peso dichiarato,
-                    non che il peso dichiarato sia onesto. Per questo l'app confronta da sola il peso reale di ogni riga col listino prodotti.
+                    Il "Peso" dichiarato da BRT serve solo come riferimento — <b>l'anomalia e la differenza da contestare si calcolano sul peso reale del prodotto</b>,
+                    appena l'app lo trova. Finché il peso reale non è ancora verificato, la riga mostra il calcolo provvisorio sul peso dichiarato da BRT.
                   </p>
                   {pesoBatch && (
                     <div className="card blue" style={{ marginBottom: 12, padding: 14 }}>
@@ -511,16 +523,18 @@ export default function Home() {
                       </tr></thead>
                       <tbody>
                         {draftRows.map((r) => {
-                          const pesoSospetto = r.pesoReale != null && r.peso > r.pesoReale * 2 && (r.peso - r.pesoReale) > 15;
                           return (
-                            <tr key={r.id} className={r.flag ? "flag" : pesoSospetto ? "peso-sospetto" : ""}>
+                            <tr key={r.id} className={r.flag ? "flag" : ""}>
                               <td>{r.sped}{r.pianoAmount ? <span className="pill blue" title={`Consegna al piano addebitata: ${fmt(r.pianoAmount)}€`}> P</span> : ""}</td>
                               <td>{r.nominativo || "—"}</td>
                               <td>{r.cap || "—"}</td>
                               <td>{r.zona}</td>
-                              <td className="num">{fmt2(r.peso)}</td>
+                              <td className="num">{fmt2(r.peso)}{r.pesoReale != null && <><br /><small style={{ color: "var(--ink-soft)" }}>dichiarato</small></>}</td>
                               <td className="num">{fmt(r.fatturato)}</td>
-                              <td className="num">{fmt(r.atteso)}</td>
+                              <td className="num">
+                                {fmt(r.atteso)}
+                                {r.pesoDichiarato !== undefined && <><br /><small style={{ color: "var(--ink-soft)" }}>su peso reale</small></>}
+                              </td>
                               <td className="num">{r.flag ? <span className="pill rust">+{fmt2(r.diff)}</span> : fmt2(r.diff)}</td>
                               <td>
                                 {r.pesoStato === "idle" && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>in coda…</span>}
@@ -530,11 +544,25 @@ export default function Home() {
                                     <button className="btn-tiny" onClick={() => verificaPeso(r.id, r.nominativo)}>Riprova</button>
                                   </div>
                                 )}
+                                {r.pesoStato === "ambiguo" && (
+                                  <div style={{ maxWidth: 220 }}>
+                                    <small style={{ color: "var(--ink-soft)", display: "block", marginBottom: 4 }}>Più prodotti nell'ordine — quale corrisponde a questa spedizione?</small>
+                                    {r.candidati.map((p, i) => (
+                                      <button key={i} className="btn-tiny" style={{ display: "block", width: "100%", textAlign: "left", marginBottom: 3, whiteSpace: "normal" }}
+                                        onClick={() => applyPesoReale(r.id, (p.pesoReale || 0) * (p.quantita || 1), p.prodottoListino, false)}>
+                                        {p.prodottoListino} — {p.pesoReale} kg
+                                      </button>
+                                    ))}
+                                  </div>
+                                )}
                                 {r.pesoStato === "trovato" && (
                                   <div className="peso-cell">
-                                    <span className={pesoSospetto ? "pill amber" : "pill teal"}>{fmtKg(r.pesoReale)}</span>
+                                    <span className={r.flag ? "pill rust" : "pill teal"}>{fmtKg(r.pesoReale)}</span>
                                     {r.pesoManuale && <span className="pill grey">manuale</span>}
                                     <small>{r.prodottoListino}</small>
+                                    {r.pesoDichiarato !== undefined && (
+                                      <small style={{ color: "var(--ink-soft)" }}>BRT dichiarava {fmt2(r.pesoDichiarato)}kg ({fmt(r.attesoDichiarato)}€)</small>
+                                    )}
                                   </div>
                                 )}
                                 <div>
@@ -580,7 +608,7 @@ export default function Home() {
                   {draftRows.length > 0 && (
                     <div className="totals">
                       <div className="t"><span className="n">{draftRows.length}</span><span className="l">Righe</span></div>
-                      <div className="t"><span className="n">{draftTotals.flags}</span><span className="l">Anomalie prezzo</span></div>
+                      <div className="t"><span className="n">{draftTotals.flags}</span><span className="l">Anomalie</span></div>
                       <div className="t"><span className="n">{draftTotals.piani}</span><span className="l">Consegne al piano</span></div>
                       <div className="t"><span className="n">{fmt2(draftTotals.diff)}€</span><span className="l">Diff. totale</span></div>
                     </div>
@@ -854,14 +882,13 @@ export default function Home() {
               </div>
             ))}
 
-            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Peso dichiarato vs peso reale — perché sono due cose diverse</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Il prezzo si calcola sul peso reale, non su quello dichiarato da BRT</h3>
             <p className="sec-note">
-              La colonna "Peso" è quella che <b>BRT dichiara</b> per calcolare il prezzo del trasporto. Per contratto, se un pacco è
-              voluminoso ma leggero (come un materasso arrotolato), BRT può calcolare un peso "virtuale" fino a 150 kg per metro cubo,
-              anche se il prodotto reale pesa molto meno. Per questo un'"anomalia prezzo" a 0 non basta da sola a dire che tutto sia in regola:
-              vuol dire solo che il prezzo torna rispetto al peso che BRT ha dichiarato, non che quel peso dichiarato sia onesto.
-              La colonna "Peso reale" (verificata da sola o a mano) ti dice invece quanto pesa davvero il materasso comprato, preso dal listino —
-              confrontando le due cifre puoi giudicare se il peso dichiarato da BRT è ragionevole o gonfiato.
+              BRT può dichiarare il peso che vuole (anche gonfiato per via del calcolo volumetrico) — a voi interessa pagare la tariffa giusta
+              per il peso vero del prodotto spedito. Per questo, appena l'app trova il peso reale di una spedizione (in automatico o a mano),
+              ricalcola da sola quanto avreste dovuto pagare sul peso vero e confronta con quanto vi hanno fatturato: quella è l'anomalia che conta,
+              non il confronto col peso dichiarato da BRT (che resta visibile solo come riferimento). Se un ordine ha più prodotti (es. materasso +
+              rete + cuscini), l'app ti chiede quale corrisponde a quella specifica spedizione, invece di sommarli alla cieca.
             </p>
 
             <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Cosa significa ogni etichetta "Tipo"</h3>
