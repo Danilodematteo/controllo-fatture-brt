@@ -47,6 +47,7 @@ export default function Home() {
   const [fData, setFData] = useState("");
   const [draftRows, setDraftRows] = useState([]);
   const [pesoBatch, setPesoBatch] = useState(null); // {done, total, running}
+  const [mostraRisolte, setMostraRisolte] = useState(false);
   const [manualOpenId, setManualOpenId] = useState(null);
   const [manualQuery, setManualQuery] = useState("");
   const verifyStopRef = useRef(false);
@@ -765,12 +766,19 @@ export default function Home() {
                 {byWeek[week].map((inv) => {
                   const flags = inv.rows.filter((r) => r.flag).length;
                   const totalDiff = inv.rows.reduce((s, r) => s + r.diff, 0);
+                  const daSegnalare = inv.rows.filter((r) => r.flag || r.tipo);
+                  const ancoraAperte = daSegnalare.filter((r) => !resolved[inv.id + "::" + r.id]).length;
                   return (
                     <div className="card" key={inv.id} style={{ marginBottom: 10, marginTop: 10 }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: 13, marginBottom: 8 }}>
                         <span>Fattura {inv.numero} <span style={{ color: "var(--ink-soft)", fontWeight: 500 }}>— {inv.data}</span></span>
                         <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           <span className={`pill ${flags > 0 ? "rust" : "teal"}`}>{flags} anomalie</span>
+                          {daSegnalare.length > 0 && (
+                            <span className={`pill ${ancoraAperte > 0 ? "amber" : "teal"}`}>
+                              {ancoraAperte > 0 ? `${ancoraAperte} ancora aperte` : "Tutto risolto ✓"}
+                            </span>
+                          )}
                           <button className="btn-sm" onClick={() => deleteInvoice(inv.id)}>Elimina</button>
                         </span>
                       </div>
@@ -802,23 +810,33 @@ export default function Home() {
         {activeTab === "verificare" && (
           <section className="active">
             <h2 className="sec-title">Righe da verificare</h2>
-            <p className="sec-note">Spedizioni con differenza ≥ 0,50€ o con un tipo assegnato, non ancora segnate come risolte.</p>
-            {daVerificareItems.length === 0 && <div className="empty">Nessuna riga da verificare al momento.</div>}
-            {daVerificareItems.length > 0 && (
+            <p className="sec-note">Spedizioni con differenza ≥ 0,50€ o con un tipo assegnato — da tutte le fatture in archivio, vecchie e nuove insieme.</p>
+            <div className="card" style={{ padding: 14, marginBottom: 12 }}>
+              <label className="checkbox-row">
+                <input type="checkbox" checked={mostraRisolte} onChange={(e) => setMostraRisolte(e.target.checked)} />
+                Mostra anche le righe già risolte ({daVerificareItems.filter((i) => i.resolved).length})
+              </label>
+            </div>
+            {(() => {
+              const visibili = mostraRisolte ? daVerificareItems : daVerificareItems.filter((i) => !i.resolved);
+              if (visibili.length === 0) {
+                return <div className="empty">{mostraRisolte ? "Nessuna riga in archivio." : "Tutto risolto — nessuna riga in sospeso al momento."}</div>;
+              }
+              return (
               <div className="card"><div className="table-wrap">
                 <table>
                   <thead><tr><th>Fattura</th><th>Sped.</th><th>Cliente</th><th>Zona</th><th className="num">Peso</th><th className="num">Fatturato</th><th className="num">Diff.</th><th>Tipo</th>
                     <th>
                       <label className="checkbox-row">
                         <input type="checkbox"
-                          checked={daVerificareItems.length > 0 && daVerificareItems.every((i) => i.resolved)}
-                          onChange={(e) => bulkToggleResolved(daVerificareItems.map((i) => i.key), e.target.checked)} />
+                          checked={visibili.length > 0 && visibili.every((i) => i.resolved)}
+                          onChange={(e) => bulkToggleResolved(visibili.map((i) => i.key), e.target.checked)} />
                         Nota credito ricevuta (tutte)
                       </label>
                     </th>
                   </tr></thead>
                   <tbody>
-                    {daVerificareItems.sort((a, b) => (b.r.flag - a.r.flag) || (b.r.diff - a.r.diff)).map((it) => (
+                    {visibili.sort((a, b) => (b.r.flag - a.r.flag) || (b.r.diff - a.r.diff)).map((it) => (
                       <tr key={it.key} className={it.resolved ? "resolved" : it.r.flag ? "flag" : ""}>
                         <td>{it.inv.numero}<br /><span style={{ color: "var(--ink-soft)", fontSize: 10 }}>{it.inv.data}</span></td>
                         <td>{it.r.sped}{it.r.pianoAmount ? <span className="pill blue"> P</span> : ""}</td>
@@ -834,7 +852,8 @@ export default function Home() {
                   </tbody>
                 </table>
               </div></div>
-            )}
+              );
+            })()}
           </section>
         )}
 
