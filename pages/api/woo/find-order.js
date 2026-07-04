@@ -2,8 +2,8 @@
 //
 // Riceve: nominativo (nome e cognome dalla fattura BRT) + una data indicativa
 // Cerca l'ordine WooCommerce corrispondente e restituisce i prodotti acquistati
-// con il loro peso (dal catalogo WooCommerce), così si può confrontare col
-// peso dichiarato da BRT in fattura.
+// con il loro peso reale (dal listino De Matteo Home), così si può confrontare
+// col peso dichiarato da BRT in fattura.
 //
 // Le chiavi WooCommerce NON vanno mai scritte qui nel codice: si leggono
 // dalle variabili d'ambiente configurate su Vercel (Andrea le imposta lì).
@@ -12,6 +12,8 @@
 //   WC_URL      -> es. https://dematteohome.it
 //   WC_KEY      -> Consumer Key generata da WooCommerce (permesso: sola lettura)
 //   WC_SECRET   -> Consumer Secret generata da WooCommerce
+
+const { matchProduct } = require("../../../lib/matchProduct");
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Metodo non permesso" });
@@ -67,19 +69,23 @@ export default async function handler(req, res) {
       orderNumber: o.number,
       data: o.date_created,
       cliente: `${o.billing?.first_name || ""} ${o.billing?.last_name || ""}`.trim(),
-      prodotti: (o.line_items || []).map((li) => ({
-        nome: li.name,
-        quantita: li.quantity,
-        pesoUnitario: li.weight || null, // valorizzato sotto, vedi nota
-      })),
+      prodotti: (o.line_items || []).map((li) => {
+        const match = matchProduct(li.name);
+        return {
+          nome: li.name,
+          quantita: li.quantity,
+          pesoReale: match ? match.peso : null,
+          prodottoListino: match ? match.descrizione : null,
+          pesoTrovato: !!match,
+        };
+      }),
     }));
 
-    // Nota per Andrea: l'endpoint "orders" di WooCommerce non restituisce
-    // il peso del prodotto dentro line_items. Va recuperato con una seconda
-    // chiamata a /wp-json/wc/v3/products/{id} per ogni line_item.product_id.
-    // Lasciato come prossimo passo per non appesantire questa prima versione:
-    // si può aggiungere un ciclo qui sotto che arricchisce ogni prodotto
-    // con il peso reale preso dal catalogo.
+    // Il peso di ogni prodotto viene cercato nel listino De Matteo Home
+    // (lib/data/pesoProdotti.json) confrontando nome e dimensione, dato che
+    // WooCommerce non ha il peso compilato nelle schede prodotto.
+    // Se un prodotto non viene trovato (pesoTrovato: false), pesoReale è null
+    // e va controllato/aggiunto a mano nel listino.
 
     return res.status(200).json({ risultati });
   } catch (err) {
