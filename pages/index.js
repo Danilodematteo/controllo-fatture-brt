@@ -810,49 +810,65 @@ export default function Home() {
         {activeTab === "verificare" && (
           <section className="active">
             <h2 className="sec-title">Righe da verificare</h2>
-            <p className="sec-note">Spedizioni con differenza ≥ 0,50€ o con un tipo assegnato — da tutte le fatture in archivio, vecchie e nuove insieme.</p>
+            <p className="sec-note">Spedizioni con differenza ≥ 0,50€ o con un tipo assegnato, raggruppate per fattura — lavorane una alla volta.</p>
             <div className="card" style={{ padding: 14, marginBottom: 12 }}>
               <label className="checkbox-row">
                 <input type="checkbox" checked={mostraRisolte} onChange={(e) => setMostraRisolte(e.target.checked)} />
-                Mostra anche le righe già risolte ({daVerificareItems.filter((i) => i.resolved).length})
+                Mostra anche le fatture già completamente risolte
               </label>
             </div>
             {(() => {
-              const visibili = mostraRisolte ? daVerificareItems : daVerificareItems.filter((i) => !i.resolved);
-              if (visibili.length === 0) {
-                return <div className="empty">{mostraRisolte ? "Nessuna riga in archivio." : "Tutto risolto — nessuna riga in sospeso al momento."}</div>;
+              const byInvoice = {};
+              daVerificareItems.forEach((it) => {
+                if (!byInvoice[it.inv.id]) byInvoice[it.inv.id] = { inv: it.inv, items: [] };
+                byInvoice[it.inv.id].items.push(it);
+              });
+              let gruppi = Object.values(byInvoice).sort((a, b) => new Date(b.inv.data) - new Date(a.inv.data));
+              if (!mostraRisolte) gruppi = gruppi.filter((g) => g.items.some((i) => !i.resolved));
+
+              if (gruppi.length === 0) {
+                return <div className="empty">Tutto risolto — nessuna fattura in sospeso al momento.</div>;
               }
-              return (
-              <div className="card"><div className="table-wrap">
-                <table>
-                  <thead><tr><th>Fattura</th><th>Sped.</th><th>Cliente</th><th>Zona</th><th className="num">Peso</th><th className="num">Fatturato</th><th className="num">Diff.</th><th>Tipo</th>
-                    <th>
-                      <label className="checkbox-row">
-                        <input type="checkbox"
-                          checked={visibili.length > 0 && visibili.every((i) => i.resolved)}
-                          onChange={(e) => bulkToggleResolved(visibili.map((i) => i.key), e.target.checked)} />
-                        Nota credito ricevuta (tutte)
-                      </label>
-                    </th>
-                  </tr></thead>
-                  <tbody>
-                    {visibili.sort((a, b) => (b.r.flag - a.r.flag) || (b.r.diff - a.r.diff)).map((it) => (
-                      <tr key={it.key} className={it.resolved ? "resolved" : it.r.flag ? "flag" : ""}>
-                        <td>{it.inv.numero}<br /><span style={{ color: "var(--ink-soft)", fontSize: 10 }}>{it.inv.data}</span></td>
-                        <td>{it.r.sped}{it.r.pianoAmount ? <span className="pill blue"> P</span> : ""}</td>
-                        <td>{it.r.nominativo || "—"}</td>
-                        <td>{it.r.zona}</td>
-                        <td className="num">{fmt2(it.r.peso)}</td>
-                        <td className="num">{fmt(it.r.fatturato)}</td>
-                        <td className="num">{it.r.flag ? `+${fmt2(it.r.diff)}€` : "—"}</td>
-                        <td>{tipoLabel(it.r.tipo)}</td>
-                        <td><label className="checkbox-row"><input type="checkbox" checked={it.resolved} onChange={(e) => toggleResolved(it.key, e.target.checked)} /> {it.resolved ? "Risolto" : "—"}</label></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div></div>
-              );
+              return gruppi.map((g) => {
+                const visibili = mostraRisolte ? g.items : g.items.filter((i) => !i.resolved);
+                const aperte = g.items.filter((i) => !i.resolved).length;
+                return (
+                  <div className="card" key={g.inv.id} style={{ marginBottom: 14 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: 13, marginBottom: 10 }}>
+                      <span>Fattura {g.inv.numero} <span style={{ color: "var(--ink-soft)", fontWeight: 500 }}>— {g.inv.data}</span></span>
+                      <span className={`pill ${aperte > 0 ? "amber" : "teal"}`}>{aperte > 0 ? `${aperte} aperte` : "Tutto risolto ✓"}</span>
+                    </div>
+                    <div className="table-wrap">
+                      <table>
+                        <thead><tr><th>Sped.</th><th>Cliente</th><th>Zona</th><th className="num">Peso</th><th className="num">Fatturato</th><th className="num">Diff.</th><th>Tipo</th>
+                          <th>
+                            <label className="checkbox-row">
+                              <input type="checkbox"
+                                checked={visibili.length > 0 && visibili.every((i) => i.resolved)}
+                                onChange={(e) => bulkToggleResolved(visibili.map((i) => i.key), e.target.checked)} />
+                              Nota credito ricevuta (tutte)
+                            </label>
+                          </th>
+                        </tr></thead>
+                        <tbody>
+                          {visibili.sort((a, b) => (b.r.flag - a.r.flag) || (b.r.diff - a.r.diff)).map((it) => (
+                            <tr key={it.key} className={it.resolved ? "resolved" : it.r.flag ? "flag" : ""}>
+                              <td>{it.r.sped}{it.r.pianoAmount ? <span className="pill blue"> P</span> : ""}</td>
+                              <td>{it.r.nominativo || "—"}</td>
+                              <td>{it.r.zona}</td>
+                              <td className="num">{fmt2(it.r.peso)}</td>
+                              <td className="num">{fmt(it.r.fatturato)}</td>
+                              <td className="num">{it.r.flag ? `+${fmt2(it.r.diff)}€` : "—"}</td>
+                              <td>{tipoLabel(it.r.tipo)}</td>
+                              <td><label className="checkbox-row"><input type="checkbox" checked={it.resolved} onChange={(e) => toggleResolved(it.key, e.target.checked)} /> {it.resolved ? "Risolto" : "—"}</label></td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                );
+              });
             })()}
           </section>
         )}
