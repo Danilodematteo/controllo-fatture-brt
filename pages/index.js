@@ -48,6 +48,10 @@ export default function Home() {
   const [draftRows, setDraftRows] = useState([]);
   const [pesoBatch, setPesoBatch] = useState(null); // {done, total, running}
   const [mostraRisolte, setMostraRisolte] = useState(false);
+  const [expandedIds, setExpandedIds] = useState({});
+  function toggleExpand(id) {
+    setExpandedIds((e) => ({ ...e, [id]: !e[id] }));
+  }
   const [manualOpenId, setManualOpenId] = useState(null);
   const [manualQuery, setManualQuery] = useState("");
   const verifyStopRef = useRef(false);
@@ -768,10 +772,12 @@ export default function Home() {
                   const totalDiff = inv.rows.reduce((s, r) => s + r.diff, 0);
                   const daSegnalare = inv.rows.filter((r) => r.flag || r.tipo);
                   const ancoraAperte = daSegnalare.filter((r) => !resolved[inv.id + "::" + r.id]).length;
+                  const aperta = !!expandedIds[inv.id];
                   return (
                     <div className="card" key={inv.id} style={{ marginBottom: 10, marginTop: 10 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: 13, marginBottom: 8 }}>
-                        <span>Fattura {inv.numero} <span style={{ color: "var(--ink-soft)", fontWeight: 500 }}>— {inv.data}</span></span>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
+                        onClick={() => toggleExpand(inv.id)}>
+                        <span>{aperta ? "▾" : "▸"} Fattura {inv.numero} <span style={{ color: "var(--ink-soft)", fontWeight: 500 }}>— {inv.data} — {inv.rows.length} righe</span></span>
                         <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           <span className={`pill ${flags > 0 ? "rust" : "teal"}`}>{flags} anomalie</span>
                           {daSegnalare.length > 0 && (
@@ -779,9 +785,11 @@ export default function Home() {
                               {ancoraAperte > 0 ? `${ancoraAperte} ancora aperte` : "Tutto risolto ✓"}
                             </span>
                           )}
-                          <button className="btn-sm" onClick={() => deleteInvoice(inv.id)}>Elimina</button>
+                          <button className="btn-sm" onClick={(e) => { e.stopPropagation(); deleteInvoice(inv.id); }}>Elimina</button>
                         </span>
                       </div>
+                      {aperta && (
+                      <div style={{ marginTop: 12 }}>
                       <div className="table-wrap">
                         <table>
                           <thead><tr><th>Sped.</th><th>Cliente</th><th>CAP</th><th>Zona</th><th className="num">Peso</th><th className="num">Fatturato</th><th className="num">Atteso</th><th className="num">Diff.</th><th>Tipo</th></tr></thead>
@@ -799,6 +807,8 @@ export default function Home() {
                         </table>
                       </div>
                       <div style={{ fontSize: 11.5, color: "var(--ink-soft)", marginTop: 8 }}>Differenza totale fattura: <b style={{ color: "var(--ink)" }}>{fmt2(totalDiff)}€</b></div>
+                      </div>
+                      )}
                     </div>
                   );
                 })}
@@ -832,13 +842,16 @@ export default function Home() {
               return gruppi.map((g) => {
                 const visibili = mostraRisolte ? g.items : g.items.filter((i) => !i.resolved);
                 const aperte = g.items.filter((i) => !i.resolved).length;
+                const espansa = !!expandedIds[g.inv.id];
                 return (
                   <div className="card" key={g.inv.id} style={{ marginBottom: 14 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: 13, marginBottom: 10 }}>
-                      <span>Fattura {g.inv.numero} <span style={{ color: "var(--ink-soft)", fontWeight: 500 }}>— {g.inv.data}</span></span>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
+                      onClick={() => toggleExpand(g.inv.id)}>
+                      <span>{espansa ? "▾" : "▸"} Fattura {g.inv.numero} <span style={{ color: "var(--ink-soft)", fontWeight: 500 }}>— {g.inv.data} — {g.items.length} righe</span></span>
                       <span className={`pill ${aperte > 0 ? "amber" : "teal"}`}>{aperte > 0 ? `${aperte} aperte` : "Tutto risolto ✓"}</span>
                     </div>
-                    <div className="table-wrap">
+                    {espansa && (
+                    <div className="table-wrap" style={{ marginTop: 10 }}>
                       <table>
                         <thead><tr><th>Sped.</th><th>Cliente</th><th>Zona</th><th className="num">Peso</th><th className="num">Fatturato</th><th className="num">Diff.</th><th>Tipo</th>
                           <th>
@@ -866,6 +879,7 @@ export default function Home() {
                         </tbody>
                       </table>
                     </div>
+                    )}
                   </div>
                 );
               });
