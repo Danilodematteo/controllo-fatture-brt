@@ -320,6 +320,11 @@ export default function Home() {
     await fetch("/api/resolved", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ key, value }) });
   }
 
+  async function bulkToggleResolved(keys, value) {
+    setResolved((r) => { const next = { ...r }; keys.forEach((k) => { next[k] = value; }); return next; });
+    await fetch("/api/resolved", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ keys, value }) });
+  }
+
   async function saveTariff() {
     await fetch("/api/tariffario", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(tariffDraft) });
     setTariff(tariffDraft);
@@ -436,7 +441,7 @@ export default function Home() {
       ? `ho controllato la fattura ${nomiFatture[0]}${relevant[0]?.data ? ` del ${relevant[0].data}` : ""} e ci sono da rivedere queste spedizioni`
       : `ho controllato le fatture ${nomiFatture.join(", ")} e ci sono da rivedere queste spedizioni`;
 
-    let body = `ciao Daniele,\n${introFattura}:\n`;
+    let body = `Ciao Daniele,\n${introFattura}:\n`;
     if (priceLines.length) body += `\n${priceLines.join("\n\n")}\n`;
     if (ritardoLines.length) body += `\nDa stornare per ritardo o annullamento:\n${ritardoLines.join("\n")}\n`;
     if (giacenzaLines.length) body += `\nGiacenze:\n${giacenzaLines.join("\n")}\n`;
@@ -444,7 +449,7 @@ export default function Home() {
     if (priceLines.length) {
       body += `\nRiepilogo: ${priceLines.length} spedizioni da rivedere, totale da recuperare ${fmt2(totaleDaRecuperare)}€.\n`;
     }
-    body += "\nAttendiamo nota credito\ngrazie saluti";
+    body += "\nAttendiamo nota credito, grazie.\nSaluti,\nAnna";
     setEmailText(body);
     setEmailSubject(subject);
   }
@@ -801,7 +806,16 @@ export default function Home() {
             {daVerificareItems.length > 0 && (
               <div className="card"><div className="table-wrap">
                 <table>
-                  <thead><tr><th>Fattura</th><th>Sped.</th><th>Cliente</th><th>Zona</th><th className="num">Peso</th><th className="num">Fatturato</th><th className="num">Diff.</th><th>Tipo</th><th>Nota credito ricevuta</th></tr></thead>
+                  <thead><tr><th>Fattura</th><th>Sped.</th><th>Cliente</th><th>Zona</th><th className="num">Peso</th><th className="num">Fatturato</th><th className="num">Diff.</th><th>Tipo</th>
+                    <th>
+                      <label className="checkbox-row">
+                        <input type="checkbox"
+                          checked={daVerificareItems.length > 0 && daVerificareItems.every((i) => i.resolved)}
+                          onChange={(e) => bulkToggleResolved(daVerificareItems.map((i) => i.key), e.target.checked)} />
+                        Nota credito ricevuta (tutte)
+                      </label>
+                    </th>
+                  </tr></thead>
                   <tbody>
                     {daVerificareItems.sort((a, b) => (b.r.flag - a.r.flag) || (b.r.diff - a.r.diff)).map((it) => (
                       <tr key={it.key} className={it.resolved ? "resolved" : it.r.flag ? "flag" : ""}>
