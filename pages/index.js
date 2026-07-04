@@ -259,7 +259,7 @@ export default function Home() {
     if (!fNumero || !fData) {
       showToast("Manca numero e/o data fattura — controlla i campi in rosso");
       numeroRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-      return;
+      return null;
     }
     const invoice = { numero: fNumero, data: fData, settimana: isoWeek(fData), rows: draftRows, createdAt: new Date().toISOString() };
     const res = await fetch("/api/invoices", {
@@ -270,6 +270,38 @@ export default function Home() {
     setDraftRows([]); setUnparsedLines([]); setFNumero(""); setFData(""); setReviewing(false); setStatus("");
     if (fileInputRef.current) fileInputRef.current.value = "";
     showToast(`Fattura ${invoice.numero} salvata in archivio`);
+    return data.invoice || null;
+  }
+
+  async function saveAndEmail() {
+    const invoice = await saveInvoice();
+    if (!invoice) return;
+    setEmailInvoiceId(invoice.id);
+    generateEmail([invoice]);
+    setActiveTab("email");
+  }
+
+  function csvAnomalie(rows) {
+    const header = ["Spedizione", "Cliente", "Zona", "Peso BRT (kg)", "Peso reale (kg)", "Diff peso (kg)", "Pagato (EUR)", "Dovuto (EUR)", "Da recuperare (EUR)"];
+    const lines = [header.join(";")];
+    rows.filter((r) => r.flag).forEach((r) => {
+      const pesoBrt = r.pesoDichiarato ?? r.peso;
+      const diffPeso = r.pesoReale != null ? pesoBrt - r.pesoReale : "";
+      const cols = [r.sped, r.nominativo || "", r.zona, fmt2(pesoBrt), r.pesoReale != null ? fmt2(r.pesoReale) : "",
+        diffPeso !== "" ? fmt2(diffPeso) : "", fmt2(r.fatturato), fmt2(r.atteso), fmt2(r.diff)];
+      lines.push(cols.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(";"));
+    });
+    return lines.join("\n");
+  }
+
+  function scaricaCsvAnomalie(rows, numero) {
+    const csv = csvAnomalie(rows);
+    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `anomalie-fattura-${numero || "bozza"}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   function cancelReview() {
@@ -366,11 +398,16 @@ export default function Home() {
     return `${r.sped}${chi ? " " + chi : ""} (fattura ${inv.numero})`;
   }
 
-  function generateEmail() {
-    const relevant = emailInvoiceId === "__all__" ? invoices : invoices.filter((i) => i.id === emailInvoiceId);
-    let subject = emailInvoiceId === "__all__"
-      ? "Richiesta verifica prezzi e storni — spedizioni in sospeso"
-      : (() => { const inv = invoices.find((i) => i.id === emailInvoiceId); return inv ? `Fattura BRT n. ${inv.numero} del ${inv.data} — richiesta verifica` : ""; })();
+  function generateEmail(invoicesOverride) {
+    const relevant = invoicesOverride || (emailInvoiceId === "__all__" ? invoices : invoices.filter((i) => i.id === emailInvoiceId));
+    let subject;
+    if (invoicesOverride && invoicesOverride.length === 1) {
+      subject = `Fattura BRT n. ${invoicesOverride[0].numero} del ${invoicesOverride[0].data} — richiesta verifica`;
+    } else {
+      subject = emailInvoiceId === "__all__"
+        ? "Richiesta verifica prezzi e storni — spedizioni in sospeso"
+        : (() => { const inv = invoices.find((i) => i.id === emailInvoiceId); return inv ? `Fattura BRT n. ${inv.numero} del ${inv.data} — richiesta verifica` : ""; })();
+    }
 
     const priceLines = [], ritardoLines = [], giacenzaLines = [], pianoLines = [];
     relevant.forEach((inv) => {
@@ -524,6 +561,12 @@ export default function Home() {
                               <b> {anomalie} spedizioni</b> con differenza da recuperare, per un totale di <b style={{ color: "var(--red)" }}>{fmt2(totaleDaRecuperare)}€</b>.
                             </p>
                             {nonTrovate > 0 && <button className="btn secondary" onClick={riprovaNonTrovate}>Riprova le righe non trovate</button>}
+                            {anomalie > 0 && (
+                              <div style={{ display: "flex", gap: 10, marginTop: 10, flexWrap: "wrap" }}>
+                                <button className="btn secondary" onClick={() => scaricaCsvAnomalie(draftRows, fNumero)}>Scarica CSV anomalie</button>
+                                <button className="btn" onClick={saveAndEmail}>Salva e genera mail per Daniele →</button>
+                              </div>
+                            )}
                           </div>
                         );
                       })()}
