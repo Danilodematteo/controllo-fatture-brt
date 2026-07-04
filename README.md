@@ -11,6 +11,26 @@ nel browser: chiunque potrebbe leggerle con "Ispeziona/Visualizza sorgente"
 e accedere a ordini e clienti del negozio. Qui invece le chiavi restano solo
 sul server (variabili d'ambiente Vercel), mai visibili al browser.
 
+## Peso reale dei prodotti
+
+Né WooCommerce né Shopify hanno il campo "peso" compilato nelle schede
+prodotto. È stato trovato un listino Excel del gestionale (Marea Sistemi)
+con peso reale per quasi tutti i prodotti, usato come base di partenza.
+
+**Il listino vive nel database** (`lib/pesoStore.js`), non più in un file
+fisso — si può modificare direttamente dalla tab "Pesi prodotti"
+dell'app: cercare un prodotto, correggere il peso, aggiungerne di nuovi.
+La prima volta che l'app parte, il database viene "seminato" con il
+contenuto di `lib/data/pesoProdotti.json` (883 articoli); da lì in poi le
+modifiche fatte dall'interfaccia restano salvate lì.
+
+`lib/matchProduct.js` confronta il nome prodotto come appare nell'ordine
+WooCommerce (es. "Materasso New Memo Molle - Matrimoniale, Misura - 160 x
+190") con le righe del listino (es. "MATERASSO NEW MEMO MOLLE 160x190"),
+anche se scritti in modo diverso, e restituisce il peso reale se trova una
+corrispondenza sufficientemente sicura (stessa dimensione + parole chiave in
+comune). Se non trova nulla, restituisce `pesoTrovato: false`.
+
 ## Cosa fa ogni pezzo
 
 - `lib/tariff.js` — calcola il prezzo di trasporto atteso per fascia peso/zona
