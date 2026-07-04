@@ -1010,8 +1010,8 @@ export default function Home() {
                 <textarea value={emailText} onChange={(e) => setEmailText(e.target.value)} style={{ minHeight: 260 }} />
                 <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <button className="btn secondary" onClick={() => { navigator.clipboard.writeText(emailText); showToast("Testo copiato"); }}>Copia testo</button>
-                  <a className="btn" style={{ textDecoration: "none", display: "inline-block" }}
-                    href={`mailto:daniele.derosa@brt.it?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailText)}`}>Apri in Mail →</a>
+                  <a className="btn" style={{ textDecoration: "none", display: "inline-block" }} target="_blank" rel="noopener noreferrer"
+                    href={`https://webmail.dematteohome.it/?_task=mail&_action=compose&_to=${encodeURIComponent("daniele.derosa@brt.it")}&_subject=${encodeURIComponent(emailSubject)}&_body=${encodeURIComponent(emailText)}`}>Apri in Mail (webmail) →</a>
                 </div>
               </div>
             )}
