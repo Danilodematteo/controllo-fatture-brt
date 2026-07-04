@@ -953,7 +953,7 @@ export default function Home() {
                   <option key={inv.id} value={inv.id}>Fattura {inv.numero} — {inv.data}</option>
                 ))}
               </select>
-              <div style={{ marginTop: 12 }}><button className="btn" onClick={generateEmail}>Genera testo</button></div>
+              <div style={{ marginTop: 12 }}><button className="btn" onClick={() => generateEmail()}>Genera testo</button></div>
             </div>
             {emailText && (
               <div className="card">
