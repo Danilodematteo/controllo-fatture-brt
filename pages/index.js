@@ -152,14 +152,15 @@ export default function Home() {
     }
   }
 
-  function applyPesoReale(rowId, pesoReale, prodottoListino, manuale) {
+  function applyPesoReale(rowId, pesoReale, prodottoListino, manuale, dettaglio) {
     setDraftRows((rows) => rows.map((r) => {
       if (r.id !== rowId) return r;
       const attesoReale = calcAtteso(pesoReale, r.zona, tariff);
       const diffReale = r.fatturato - attesoReale;
       return {
         ...r,
-        pesoReale, prodottoListino, pesoManuale: !!manuale, pesoStato: "trovato", candidati: null,
+        pesoReale, prodottoListino, pesoManuale: !!manuale, pesoStato: "trovato",
+        prodottiDettaglio: dettaglio || null,
         pesoDichiarato: r.pesoDichiarato ?? r.peso,
         attesoDichiarato: r.attesoDichiarato ?? r.atteso,
         atteso: attesoReale, diff: diffReale, flag: diffReale >= 0.5,
@@ -186,11 +187,11 @@ export default function Home() {
         setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r)));
         return;
       }
-      if (prodotti.length === 1) {
-        applyPesoReale(rowId, (prodotti[0].pesoReale || 0) * (prodotti[0].quantita || 1), prodotti[0].prodottoListino, false);
-      } else {
-        setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "ambiguo", candidati: prodotti } : r)));
-      }
+      // Una spedizione BRT corrisponde a un ordine: sommiamo il peso di tutti i pezzi
+      // (un ordine può avere più materassi/accessori spediti insieme nello stesso collo).
+      const pesoTotale = prodotti.reduce((s, p) => s + (p.pesoReale || 0) * (p.quantita || 1), 0);
+      const label = prodotti.length === 1 ? prodotti[0].prodottoListino : `${prodotti.length} prodotti — ${fmt2(pesoTotale)} kg totali`;
+      applyPesoReale(rowId, pesoTotale, label, false, prodotti);
     } catch (e) {
       setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r)));
     }
@@ -544,22 +545,22 @@ export default function Home() {
                                     <button className="btn-tiny" onClick={() => verificaPeso(r.id, r.nominativo)}>Riprova</button>
                                   </div>
                                 )}
-                                {r.pesoStato === "ambiguo" && (
-                                  <div style={{ maxWidth: 220 }}>
-                                    <small style={{ color: "var(--ink-soft)", display: "block", marginBottom: 4 }}>Più prodotti nell'ordine — quale corrisponde a questa spedizione?</small>
-                                    {r.candidati.map((p, i) => (
-                                      <button key={i} className="btn-tiny" style={{ display: "block", width: "100%", textAlign: "left", marginBottom: 3, whiteSpace: "normal" }}
-                                        onClick={() => applyPesoReale(r.id, (p.pesoReale || 0) * (p.quantita || 1), p.prodottoListino, false)}>
-                                        {p.prodottoListino} — {p.pesoReale} kg
-                                      </button>
-                                    ))}
-                                  </div>
-                                )}
                                 {r.pesoStato === "trovato" && (
                                   <div className="peso-cell">
                                     <span className={r.flag ? "pill rust" : "pill teal"}>{fmtKg(r.pesoReale)}</span>
                                     {r.pesoManuale && <span className="pill grey">manuale</span>}
-                                    <small>{r.prodottoListino}</small>
+                                    {r.prodottiDettaglio && r.prodottiDettaglio.length > 1 ? (
+                                      <details style={{ fontSize: 11, textAlign: "right" }}>
+                                        <summary style={{ cursor: "pointer", color: "var(--ink-soft)" }}>{r.prodottiDettaglio.length} prodotti — {fmt2(r.pesoReale)} kg tot.</summary>
+                                        <ul style={{ margin: "4px 0 0", paddingLeft: 14, textAlign: "left" }}>
+                                          {r.prodottiDettaglio.map((p, i) => (
+                                            <li key={i}>{p.prodottoListino} {p.quantita > 1 ? `×${p.quantita}` : ""} — {p.pesoReale} kg</li>
+                                          ))}
+                                        </ul>
+                                      </details>
+                                    ) : (
+                                      <small>{r.prodottoListino}</small>
+                                    )}
                                     {r.pesoDichiarato !== undefined && (
                                       <small style={{ color: "var(--ink-soft)" }}>BRT dichiarava {fmt2(r.pesoDichiarato)}kg ({fmt(r.attesoDichiarato)}€)</small>
                                     )}
