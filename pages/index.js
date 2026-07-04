@@ -495,8 +495,9 @@ export default function Home() {
 
                 <div className="card">
                   <p className="sec-note" style={{ marginBottom: 12 }}>
-                    Il "Peso" dichiarato da BRT serve solo come riferimento — <b>l'anomalia e la differenza da contestare si calcolano sul peso reale del prodotto</b>,
-                    appena l'app lo trova. Finché il peso reale non è ancora verificato, la riga mostra il calcolo provvisorio sul peso dichiarato da BRT.
+                    <b>Peso BRT</b> è quello dichiarato da loro in fattura. <b>Peso reale</b> è quello vero del prodotto, verificato dall'app.
+                    <b> Dovuto</b> è quanto avreste dovuto pagare in base al peso reale. <b>Da recuperare</b> è la differenza tra quanto avete
+                    pagato e quanto dovuto — quella è la cifra da chiedere indietro a BRT su ogni spedizione.
                   </p>
                   {pesoBatch && (
                     <div className="card blue" style={{ marginBottom: 12, padding: 14 }}>
@@ -518,51 +519,46 @@ export default function Home() {
                   <div className="table-wrap">
                     <table>
                       <thead><tr>
-                        <th>Sped.</th><th>Cliente</th><th>CAP</th><th>Zona</th><th className="num">Peso</th>
-                        <th className="num">Fatturato</th><th className="num">Atteso</th><th className="num">Diff.</th>
-                        <th>Peso reale</th><th>Tipo</th><th>Nota</th><th></th>
+                        <th>Sped.</th><th>Cliente</th><th>Zona</th>
+                        <th className="num">Peso BRT</th>
+                        <th>Peso reale</th>
+                        <th className="num">Diff. peso</th>
+                        <th className="num">Pagato</th>
+                        <th className="num">Dovuto</th>
+                        <th className="num">Da recuperare</th>
+                        <th>Tipo</th><th>Nota</th><th></th>
                       </tr></thead>
                       <tbody>
                         {draftRows.map((r) => {
+                          const pesoBrt = r.pesoDichiarato ?? r.peso;
+                          const diffPeso = r.pesoReale != null ? pesoBrt - r.pesoReale : null;
                           return (
                             <tr key={r.id} className={r.flag ? "flag" : ""}>
                               <td>{r.sped}{r.pianoAmount ? <span className="pill blue" title={`Consegna al piano addebitata: ${fmt(r.pianoAmount)}€`}> P</span> : ""}</td>
                               <td>{r.nominativo || "—"}</td>
-                              <td>{r.cap || "—"}</td>
                               <td>{r.zona}</td>
-                              <td className="num">{fmt2(r.peso)}{r.pesoReale != null && <><br /><small style={{ color: "var(--ink-soft)" }}>dichiarato</small></>}</td>
-                              <td className="num">{fmt(r.fatturato)}</td>
-                              <td className="num">
-                                {fmt(r.atteso)}
-                                {r.pesoDichiarato !== undefined && <><br /><small style={{ color: "var(--ink-soft)" }}>su peso reale</small></>}
-                              </td>
-                              <td className="num">{r.flag ? <span className="pill rust">+{fmt2(r.diff)}</span> : fmt2(r.diff)}</td>
-                              <td>
+                              <td className="num">{fmt2(pesoBrt)} kg</td>
+                              <td style={{ minWidth: 190 }}>
                                 {r.pesoStato === "idle" && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>in coda…</span>}
                                 {r.pesoStato === "loading" && <span className="mini-spinner"></span>}
                                 {r.pesoStato === "nontrovato" && (
-                                  <div style={{ display: "flex", gap: 4 }}>
-                                    <button className="btn-tiny" onClick={() => verificaPeso(r.id, r.nominativo)}>Riprova</button>
-                                  </div>
+                                  <button className="btn-tiny" onClick={() => verificaPeso(r.id, r.nominativo)}>Riprova</button>
                                 )}
                                 {r.pesoStato === "trovato" && (
-                                  <div className="peso-cell">
-                                    <span className={r.flag ? "pill rust" : "pill teal"}>{fmtKg(r.pesoReale)}</span>
+                                  <div className="peso-cell" style={{ alignItems: "flex-start", textAlign: "left" }}>
+                                    <b style={{ fontSize: 14 }}>{fmtKg(r.pesoReale)}</b>
                                     {r.pesoManuale && <span className="pill grey">manuale</span>}
                                     {r.prodottiDettaglio && r.prodottiDettaglio.length > 1 ? (
-                                      <details style={{ fontSize: 11, textAlign: "right" }}>
-                                        <summary style={{ cursor: "pointer", color: "var(--ink-soft)" }}>{r.prodottiDettaglio.length} prodotti — {fmt2(r.pesoReale)} kg tot.</summary>
-                                        <ul style={{ margin: "4px 0 0", paddingLeft: 14, textAlign: "left" }}>
+                                      <details style={{ fontSize: 11 }}>
+                                        <summary style={{ cursor: "pointer", color: "var(--ink-soft)" }}>{r.prodottiDettaglio.length} prodotti</summary>
+                                        <ul style={{ margin: "4px 0 0", paddingLeft: 14 }}>
                                           {r.prodottiDettaglio.map((p, i) => (
                                             <li key={i}>{p.prodottoListino} {p.quantita > 1 ? `×${p.quantita}` : ""} — {p.pesoReale} kg</li>
                                           ))}
                                         </ul>
                                       </details>
                                     ) : (
-                                      <small>{r.prodottoListino}</small>
-                                    )}
-                                    {r.pesoDichiarato !== undefined && (
-                                      <small style={{ color: "var(--ink-soft)" }}>BRT dichiarava {fmt2(r.pesoDichiarato)}kg ({fmt(r.attesoDichiarato)}€)</small>
+                                      <small style={{ color: "var(--ink-soft)" }}>{r.prodottoListino}</small>
                                     )}
                                   </div>
                                 )}
@@ -591,6 +587,10 @@ export default function Home() {
                                   )}
                                 </div>
                               </td>
+                              <td className="num">{diffPeso != null ? <b>{fmt2(diffPeso)} kg</b> : "—"}</td>
+                              <td className="num">{fmt(r.fatturato)}€</td>
+                              <td className="num">{fmt(r.atteso)}€</td>
+                              <td className="num">{r.flag ? <span className="pill rust" style={{ fontSize: 13 }}>+{fmt2(r.diff)}€</span> : `${fmt2(r.diff)}€`}</td>
                               <td>
                                 <select value={r.tipo} onChange={(e) => updateDraftRow(r.id, "tipo", e.target.value)} style={{ width: 118 }}>
                                   {TIPO_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
