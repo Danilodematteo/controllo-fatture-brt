@@ -14,6 +14,7 @@
 //   WC_SECRET   -> Consumer Secret generata da WooCommerce
 
 const { matchProduct } = require("../../../lib/matchProduct");
+const { getListino } = require("../../../lib/pesoStore");
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Metodo non permesso" });
@@ -55,6 +56,7 @@ export default async function handler(req, res) {
     }
 
     const orders = await wcRes.json();
+    const listino = await getListino();
 
     // Filtro lato server: il "search" di WooCommerce è ampio, restringiamo
     // controllando che nome+cognome fatturazione combacino ragionevolmente.
@@ -70,7 +72,7 @@ export default async function handler(req, res) {
       data: o.date_created,
       cliente: `${o.billing?.first_name || ""} ${o.billing?.last_name || ""}`.trim(),
       prodotti: (o.line_items || []).map((li) => {
-        const match = matchProduct(li.name);
+        const match = matchProduct(li.name, listino);
         return {
           nome: li.name,
           quantita: li.quantity,
