@@ -441,6 +441,12 @@ export default function Home() {
                 </div>
 
                 <div className="card">
+                  <p className="sec-note" style={{ marginBottom: 12 }}>
+                    Il "Peso" qui sotto è quello <b>dichiarato da BRT</b> per calcolare il prezzo — per contratto può essere più alto del peso vero
+                    se il pacco è voluminoso. Un'"anomalia prezzo" a 0 significa solo che il prezzo torna rispetto a quel peso dichiarato,
+                    non che il peso dichiarato sia onesto. Premi "Verifica" su una riga qualsiasi per vedere il peso reale del prodotto comprato
+                    e confrontarlo — anche su righe senza anomalia di prezzo, se vuoi controllarle a campione.
+                  </p>
                   {draftRows.length > 0 && (
                     <div style={{ marginBottom: 10 }}>
                       <button className="btn secondary" onClick={verificaPesiAnomalie}>
@@ -484,7 +490,7 @@ export default function Home() {
                                   {TIPO_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                                 </select>
                               </td>
-                              <td><input value={r.nota} placeholder="nome cliente" style={{ width: 120 }}
+                              <td><input value={r.nota} placeholder="nota (es. motivo)" style={{ width: 120 }}
                                 onChange={(e) => updateDraftRow(r.id, "nota", e.target.value)} /></td>
                               <td><button className="btn-sm" onClick={() => removeDraftRow(r.id)}>✕</button></td>
                             </tr>
