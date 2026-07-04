@@ -63,6 +63,12 @@ export default function Home() {
   const [emailText, setEmailText] = useState("");
   const [emailSubject, setEmailSubject] = useState("");
 
+  const [pesi, setPesi] = useState([]);
+  const [pesiSearch, setPesiSearch] = useState("");
+  const [pesiEdits, setPesiEdits] = useState({}); // codice||descrizione -> valore in modifica
+  const [pesiSavingKey, setPesiSavingKey] = useState(null);
+  const [newProd, setNewProd] = useState({ codice: "", descrizione: "", categoria: "", peso: "" });
+
   const [toast, setToast] = useState("");
   const toastTimer = useRef(null);
 
@@ -80,14 +86,16 @@ export default function Home() {
     if (!unlocked) return;
     (async () => {
       try {
-        const [tRes, iRes, rRes] = await Promise.all([
+        const [tRes, iRes, rRes, pRes] = await Promise.all([
           fetch("/api/tariffario").then((r) => r.json()),
           fetch("/api/invoices").then((r) => r.json()),
           fetch("/api/resolved").then((r) => r.json()),
+          fetch("/api/pesi").then((r) => r.json()),
         ]);
         if (tRes.tariff) { setTariff(tRes.tariff); setTariffDraft(tRes.tariff); }
         if (iRes.invoices) setInvoices(iRes.invoices);
         if (rRes.resolved) setResolved(rRes.resolved);
+        if (pRes.listino) setPesi(pRes.listino);
       } catch (e) {
         showToast("Errore nel caricare i dati salvati");
       }
@@ -248,6 +256,53 @@ export default function Home() {
     });
   }
 
+  function pesoKey(p) {
+    return (p.codice || "") + "||" + p.descrizione;
+  }
+
+  async function salvaPeso(p) {
+    const key = pesoKey(p);
+    const nuovoPeso = pesiEdits[key] !== undefined ? pesiEdits[key] : p.peso;
+    setPesiSavingKey(key);
+    const res = await fetch("/api/pesi", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ codice: p.codice, descrizione: p.descrizione, categoria: p.categoria, peso: nuovoPeso }),
+    });
+    const data = await res.json();
+    if (data.listino) setPesi(data.listino);
+    setPesiEdits((e) => { const next = { ...e }; delete next[key]; return next; });
+    setPesiSavingKey(null);
+    showToast("Peso aggiornato");
+  }
+
+  async function eliminaPeso(p) {
+    if (!confirm(`Eliminare "${p.descrizione}" dal listino?`)) return;
+    const res = await fetch("/api/pesi", {
+      method: "DELETE", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ codice: p.codice, descrizione: p.descrizione }),
+    });
+    const data = await res.json();
+    if (data.listino) setPesi(data.listino);
+  }
+
+  async function aggiungiProdotto() {
+    if (!newProd.descrizione || newProd.peso === "") {
+      showToast("Servono almeno descrizione e peso");
+      return;
+    }
+    const res = await fetch("/api/pesi", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(newProd),
+    });
+    const data = await res.json();
+    if (data.listino) setPesi(data.listino);
+    setNewProd({ codice: "", descrizione: "", categoria: "", peso: "" });
+    showToast("Prodotto aggiunto al listino");
+  }
+
+  const pesiFiltrati = pesiSearch.trim().length >= 2
+    ? pesi.filter((p) => p.descrizione.toUpperCase().includes(pesiSearch.trim().toUpperCase())).slice(0, 100)
+    : [];
+
   function formatLine(inv, r) {
     const chi = r.nominativo ? ` — ${r.nominativo}` : "";
     return `Fattura ${inv.numero} — Spedizione ${r.sped}${chi} (${r.zona}, CAP ${r.cap || "—"}, ${fmt2(r.peso)} kg)\nFatturato: ${fmt(r.fatturato)}€ — Atteso da contratto: ${fmt(r.atteso)}€ — Differenza: +${fmt2(r.diff)}€`;
@@ -345,6 +400,7 @@ export default function Home() {
             Da verificare {openCount > 0 && <span className="badge">{openCount}</span>}
           </button>
           <button className={activeTab === "tariffario" ? "active" : ""} onClick={() => setActiveTab("tariffario")}>Tariffario</button>
+          <button className={activeTab === "pesi" ? "active" : ""} onClick={() => setActiveTab("pesi")}>Pesi prodotti</button>
           <button className={activeTab === "email" ? "active" : ""} onClick={() => setActiveTab("email")}>Email a Daniele</button>
           <button className={activeTab === "guida" ? "active" : ""} onClick={() => setActiveTab("guida")}>Guida</button>
         </nav>
@@ -593,6 +649,74 @@ export default function Home() {
             </div>
             <button className="btn" onClick={saveTariff}>Salva tariffario</button>
             {tariffSaved && <span style={{ marginLeft: 10, fontSize: 12.5, color: "var(--green)", fontWeight: 600 }}>✓ Salvato</span>}
+          </section>
+        )}
+
+        {activeTab === "pesi" && (
+          <section className="active">
+            <h2 className="sec-title">Pesi prodotti</h2>
+            <p className="sec-note">
+              Elenco di {pesi.length} prodotti usato per confrontare il peso dichiarato da BRT con il peso reale.
+              Cerca un prodotto per correggerne il peso, o aggiungine uno nuovo se manca.
+            </p>
+
+            <div className="card">
+              <label>Cerca prodotto</label>
+              <input placeholder="Scrivi almeno 2 lettere del nome (es. New Memo Molle)"
+                value={pesiSearch} onChange={(e) => setPesiSearch(e.target.value)} />
+            </div>
+
+            {pesiSearch.trim().length >= 2 && (
+              <div className="card">
+                <div className="table-wrap">
+                  <table>
+                    <thead><tr><th>Codice</th><th>Descrizione</th><th>Categoria</th><th className="num">Peso (kg)</th><th></th></tr></thead>
+                    <tbody>
+                      {pesiFiltrati.map((p) => {
+                        const key = pesoKey(p);
+                        const val = pesiEdits[key] !== undefined ? pesiEdits[key] : p.peso;
+                        const dirty = pesiEdits[key] !== undefined && String(pesiEdits[key]) !== String(p.peso);
+                        return (
+                          <tr key={key}>
+                            <td>{p.codice || "—"}</td>
+                            <td>{p.descrizione}</td>
+                            <td>{p.categoria || "—"}</td>
+                            <td className="num">
+                              <input value={val} style={{ width: 80, textAlign: "right" }}
+                                onChange={(e) => setPesiEdits((ed) => ({ ...ed, [key]: e.target.value }))} />
+                            </td>
+                            <td style={{ display: "flex", gap: 6 }}>
+                              {dirty && (
+                                <button className="btn-tiny" disabled={pesiSavingKey === key} onClick={() => salvaPeso(p)}>
+                                  {pesiSavingKey === key ? "…" : "Salva"}
+                                </button>
+                              )}
+                              <button className="btn-sm" onClick={() => eliminaPeso(p)}>✕</button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                  {pesiFiltrati.length === 0 && <div className="empty">Nessun prodotto trovato con questo nome.</div>}
+                </div>
+              </div>
+            )}
+
+            <details className="advanced">
+              <summary>+ Aggiungi un prodotto nuovo al listino</summary>
+              <div className="card" style={{ marginTop: 10 }}>
+                <div className="grid g4">
+                  <div><label>Codice (SKU/EAN, opzionale)</label><input value={newProd.codice} onChange={(e) => setNewProd({ ...newProd, codice: e.target.value })} /></div>
+                  <div style={{ gridColumn: "span 2" }}><label>Descrizione</label><input value={newProd.descrizione} onChange={(e) => setNewProd({ ...newProd, descrizione: e.target.value })} placeholder="es. MATERASSO NUOVO MODELLO 160x190" /></div>
+                  <div><label>Peso (kg)</label><input value={newProd.peso} onChange={(e) => setNewProd({ ...newProd, peso: e.target.value })} /></div>
+                </div>
+                <div className="grid g2" style={{ marginTop: 10 }}>
+                  <div><label>Categoria (opzionale)</label><input value={newProd.categoria} onChange={(e) => setNewProd({ ...newProd, categoria: e.target.value })} /></div>
+                  <div style={{ display: "flex", alignItems: "flex-end" }}><button className="btn secondary" style={{ width: "100%" }} onClick={aggiungiProdotto}>+ Aggiungi al listino</button></div>
+                </div>
+              </div>
+            </details>
           </section>
         )}
 
