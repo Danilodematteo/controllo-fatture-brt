@@ -1,0 +1,5300 @@
+[
+{
+"codice": "DEPLIANT",
+"descrizione": "Depliant",
+"categoria": "-",
+"peso": 0.0
+},
+{
+"codice": "CURSORI",
+"descrizione": "Cursori",
+"categoria": "-",
+"peso": 0.0
+},
+{
+"codice": "CP",
+"descrizione": "Consegna al piano",
+"categoria": "-",
+"peso": 0.0
+},
+{
+"codice": "CARTONI",
+"descrizione": "Cartoni",
+"categoria": "-",
+"peso": 0.0
+},
+{
+"codice": "8050030189864",
+"descrizione": "MATERASSO AIR ALOE 80x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189871",
+"descrizione": "MATERASSO AIR ALOE 80x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189888",
+"descrizione": "MATERASSO AIR ALOE 90x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189895",
+"descrizione": "MATERASSO AIR ALOE 90x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189901",
+"descrizione": "MATERASSO AIR ALOE 120x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189918",
+"descrizione": "MATERASSO AIR ALOE 120x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189925",
+"descrizione": "MATERASSO AIR ALOE 140x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189932",
+"descrizione": "MATERASSO AIR ALOE 140x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189949",
+"descrizione": "MATERASSO AIR ALOE 160x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189956",
+"descrizione": "MATERASSO AIR ALOE 160x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189963",
+"descrizione": "MATERASSO AIR ALOE 170x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189970",
+"descrizione": "MATERASSO AIR ALOE 170x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189987",
+"descrizione": "MATERASSO AIR ALOE 180x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189994",
+"descrizione": "MATERASSO AIR ALOE 180x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189697",
+"descrizione": "MATERASSO NEW MEMO MOLLE 180x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030189260",
+"descrizione": "MATERASSO FIVE COMFORT 80x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189277",
+"descrizione": "MATERASSO FIVE COMFORT 80x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189284",
+"descrizione": "MATERASSO FIVE COMFORT 80x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189291",
+"descrizione": "MATERASSO FIVE COMFORT 85x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189307",
+"descrizione": "MATERASSO FIVE COMFORT 85x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189314",
+"descrizione": "MATERASSO FIVE COMFORT 85x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189321",
+"descrizione": "MATERASSO FIVE COMFORT 90x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189338",
+"descrizione": "MATERASSO FIVE COMFORT 90x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189345",
+"descrizione": "MATERASSO FIVE COMFORT 90x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189352",
+"descrizione": "MATERASSO FIVE COMFORT 120x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189369",
+"descrizione": "MATERASSO FIVE COMFORT 120x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189376",
+"descrizione": "MATERASSO FIVE COMFORT 120x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189383",
+"descrizione": "MATERASSO FIVE COMFORT 140x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189390",
+"descrizione": "MATERASSO FIVE COMFORT 140x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189406",
+"descrizione": "MATERASSO FIVE COMFORT 140x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030189413",
+"descrizione": "MATERASSO FIVE COMFORT 160x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189420",
+"descrizione": "MATERASSO FIVE COMFORT 160x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189437",
+"descrizione": "MATERASSO FIVE COMFORT 160x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189444",
+"descrizione": "MATERASSO FIVE COMFORT 165x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189451",
+"descrizione": "MATERASSO FIVE COMFORT 165x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189468",
+"descrizione": "MATERASSO FIVE COMFORT 165x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189475",
+"descrizione": "MATERASSO FIVE COMFORT 170x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189482",
+"descrizione": "MATERASSO FIVE COMFORT 170x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189499",
+"descrizione": "MATERASSO FIVE COMFORT 170x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189505",
+"descrizione": "MATERASSO FIVE COMFORT 175x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189512",
+"descrizione": "MATERASSO FIVE COMFORT 175x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189529",
+"descrizione": "MATERASSO FIVE COMFORT 175x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189536",
+"descrizione": "MATERASSO FIVE COMFORT 180x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189543",
+"descrizione": "MATERASSO FIVE COMFORT 180x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189550",
+"descrizione": "MATERASSO FIVE COMFORT 180x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030189239",
+"descrizione": "CUSCINO TULIPANO 11 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030188539",
+"descrizione": "COPPIA CUSCINI GINSENG 15 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030188270",
+"descrizione": "MATERASSO FIVE COMFORT 85x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188287",
+"descrizione": "MATERASSO FIVE COMFORT 85x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188294",
+"descrizione": "MATERASSO FIVE COMFORT 90x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188300",
+"descrizione": "MATERASSO FIVE COMFORT 90x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188317",
+"descrizione": "MATERASSO FIVE COMFORT 90x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188324",
+"descrizione": "MATERASSO FIVE COMFORT 120x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188331",
+"descrizione": "MATERASSO FIVE COMFORT 120x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188348",
+"descrizione": "MATERASSO FIVE COMFORT 120x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188355",
+"descrizione": "MATERASSO FIVE COMFORT 140x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188362",
+"descrizione": "MATERASSO FIVE COMFORT 140x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188379",
+"descrizione": "MATERASSO FIVE COMFORT 140x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188386",
+"descrizione": "MATERASSO FIVE COMFORT 160x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188393",
+"descrizione": "MATERASSO FIVE COMFORT 160x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188409",
+"descrizione": "MATERASSO FIVE COMFORT 160x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188416",
+"descrizione": "MATERASSO FIVE COMFORT 165x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188423",
+"descrizione": "MATERASSO FIVE COMFORT 165x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188430",
+"descrizione": "MATERASSO FIVE COMFORT 165x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188447",
+"descrizione": "MATERASSO FIVE COMFORT 170x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188454",
+"descrizione": "MATERASSO FIVE COMFORT 170x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188461",
+"descrizione": "MATERASSO FIVE COMFORT 170x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188478",
+"descrizione": "MATERASSO FIVE COMFORT 175x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188485",
+"descrizione": "MATERASSO FIVE COMFORT 175x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188492",
+"descrizione": "MATERASSO FIVE COMFORT 175x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188508",
+"descrizione": "MATERASSO FIVE COMFORT 180x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188515",
+"descrizione": "MATERASSO FIVE COMFORT 180x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188522",
+"descrizione": "MATERASSO FIVE COMFORT 180x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030188263",
+"descrizione": "MATERASSO INFINITY MEMORY 90x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188256",
+"descrizione": "MATERASSO FIVE COMFORT 80x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030188096",
+"descrizione": "MATERASSO FIVE COMFORT 80x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030188102",
+"descrizione": "MATERASSO FIVE COMFORT 85x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030188119",
+"descrizione": "MATERASSO FIVE COMFORT 85x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030188126",
+"descrizione": "MATERASSO FIVE COMFORT 85x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030188133",
+"descrizione": "MATERASSO FIVE COMFORT 90x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030188140",
+"descrizione": "MATERASSO FIVE COMFORT 120x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030188157",
+"descrizione": "MATERASSO FIVE COMFORT 160x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030188164",
+"descrizione": "MATERASSO FIVE COMFORT 140x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030188171",
+"descrizione": "MATERASSO FIVE COMFORT 165x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030188188",
+"descrizione": "MATERASSO FIVE COMFORT 165x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030188195",
+"descrizione": "MATERASSO FIVE COMFORT 165x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030188201",
+"descrizione": "MATERASSO FIVE COMFORT 170x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030188218",
+"descrizione": "MATERASSO FIVE COMFORT 175x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030188225",
+"descrizione": "MATERASSO FIVE COMFORT 175x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030188232",
+"descrizione": "MATERASSO FIVE COMFORT 175x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030188249",
+"descrizione": "MATERASSO FIVE COMFORT 180x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187938",
+"descrizione": "RETE BEST PLUS ATP MANUALE 80x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187945",
+"descrizione": "RETE BEST PLUS ATP MANUALE 85x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187952",
+"descrizione": "RETE BEST PLUS ATP MANUALE 85x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187969",
+"descrizione": "RETE BEST PLUS ATP MANUALE 85x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187976",
+"descrizione": "RETE BEST PLUS ATP MANUALE 90x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187983",
+"descrizione": "RETE BEST PLUS ATP MANUALE 120x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187990",
+"descrizione": "RETE BEST PLUS ATP MANUALE 140x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030188003",
+"descrizione": "RETE BEST PLUS ATP MANUALE 160x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030188010",
+"descrizione": "RETE BEST PLUS ATP MANUALE 165x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030188027",
+"descrizione": "RETE BEST PLUS ATP MANUALE 165x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030188034",
+"descrizione": "RETE BEST PLUS ATP MANUALE 165x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030188041",
+"descrizione": "RETE BEST PLUS ATP MANUALE 170x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030188058",
+"descrizione": "RETE BEST PLUS ATP MANUALE 175x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030188065",
+"descrizione": "RETE BEST PLUS ATP MANUALE 175x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030188072",
+"descrizione": "RETE BEST PLUS ATP MANUALE 175x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030188089",
+"descrizione": "RETE BEST PLUS ATP MANUALE 180x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187778",
+"descrizione": "RETE BEST PLUS 80x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187785",
+"descrizione": "RETE BEST PLUS 85x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187792",
+"descrizione": "RETE BEST PLUS 85x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187808",
+"descrizione": "RETE BEST PLUS 85x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187815",
+"descrizione": "RETE BEST PLUS 90x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187822",
+"descrizione": "RETE BEST PLUS 120x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187839",
+"descrizione": "RETE BEST PLUS 140x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187846",
+"descrizione": "RETE BEST PLUS 160x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187853",
+"descrizione": "RETE BEST PLUS 165x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187860",
+"descrizione": "RETE BEST PLUS 165x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187877",
+"descrizione": "RETE BEST PLUS 165x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187884",
+"descrizione": "RETE BEST PLUS 170x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187891",
+"descrizione": "RETE BEST PLUS 175x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187907",
+"descrizione": "RETE BEST PLUS 175x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187914",
+"descrizione": "RETE BEST PLUS 175x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187921",
+"descrizione": "RETE BEST PLUS 180x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187617",
+"descrizione": "RETE EASY  80x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187624",
+"descrizione": "RETE EASY  85x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187631",
+"descrizione": "RETE EASY  85x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187648",
+"descrizione": "RETE EASY  85x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187655",
+"descrizione": "RETE EASY  90x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187662",
+"descrizione": "RETE EASY  120x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187679",
+"descrizione": "RETE EASY  140x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187686",
+"descrizione": "RETE EASY  160x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187693",
+"descrizione": "RETE EASY  165x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187709",
+"descrizione": "RETE EASY  165x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187716",
+"descrizione": "RETE EASY  165x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187723",
+"descrizione": "RETE EASY  170x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187730",
+"descrizione": "RETE EASY  175x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187747",
+"descrizione": "RETE EASY  175x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187754",
+"descrizione": "RETE EASY  175x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187761",
+"descrizione": "RETE EASY  180x195",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030187532",
+"descrizione": "TOPPER EKO MEMORY 80x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187549",
+"descrizione": "TOPPER EKO MEMORY 85x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187556",
+"descrizione": "TOPPER EKO MEMORY 85x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187563",
+"descrizione": "TOPPER EKO MEMORY 85x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187570",
+"descrizione": "TOPPER EKO MEMORY 90x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187587",
+"descrizione": "TOPPER EKO MEMORY 120x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187594",
+"descrizione": "TOPPER EKO MEMORY 140x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187600",
+"descrizione": "TOPPER EKO MEMORY 160x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187464",
+"descrizione": "TOPPER PURPLE 80x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187471",
+"descrizione": "TOPPER PURPLE 85x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187488",
+"descrizione": "TOPPER PURPLE 85x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187495",
+"descrizione": "TOPPER PURPLE 85x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187501",
+"descrizione": "TOPPER PURPLE 90x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187518",
+"descrizione": "TOPPER PURPLE 120x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187525",
+"descrizione": "TOPPER PURPLE 140x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187457",
+"descrizione": "CUSCINO FIOCCO MEMORY",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030187440",
+"descrizione": "CUSCINO GINSENG 15 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030187433",
+"descrizione": "CUSCINO ALOE FRESH 15 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030187426",
+"descrizione": "CUSCINO POLAR GEL 15 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030187396",
+"descrizione": "CUSCINO SAPONETTA FORATO 13 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030187402",
+"descrizione": "CUSCINO SAPONETTA FORATO 15 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030187419",
+"descrizione": "CUSCINO CERVICAL FORATO 11/13 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030187341",
+"descrizione": "TOPPER PURPLE 175x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187358",
+"descrizione": "TOPPER PURPLE 175x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187365",
+"descrizione": "TOPPER PURPLE 175x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187372",
+"descrizione": "TOPPER PURPLE 180x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030187044",
+"descrizione": "MATERASSO CASHMERE SPRING 80x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187051",
+"descrizione": "MATERASSO CASHMERE SPRING 80x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187068",
+"descrizione": "MATERASSO CASHMERE SPRING 80x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187075",
+"descrizione": "MATERASSO CASHMERE SPRING 85x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187082",
+"descrizione": "MATERASSO CASHMERE SPRING 85x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187099",
+"descrizione": "MATERASSO CASHMERE SPRING 85x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187105",
+"descrizione": "MATERASSO CASHMERE SPRING 90x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187112",
+"descrizione": "MATERASSO CASHMERE SPRING 90x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187129",
+"descrizione": "MATERASSO CASHMERE SPRING 90x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187136",
+"descrizione": "MATERASSO CASHMERE SPRING 120x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187143",
+"descrizione": "MATERASSO CASHMERE SPRING 120x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187150",
+"descrizione": "MATERASSO CASHMERE SPRING 120x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187167",
+"descrizione": "MATERASSO CASHMERE SPRING 140x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187174",
+"descrizione": "MATERASSO CASHMERE SPRING 140x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187181",
+"descrizione": "MATERASSO CASHMERE SPRING 140x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030187198",
+"descrizione": "MATERASSO CASHMERE SPRING 160x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187204",
+"descrizione": "MATERASSO CASHMERE SPRING 160x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187211",
+"descrizione": "MATERASSO CASHMERE SPRING 160x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187228",
+"descrizione": "MATERASSO CASHMERE SPRING 165x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187235",
+"descrizione": "MATERASSO CASHMERE SPRING 165x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187242",
+"descrizione": "MATERASSO CASHMERE SPRING 165x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187259",
+"descrizione": "MATERASSO CASHMERE SPRING 170x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187266",
+"descrizione": "MATERASSO CASHMERE SPRING 170x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187273",
+"descrizione": "MATERASSO CASHMERE SPRING 170x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187280",
+"descrizione": "MATERASSO CASHMERE SPRING 175x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187297",
+"descrizione": "MATERASSO CASHMERE SPRING 175x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187303",
+"descrizione": "MATERASSO CASHMERE SPRING 175x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187310",
+"descrizione": "MATERASSO CASHMERE SPRING 180x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187327",
+"descrizione": "MATERASSO CASHMERE SPRING 180x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187334",
+"descrizione": "MATERASSO CASHMERE SPRING 180x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186740",
+"descrizione": "MATERASSO SEVEN GOLD 80x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186757",
+"descrizione": "MATERASSO SEVEN GOLD 80x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186764",
+"descrizione": "MATERASSO SEVEN GOLD 80x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186771",
+"descrizione": "MATERASSO SEVEN GOLD 85x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186788",
+"descrizione": "MATERASSO SEVEN GOLD 85x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186795",
+"descrizione": "MATERASSO SEVEN GOLD 85x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186801",
+"descrizione": "MATERASSO SEVEN GOLD 90x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186818",
+"descrizione": "MATERASSO SEVEN GOLD 90x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186825",
+"descrizione": "MATERASSO SEVEN GOLD 90x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186832",
+"descrizione": "MATERASSO SEVEN GOLD 120x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186849",
+"descrizione": "MATERASSO SEVEN GOLD 120x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186856",
+"descrizione": "MATERASSO SEVEN GOLD 120x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186863",
+"descrizione": "MATERASSO SEVEN GOLD 140x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186870",
+"descrizione": "MATERASSO SEVEN GOLD 140x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186887",
+"descrizione": "MATERASSO SEVEN GOLD 140x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186894",
+"descrizione": "MATERASSO SEVEN GOLD 160x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186900",
+"descrizione": "MATERASSO SEVEN GOLD 160x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186917",
+"descrizione": "MATERASSO SEVEN GOLD 160x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186924",
+"descrizione": "MATERASSO SEVEN GOLD 165x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186931",
+"descrizione": "MATERASSO SEVEN GOLD 165x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186948",
+"descrizione": "MATERASSO SEVEN GOLD 165x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186955",
+"descrizione": "MATERASSO SEVEN GOLD 170x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186962",
+"descrizione": "MATERASSO SEVEN GOLD 170x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186979",
+"descrizione": "MATERASSO SEVEN GOLD 170x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186986",
+"descrizione": "MATERASSO SEVEN GOLD 175x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186993",
+"descrizione": "MATERASSO SEVEN GOLD 175x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187006",
+"descrizione": "MATERASSO SEVEN GOLD 175x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187013",
+"descrizione": "MATERASSO SEVEN GOLD 180x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187020",
+"descrizione": "MATERASSO SEVEN GOLD 180x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030187037",
+"descrizione": "MATERASSO SEVEN GOLD 180x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186443",
+"descrizione": "MATERASSO MEMORY SEASON 80x190 + CUSCINO FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186450",
+"descrizione": "MATERASSO MEMORY SEASON 80x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186467",
+"descrizione": "MATERASSO MEMORY SEASON 80x200 + CUSCINO FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186474",
+"descrizione": "MATERASSO MEMORY SEASON 85x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186481",
+"descrizione": "MATERASSO MEMORY SEASON 85x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186498",
+"descrizione": "MATERASSO MEMORY SEASON 85x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186504",
+"descrizione": "MATERASSO MEMORY SEASON 90x190 + CUSCINO FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186511",
+"descrizione": "MATERASSO MEMORY SEASON 90x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186528",
+"descrizione": "MATERASSO MEMORY SEASON 90x200 + CUSCINO FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186535",
+"descrizione": "MATERASSO MEMORY SEASON 120x190 + CUSCINO FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186542",
+"descrizione": "MATERASSO MEMORY SEASON 120x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186559",
+"descrizione": "MATERASSO MEMORY SEASON 120x200 + CUSCINO FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186566",
+"descrizione": "MATERASSO MEMORY SEASON 140x190 + CUSCINI FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186573",
+"descrizione": "MATERASSO MEMORY SEASON 140x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186580",
+"descrizione": "MATERASSO MEMORY SEASON 140x200 + CUSCINI FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186597",
+"descrizione": "MATERASSO MEMORY SEASON 160x190 + CUSCINI FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186603",
+"descrizione": "MATERASSO MEMORY SEASON 160x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186610",
+"descrizione": "MATERASSO MEMORY SEASON 160x200 + CUSCINI FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186627",
+"descrizione": "MATERASSO MEMORY SEASON 165x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186634",
+"descrizione": "MATERASSO MEMORY SEASON 165x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186641",
+"descrizione": "MATERASSO MEMORY SEASON 165x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186658",
+"descrizione": "MATERASSO MEMORY SEASON 170x190 + CUSCINI FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186665",
+"descrizione": "MATERASSO MEMORY SEASON 170x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186672",
+"descrizione": "MATERASSO MEMORY SEASON 170x200 + CUSCINI FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186689",
+"descrizione": "MATERASSO MEMORY SEASON 175x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186696",
+"descrizione": "MATERASSO MEMORY SEASON 175x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186702",
+"descrizione": "MATERASSO MEMORY SEASON 175x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186719",
+"descrizione": "MATERASSO MEMORY SEASON 180x190 + CUSCINI FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186726",
+"descrizione": "MATERASSO MEMORY SEASON 180x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186733",
+"descrizione": "MATERASSO MEMORY SEASON 180x200 + CUSCINI FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186283",
+"descrizione": "MATERASSO INFINITY MEMORY 80x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186290",
+"descrizione": "MATERASSO INFINITY MEMORY 85x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186306",
+"descrizione": "MATERASSO INFINITY MEMORY 85x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186313",
+"descrizione": "MATERASSO INFINITY MEMORY 85x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186320",
+"descrizione": "MATERASSO INFINITY MEMORY 90x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186337",
+"descrizione": "MATERASSO INFINITY MEMORY 120x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186344",
+"descrizione": "MATERASSO INFINITY MEMORY 140x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030186351",
+"descrizione": "MATERASSO INFINITY MEMORY 160x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186368",
+"descrizione": "MATERASSO INFINITY MEMORY 165x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186375",
+"descrizione": "MATERASSO INFINITY MEMORY 165x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186382",
+"descrizione": "MATERASSO INFINITY MEMORY 165x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186399",
+"descrizione": "MATERASSO INFINITY MEMORY 170x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186405",
+"descrizione": "MATERASSO INFINITY MEMORY 175x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186412",
+"descrizione": "MATERASSO INFINITY MEMORY 175x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186429",
+"descrizione": "MATERASSO INFINITY MEMORY 175x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186436",
+"descrizione": "MATERASSO INFINITY MEMORY 180x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030186122",
+"descrizione": "MATERASSO CASHMERE SPRING 80x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030186139",
+"descrizione": "MATERASSO CASHMERE SPRING 85x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030186146",
+"descrizione": "MATERASSO CASHMERE SPRING 85x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030186153",
+"descrizione": "MATERASSO CASHMERE SPRING 85x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030186160",
+"descrizione": "MATERASSO CASHMERE SPRING 90x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030186177",
+"descrizione": "MATERASSO CASHMERE SPRING 120x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030186184",
+"descrizione": "MATERASSO CASHMERE SPRING 140x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030186191",
+"descrizione": "MATERASSO CASHMERE SPRING 160x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186207",
+"descrizione": "MATERASSO CASHMERE SPRING 165x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186214",
+"descrizione": "MATERASSO CASHMERE SPRING 165x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186221",
+"descrizione": "MATERASSO CASHMERE SPRING 165x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186238",
+"descrizione": "MATERASSO CASHMERE SPRING 170x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186245",
+"descrizione": "MATERASSO CASHMERE SPRING 175x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186252",
+"descrizione": "MATERASSO CASHMERE SPRING 175x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186269",
+"descrizione": "MATERASSO CASHMERE SPRING 175x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186276",
+"descrizione": "MATERASSO CASHMERE SPRING 180x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185828",
+"descrizione": "MATERASSO NEW MEMO MOLLE 80x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185835",
+"descrizione": "MATERASSO NEW MEMO MOLLE 80x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185842",
+"descrizione": "MATERASSO NEW MEMO MOLLE 80x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185859",
+"descrizione": "MATERASSO NEW MEMO MOLLE 85x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185866",
+"descrizione": "MATERASSO NEW MEMO MOLLE 85x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185873",
+"descrizione": "MATERASSO NEW MEMO MOLLE 85x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185880",
+"descrizione": "MATERASSO NEW MEMO MOLLE 90x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185897",
+"descrizione": "MATERASSO NEW MEMO MOLLE 90x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185903",
+"descrizione": "MATERASSO NEW MEMO MOLLE 90x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185910",
+"descrizione": "MATERASSO NEW MEMO MOLLE 120x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185927",
+"descrizione": "MATERASSO NEW MEMO MOLLE 120x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185934",
+"descrizione": "MATERASSO NEW MEMO MOLLE 120x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185941",
+"descrizione": "MATERASSO NEW MEMO MOLLE 140x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185958",
+"descrizione": "MATERASSO NEW MEMO MOLLE 140x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185965",
+"descrizione": "MATERASSO NEW MEMO MOLLE 140x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185972",
+"descrizione": "MATERASSO NEW MEMO MOLLE 160x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185989",
+"descrizione": "MATERASSO NEW MEMO MOLLE 160x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185996",
+"descrizione": "MATERASSO NEW MEMO MOLLE 160x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186009",
+"descrizione": "MATERASSO NEW MEMO MOLLE 165x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186016",
+"descrizione": "MATERASSO NEW MEMO MOLLE 165x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186023",
+"descrizione": "MATERASSO NEW MEMO MOLLE 165x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186030",
+"descrizione": "MATERASSO NEW MEMO MOLLE 170x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186047",
+"descrizione": "MATERASSO NEW MEMO MOLLE 170x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186054",
+"descrizione": "MATERASSO NEW MEMO MOLLE 170x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186061",
+"descrizione": "MATERASSO NEW MEMO MOLLE 175x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186078",
+"descrizione": "MATERASSO NEW MEMO MOLLE 175x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186085",
+"descrizione": "MATERASSO NEW MEMO MOLLE 175x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186092",
+"descrizione": "MATERASSO NEW MEMO MOLLE 180x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186108",
+"descrizione": "MATERASSO NEW MEMO MOLLE 180x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030186115",
+"descrizione": "MATERASSO NEW MEMO MOLLE 180x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185521",
+"descrizione": "MATERASSO SEVEN GOLD 80x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185538",
+"descrizione": "MATERASSO SEVEN GOLD 80x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185545",
+"descrizione": "MATERASSO SEVEN GOLD 80x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185552",
+"descrizione": "MATERASSO SEVEN GOLD 85x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185569",
+"descrizione": "MATERASSO SEVEN GOLD 85x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185576",
+"descrizione": "MATERASSO SEVEN GOLD 85x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185583",
+"descrizione": "MATERASSO SEVEN GOLD 90x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185590",
+"descrizione": "MATERASSO SEVEN GOLD 90x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185606",
+"descrizione": "MATERASSO SEVEN GOLD 90x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185613",
+"descrizione": "MATERASSO SEVEN GOLD 120x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185620",
+"descrizione": "MATERASSO SEVEN GOLD 120x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185637",
+"descrizione": "MATERASSO SEVEN GOLD 120x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185644",
+"descrizione": "MATERASSO SEVEN GOLD 140x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185651",
+"descrizione": "MATERASSO SEVEN GOLD 140x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185668",
+"descrizione": "MATERASSO SEVEN GOLD 140x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185675",
+"descrizione": "MATERASSO SEVEN GOLD 160x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185682",
+"descrizione": "MATERASSO SEVEN GOLD 160x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185699",
+"descrizione": "MATERASSO SEVEN GOLD 160x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185705",
+"descrizione": "MATERASSO SEVEN GOLD 165x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185712",
+"descrizione": "MATERASSO SEVEN GOLD 165x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185729",
+"descrizione": "MATERASSO SEVEN GOLD 165x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185736",
+"descrizione": "MATERASSO SEVEN GOLD 170x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185743",
+"descrizione": "MATERASSO SEVEN GOLD 170x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185750",
+"descrizione": "MATERASSO SEVEN GOLD 170x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185767",
+"descrizione": "MATERASSO SEVEN GOLD 175x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185774",
+"descrizione": "MATERASSO SEVEN GOLD 175x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185781",
+"descrizione": "MATERASSO SEVEN GOLD 175x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185798",
+"descrizione": "MATERASSO SEVEN GOLD 180x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185804",
+"descrizione": "MATERASSO SEVEN GOLD 180x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185811",
+"descrizione": "MATERASSO SEVEN GOLD 180x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185224",
+"descrizione": "MATERASSO MEMORY SEASON 80x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185231",
+"descrizione": "MATERASSO MEMORY SEASON 80x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185248",
+"descrizione": "MATERASSO MEMORY SEASON 80x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185255",
+"descrizione": "MATERASSO MEMORY SEASON 85x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185262",
+"descrizione": "MATERASSO MEMORY SEASON 85x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185279",
+"descrizione": "MATERASSO MEMORY SEASON 85x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185286",
+"descrizione": "MATERASSO MEMORY SEASON 90x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185293",
+"descrizione": "MATERASSO MEMORY SEASON 90x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185309",
+"descrizione": "MATERASSO MEMORY SEASON 90x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185316",
+"descrizione": "MATERASSO MEMORY SEASON 120x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185323",
+"descrizione": "MATERASSO MEMORY SEASON 120x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185330",
+"descrizione": "MATERASSO MEMORY SEASON 120x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185347",
+"descrizione": "MATERASSO MEMORY SEASON 140x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185354",
+"descrizione": "MATERASSO MEMORY SEASON 140x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185361",
+"descrizione": "MATERASSO MEMORY SEASON 140x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185378",
+"descrizione": "MATERASSO MEMORY SEASON 160x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185385",
+"descrizione": "MATERASSO MEMORY SEASON 160x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185392",
+"descrizione": "MATERASSO MEMORY SEASON 160x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185408",
+"descrizione": "MATERASSO MEMORY SEASON 165x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185415",
+"descrizione": "MATERASSO MEMORY SEASON 165x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185422",
+"descrizione": "MATERASSO MEMORY SEASON 165x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185439",
+"descrizione": "MATERASSO MEMORY SEASON 170x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185446",
+"descrizione": "MATERASSO MEMORY SEASON 170x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185453",
+"descrizione": "MATERASSO MEMORY SEASON 170x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185460",
+"descrizione": "MATERASSO MEMORY SEASON 175x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185477",
+"descrizione": "MATERASSO MEMORY SEASON 175x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185484",
+"descrizione": "MATERASSO MEMORY SEASON 175x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185491",
+"descrizione": "MATERASSO MEMORY SEASON 180x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185507",
+"descrizione": "MATERASSO MEMORY SEASON 180x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185514",
+"descrizione": "MATERASSO MEMORY SEASON 180x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184920",
+"descrizione": "MATERASSO AIR ALOE 80x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184937",
+"descrizione": "MATERASSO AIR ALOE 80x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184944",
+"descrizione": "MATERASSO AIR ALOE 80x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184951",
+"descrizione": "MATERASSO AIR ALOE 85x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184968",
+"descrizione": "MATERASSO AIR ALOE 85x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184975",
+"descrizione": "MATERASSO AIR ALOE 85x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184982",
+"descrizione": "MATERASSO AIR ALOE 90x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184999",
+"descrizione": "MATERASSO AIR ALOE 90x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185002",
+"descrizione": "MATERASSO AIR ALOE 90x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185019",
+"descrizione": "MATERASSO AIR ALOE 120x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185026",
+"descrizione": "MATERASSO AIR ALOE 120x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185033",
+"descrizione": "MATERASSO AIR ALOE 120x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185040",
+"descrizione": "MATERASSO AIR ALOE 140x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185057",
+"descrizione": "MATERASSO AIR ALOE 140x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185064",
+"descrizione": "MATERASSO AIR ALOE 140x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030185071",
+"descrizione": "MATERASSO AIR ALOE 160x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185088",
+"descrizione": "MATERASSO AIR ALOE 160x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185095",
+"descrizione": "MATERASSO AIR ALOE 160x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185101",
+"descrizione": "MATERASSO AIR ALOE 165x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185118",
+"descrizione": "MATERASSO AIR ALOE 165x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185125",
+"descrizione": "MATERASSO AIR ALOE 165x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185132",
+"descrizione": "MATERASSO AIR ALOE 170x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185149",
+"descrizione": "MATERASSO AIR ALOE 170x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185156",
+"descrizione": "MATERASSO AIR ALOE 170x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185163",
+"descrizione": "MATERASSO AIR ALOE 175x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185170",
+"descrizione": "MATERASSO AIR ALOE 175x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185187",
+"descrizione": "MATERASSO AIR ALOE 175x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185194",
+"descrizione": "MATERASSO AIR ALOE 180x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185200",
+"descrizione": "MATERASSO AIR ALOE 180x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030185217",
+"descrizione": "MATERASSO AIR ALOE 180x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184630",
+"descrizione": "MATERASSO INFINITY MEMORY 80x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184647",
+"descrizione": "MATERASSO INFINITY MEMORY 80x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184654",
+"descrizione": "MATERASSO INFINITY MEMORY 80x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184661",
+"descrizione": "MATERASSO INFINITY MEMORY 85x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184678",
+"descrizione": "MATERASSO INFINITY MEMORY 85x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184685",
+"descrizione": "MATERASSO INFINITY MEMORY 85x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184692",
+"descrizione": "MATERASSO INFINITY MEMORY 90x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184708",
+"descrizione": "MATERASSO INFINITY MEMORY 90x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184715",
+"descrizione": "MATERASSO INFINITY MEMORY 120x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184722",
+"descrizione": "MATERASSO INFINITY MEMORY 120x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184739",
+"descrizione": "MATERASSO INFINITY MEMORY 120x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184746",
+"descrizione": "MATERASSO INFINITY MEMORY 140x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184753",
+"descrizione": "MATERASSO INFINITY MEMORY 140x195",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184760",
+"descrizione": "MATERASSO INFINITY MEMORY 140x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184777",
+"descrizione": "MATERASSO INFINITY MEMORY 160x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184784",
+"descrizione": "MATERASSO INFINITY MEMORY 160x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184791",
+"descrizione": "MATERASSO INFINITY MEMORY 160x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184807",
+"descrizione": "MATERASSO INFINITY MEMORY 165x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184814",
+"descrizione": "MATERASSO INFINITY MEMORY 165x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184821",
+"descrizione": "MATERASSO INFINITY MEMORY 165x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184838",
+"descrizione": "MATERASSO INFINITY MEMORY 170x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184845",
+"descrizione": "MATERASSO INFINITY MEMORY 170x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184852",
+"descrizione": "MATERASSO INFINITY MEMORY 170x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184869",
+"descrizione": "MATERASSO INFINITY MEMORY 175x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184876",
+"descrizione": "MATERASSO INFINITY MEMORY 175x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184883",
+"descrizione": "MATERASSO INFINITY MEMORY 175x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184890",
+"descrizione": "MATERASSO INFINITY MEMORY 180x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184906",
+"descrizione": "MATERASSO INFINITY MEMORY 180x195",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184913",
+"descrizione": "MATERASSO INFINITY MEMORY 180x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184593",
+"descrizione": "COPRIMATERASSO 80x200",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030184609",
+"descrizione": "COPRIMATERASSO 120x200",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030184616",
+"descrizione": "COPRIMATERASSO 160x200",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030184623",
+"descrizione": "COPRIMATERASSO 180x200",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030184562",
+"descrizione": "MATERASSO SEVEN GOLD 80x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184579",
+"descrizione": "MATERASSO SEVEN GOLD 120x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184586",
+"descrizione": "MATERASSO SEVEN GOLD 140x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184487",
+"descrizione": "MATERASSO CASHMERE SPRING 80x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184494",
+"descrizione": "MATERASSO CASHMERE SPRING 120x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184500",
+"descrizione": "MATERASSO CASHMERE SPRING 140x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184517",
+"descrizione": "MATERASSO CASHMERE SPRING 140x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030184524",
+"descrizione": "MATERASSO CASHMERE SPRING 160x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184531",
+"descrizione": "MATERASSO CASHMERE SPRING 170x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184548",
+"descrizione": "MATERASSO CASHMERE SPRING 180x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184555",
+"descrizione": "MATERASSO CASHMERE SPRING 180x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030184470",
+"descrizione": "MATERASSO NEW MEMO MOLLE 180x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184326",
+"descrizione": "MATERASSO INFINITY MEMORY 80x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184333",
+"descrizione": "MATERASSO INFINITY MEMORY 80x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184340",
+"descrizione": "MATERASSO INFINITY MEMORY 90x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184357",
+"descrizione": "MATERASSO INFINITY MEMORY 90x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184364",
+"descrizione": "MATERASSO INFINITY MEMORY 120x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184371",
+"descrizione": "MATERASSO INFINITY MEMORY 120x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184388",
+"descrizione": "MATERASSO INFINITY MEMORY 140x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184395",
+"descrizione": "MATERASSO INFINITY MEMORY 140x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184401",
+"descrizione": "MATERASSO INFINITY MEMORY 160x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184418",
+"descrizione": "MATERASSO INFINITY MEMORY 160x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184425",
+"descrizione": "MATERASSO INFINITY MEMORY 170x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184432",
+"descrizione": "MATERASSO INFINITY MEMORY 170x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184449",
+"descrizione": "MATERASSO INFINITY MEMORY 180x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184456",
+"descrizione": "MATERASSO INFINITY MEMORY 180x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184302",
+"descrizione": "MATERASSO FIVE COMFORT 80x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184319",
+"descrizione": "MATERASSO FIVE COMFORT 85x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184258",
+"descrizione": "TOPPER PURPLE 160x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184265",
+"descrizione": "TOPPER PURPLE 165x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184272",
+"descrizione": "TOPPER PURPLE 165x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184289",
+"descrizione": "TOPPER PURPLE 165x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184296",
+"descrizione": "TOPPER PURPLE 170x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184173",
+"descrizione": "TOPPER EKO MEMORY 165x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184180",
+"descrizione": "TOPPER EKO MEMORY 165x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184197",
+"descrizione": "TOPPER EKO MEMORY 165x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184203",
+"descrizione": "TOPPER EKO MEMORY 170x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184210",
+"descrizione": "TOPPER EKO MEMORY 175x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184227",
+"descrizione": "TOPPER EKO MEMORY 175x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184234",
+"descrizione": "TOPPER EKO MEMORY 175x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184241",
+"descrizione": "TOPPER EKO MEMORY 180x195",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030184029",
+"descrizione": "MATERASSO NEW MEMO MOLLE 80x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184036",
+"descrizione": "MATERASSO NEW MEMO MOLLE 85x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184043",
+"descrizione": "MATERASSO NEW MEMO MOLLE 85x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184050",
+"descrizione": "MATERASSO NEW MEMO MOLLE 85x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184067",
+"descrizione": "MATERASSO NEW MEMO MOLLE 90x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184074",
+"descrizione": "MATERASSO NEW MEMO MOLLE 120x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184081",
+"descrizione": "MATERASSO NEW MEMO MOLLE 140x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030184098",
+"descrizione": "MATERASSO NEW MEMO MOLLE 160x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184104",
+"descrizione": "MATERASSO NEW MEMO MOLLE 165x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184111",
+"descrizione": "MATERASSO NEW MEMO MOLLE 165x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184128",
+"descrizione": "MATERASSO NEW MEMO MOLLE 165x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184135",
+"descrizione": "MATERASSO NEW MEMO MOLLE 170x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184142",
+"descrizione": "MATERASSO NEW MEMO MOLLE 175x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184159",
+"descrizione": "MATERASSO NEW MEMO MOLLE 175x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184166",
+"descrizione": "MATERASSO NEW MEMO MOLLE 175x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183855",
+"descrizione": "MATERASSO AIR ALOE  80x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183862",
+"descrizione": "MATERASSO AIR ALOE  85x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183879",
+"descrizione": "MATERASSO AIR ALOE  85x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183886",
+"descrizione": "MATERASSO AIR ALOE  85x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183893",
+"descrizione": "MATERASSO AIR ALOE  90x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183909",
+"descrizione": "MATERASSO AIR ALOE  120x195 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183916",
+"descrizione": "MATERASSO AIR ALOE  140x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183923",
+"descrizione": "MATERASSO AIR ALOE  160x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183930",
+"descrizione": "MATERASSO AIR ALOE  165x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183954",
+"descrizione": "MATERASSO AIR ALOE  165x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183961",
+"descrizione": "MATERASSO AIR ALOE  165x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183978",
+"descrizione": "MATERASSO AIR ALOE  170x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183985",
+"descrizione": "MATERASSO AIR ALOE  175x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183992",
+"descrizione": "MATERASSO AIR ALOE  175x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184005",
+"descrizione": "MATERASSO AIR ALOE  175x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030184012",
+"descrizione": "MATERASSO AIR ALOE  180x195 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183824",
+"descrizione": "CUSCINO DOMMY",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030183688",
+"descrizione": "TOPPER PURPLE 80x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183695",
+"descrizione": "TOPPER PURPLE 80x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183701",
+"descrizione": "TOPPER PURPLE 90x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183718",
+"descrizione": "TOPPER PURPLE 90x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183725",
+"descrizione": "TOPPER PURPLE 120x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183732",
+"descrizione": "TOPPER PURPLE 120x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183749",
+"descrizione": "TOPPER PURPLE 140x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183756",
+"descrizione": "TOPPER PURPLE 140x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183763",
+"descrizione": "TOPPER PURPLE 160x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183770",
+"descrizione": "TOPPER PURPLE 160x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183787",
+"descrizione": "TOPPER PURPLE 170x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183794",
+"descrizione": "TOPPER PURPLE 170x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183800",
+"descrizione": "TOPPER PURPLE 180x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183817",
+"descrizione": "TOPPER PURPLE 180x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183541",
+"descrizione": "TOPPER EKO MEMORY 80x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183558",
+"descrizione": "TOPPER EKO MEMORY 80x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183565",
+"descrizione": "TOPPER EKO MEMORY 90x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183572",
+"descrizione": "TOPPER EKO MEMORY 90x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183589",
+"descrizione": "TOPPER EKO MEMORY 120x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183596",
+"descrizione": "TOPPER EKO MEMORY 120x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183602",
+"descrizione": "TOPPER EKO MEMORY 140x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183619",
+"descrizione": "TOPPER EKO MEMORY 140x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183626",
+"descrizione": "TOPPER EKO MEMORY 160x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183633",
+"descrizione": "TOPPER EKO MEMORY 160x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183640",
+"descrizione": "TOPPER EKO MEMORY 170x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183657",
+"descrizione": "TOPPER EKO MEMORY 170x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183664",
+"descrizione": "TOPPER EKO MEMORY 180x190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183671",
+"descrizione": "TOPPER EKO MEMORY 180x200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030183381",
+"descrizione": "MATERASSO MEMORY SEASON 80x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183398",
+"descrizione": "MATERASSO MEMORY SEASON 80x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183404",
+"descrizione": "MATERASSO MEMORY SEASON 90x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183411",
+"descrizione": "MATERASSO MEMORY SEASON 90x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183428",
+"descrizione": "MATERASSO MEMORY SEASON 120x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183435",
+"descrizione": "MATERASSO MEMORY SEASON 120x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183442",
+"descrizione": "MATERASSO MEMORY SEASON 140x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183459",
+"descrizione": "MATERASSO MEMORY SEASON 140x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183466",
+"descrizione": "MATERASSO MEMORY SEASON 160x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183473",
+"descrizione": "MATERASSO MEMORY SEASON 160x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183480",
+"descrizione": "MATERASSO MEMORY SEASON 170x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183497",
+"descrizione": "MATERASSO MEMORY SEASON 170x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183503",
+"descrizione": "MATERASSO MEMORY SEASON 180x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183510",
+"descrizione": "MATERASSO MEMORY SEASON 180x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183374",
+"descrizione": "COPPIA CUSCINI TULIPANO",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030183367",
+"descrizione": "CUSCINO TOP MEMORY 11 CM",
+"categoria": "Cuscini",
+"peso": 0.0
+},
+{
+"codice": "8050030183350",
+"descrizione": "COPRIMATERASSO 180x200",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030183213",
+"descrizione": "RETE EASY  80x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183220",
+"descrizione": "RETE EASY  80x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183237",
+"descrizione": "RETE EASY  90x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183244",
+"descrizione": "RETE EASY  90x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183251",
+"descrizione": "RETE EASY  120x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183268",
+"descrizione": "RETE EASY  120x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183275",
+"descrizione": "RETE EASY  140x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183282",
+"descrizione": "RETE EASY  140x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183299",
+"descrizione": "RETE EASY  160x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183305",
+"descrizione": "RETE EASY  160x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183312",
+"descrizione": "RETE EASY  170x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183329",
+"descrizione": "RETE EASY  170x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183336",
+"descrizione": "RETE EASY  180x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183343",
+"descrizione": "RETE EASY  180x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030183077",
+"descrizione": "MATERASSO AIR ALOE  80x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183084",
+"descrizione": "MATERASSO AIR ALOE  80x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183091",
+"descrizione": "MATERASSO AIR ALOE  90x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183107",
+"descrizione": "MATERASSO AIR ALOE  90x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183114",
+"descrizione": "MATERASSO AIR ALOE  120x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183121",
+"descrizione": "MATERASSO AIR ALOE  120x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183138",
+"descrizione": "MATERASSO AIR ALOE  140x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183145",
+"descrizione": "MATERASSO AIR ALOE  140x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030183152",
+"descrizione": "MATERASSO AIR ALOE  160x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183169",
+"descrizione": "MATERASSO AIR ALOE  160x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183176",
+"descrizione": "MATERASSO AIR ALOE  170x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183183",
+"descrizione": "MATERASSO AIR ALOE  170x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183190",
+"descrizione": "MATERASSO AIR ALOE  180x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183206",
+"descrizione": "MATERASSO AIR ALOE  180x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030183060",
+"descrizione": "BABY LATEX",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030183053",
+"descrizione": "BABY LATEX",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030183046",
+"descrizione": "BABY LATEX",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030183039",
+"descrizione": "BABY LATEX",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030183022",
+"descrizione": "BABY MEMOAIR",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030183015",
+"descrizione": "BABY MEMOAIR",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030183008",
+"descrizione": "BABY MEMOAIR",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030182995",
+"descrizione": "BABY MEMOAIR",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030182988",
+"descrizione": "BABY POLLY PLUS",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030182971",
+"descrizione": "BABY POLLY PLUS",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030182964",
+"descrizione": "BABY POLLY PLUS",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030182957",
+"descrizione": "BABY POLLY PLUS",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030182940",
+"descrizione": "BABY POLLY",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030182933",
+"descrizione": "BABY POLLY",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030182926",
+"descrizione": "BABY POLLY",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030182919",
+"descrizione": "BABY POLLY",
+"categoria": "Materassi Culle",
+"peso": 0.0
+},
+{
+"codice": "8050030182902",
+"descrizione": "LETTINO A CASTELLO ROSSO",
+"categoria": "Letti",
+"peso": 0.0
+},
+{
+"codice": "8050030182896",
+"descrizione": "LETTINO A CASTELLO BIANCO",
+"categoria": "Letti",
+"peso": 0.0
+},
+{
+"codice": "8050030182889",
+"descrizione": "LETTINO A CASTELLO NERO",
+"categoria": "Letti",
+"peso": 0.0
+},
+{
+"codice": "8050030182872",
+"descrizione": "LETTINO ARCO ROSSO",
+"categoria": "Letti",
+"peso": 0.0
+},
+{
+"codice": "8050030182865",
+"descrizione": "LETTINO ARCO BIANCO",
+"categoria": "Letti",
+"peso": 0.0
+},
+{
+"codice": "8050030182858",
+"descrizione": "LETTINO ARCO NERO",
+"categoria": "Letti",
+"peso": 0.0
+},
+{
+"codice": "8050030182841",
+"descrizione": "BRANDINA PIEGHEVOLE",
+"categoria": "Letti",
+"peso": 0.0
+},
+{
+"codice": "8050030182834",
+"descrizione": "CUSCINO POGGIARENI IN MEMORY 32x36x10",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030182827",
+"descrizione": "SEDUTA ANATOMICA IN MEMORY 42x42x7",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030182810",
+"descrizione": "COLLARE IN MEMORY 28x26x10",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030182803",
+"descrizione": "SOLLEVA GAMBE IN MEMORY 50x80x18",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030182797",
+"descrizione": "CUSCINO CUNEO ANTI REFLUSSO IN MEMORY 75x62x20",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030182766",
+"descrizione": "COPRIMATERASSO 80x190",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030182773",
+"descrizione": "COPRIMATERASSO 120x190",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030182780",
+"descrizione": "COPRIMATERASSO 160x190",
+"categoria": "Accessori",
+"peso": 1.0
+},
+{
+"codice": "8050030182759",
+"descrizione": "COPPIA FIOCCHI IN MEMORY",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030182742",
+"descrizione": "CUSCINO FIOCCO MEMORY",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030182735",
+"descrizione": "COPPIA ORTO CERVICALE LATTICE",
+"categoria": "Cuscini",
+"peso": 0.0
+},
+{
+"codice": "8050030182728",
+"descrizione": "ORTO CERVICALE LATTICE",
+"categoria": "Cuscini",
+"peso": 0.0
+},
+{
+"codice": "8050030182711",
+"descrizione": "COPPIA SAP LATTICE MICROGEL",
+"categoria": "Cuscini",
+"peso": 0.0
+},
+{
+"codice": "8050030182704",
+"descrizione": "SAP LATTICE MICROGEL",
+"categoria": "Cuscini",
+"peso": 0.0
+},
+{
+"codice": "8050030182698",
+"descrizione": "COPPIA CUSCINI ALOE FRESH 15 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030182681",
+"descrizione": "CUSCINO POLAR GEL 15 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030182674",
+"descrizione": "COPPIA CUSCINI POLAR GEL15 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030182667",
+"descrizione": "CUSCINO ALOE FRESH 15 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030182650",
+"descrizione": "COPPIA CUSCINI CERVICAL FORATO 11/13 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030182643",
+"descrizione": "CUSCINO CERVICAL FORATO 11/13 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030182636",
+"descrizione": "COPPIA CUSCINI SAPONETTA FORATO 15 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030182629",
+"descrizione": "CUSCINO SAPONETTA FORATO 15 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030182612",
+"descrizione": "COPPIA CUSCINI SAPONETTA FORATO 13 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030182605",
+"descrizione": "CUSCINO SAPONETTA FORATO 13 CM",
+"categoria": "Cuscini",
+"peso": 1.0
+},
+{
+"codice": "8050030182445",
+"descrizione": "TOPPER ALOE 7CM 80X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182452",
+"descrizione": "TOPPER ALOE 7CM 80X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182469",
+"descrizione": "TOPPER ALOE 7CM 90X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182476",
+"descrizione": "TOPPER ALOE 7CM 90X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182483",
+"descrizione": "TOPPER ALOE 7CM 120X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182490",
+"descrizione": "TOPPER ALOE 7CM 120X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182506",
+"descrizione": "TOPPER ALOE 7CM  140X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182513",
+"descrizione": "TOPPER ALOE 7CM 140X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182520",
+"descrizione": "TOPPER ALOE 7CM 160X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182537",
+"descrizione": "TOPPER ALOE 7CM 160X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182544",
+"descrizione": "TOPPER ALOE 7CM 170X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182551",
+"descrizione": "TOPPER ALOE 7CM 170X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182568",
+"descrizione": "TOPPER ALOE 7CM 180X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182575",
+"descrizione": "TOPPER ALOE 7CM 180X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182308",
+"descrizione": "TOPPER GEL 5CM 80X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182315",
+"descrizione": "TOPPER GEL 5CM 80X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182322",
+"descrizione": "TOPPER GEL 5CM 90X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182339",
+"descrizione": "TOPPER GEL 5CM 90X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182346",
+"descrizione": "TOPPER GEL 5CM 120X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182353",
+"descrizione": "TOPPER GEL 5CM 120X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182360",
+"descrizione": "TOPPER GEL 5CM 140X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182377",
+"descrizione": "TOPPER GEL 5CM 140X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182384",
+"descrizione": "TOPPER GEL 5CM 160X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182391",
+"descrizione": "TOPPER GEL 5CM 160X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182407",
+"descrizione": "TOPPER GEL 5CM 170X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182414",
+"descrizione": "TOPPER GEL 5CM 170X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182421",
+"descrizione": "TOPPER GEL 5CM 180X190",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182438",
+"descrizione": "TOPPER GEL 5CM 180X200",
+"categoria": "Topper",
+"peso": 5.0
+},
+{
+"codice": "8050030182278",
+"descrizione": "CAPRI  TRIO TORTORA 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182285",
+"descrizione": "CAPRI  TRIO TORTORA 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182292",
+"descrizione": "CAPRI  TRIO TORTORA 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182247",
+"descrizione": "CAPRI  TRIO AVORIO 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182254",
+"descrizione": "CAPRI  TRIO AVORIO 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182261",
+"descrizione": "CAPRI  TRIO AVORIO 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182216",
+"descrizione": "CAPRI  TRIO GRIGIO 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182223",
+"descrizione": "CAPRI  TRIO GRIGIO 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182230",
+"descrizione": "CAPRI  TRIO GRIGIO 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182186",
+"descrizione": "CAPRI  TRIO BIANCO 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182193",
+"descrizione": "CAPRI  TRIO BIANCO 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182209",
+"descrizione": "CAPRI  TRIO BIANCO 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182155",
+"descrizione": "CAPRI  DUO TORTORA 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182162",
+"descrizione": "CAPRI  DUO TORTORA 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182179",
+"descrizione": "CAPRI  DUO TORTORA 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182124",
+"descrizione": "CAPRI  DUO AVORIO 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182131",
+"descrizione": "CAPRI DUO AVORIO 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182148",
+"descrizione": "CAPRI  DUO AVORIO 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182094",
+"descrizione": "CAPRI  DUO GRIGIO 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182100",
+"descrizione": "CAPRI  DUO GRIGIO 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182117",
+"descrizione": "CAPRI  DUO GRIGIO 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182063",
+"descrizione": "CAPRI  DUO BIANCO 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182070",
+"descrizione": "CAPRI  DUO BIANCO 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182087",
+"descrizione": "CAPRI  DUO BIANCO 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182032",
+"descrizione": "VENERE  TRIO TORTORA 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182049",
+"descrizione": "VENERE  TRIO TORTORA 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182056",
+"descrizione": "VENERE  TRIO TORTORA 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182001",
+"descrizione": "VENERE  TRIO AVORIO 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182018",
+"descrizione": "VENERE  TRIO AVORIO 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030182025",
+"descrizione": "VENERE  TRIO AVORIO 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181974",
+"descrizione": "VENERE  TRIO GRIGIO 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181981",
+"descrizione": "VENERE  TRIO GRIGIO 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181998",
+"descrizione": "VENERE  TRIO GRIGIO 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181943",
+"descrizione": "VENERE  TRIO BIANCO 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181950",
+"descrizione": "VENERE  TRIO BIANCO 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181967",
+"descrizione": "VENERE  TRIO BIANCO 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181912",
+"descrizione": "VENERE  DUO TORTORA 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181929",
+"descrizione": "VENERE  DUO TORTORA 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181936",
+"descrizione": "VENERE  DUO TORTORA 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181882",
+"descrizione": "VENERE  DUO AVORIO 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181899",
+"descrizione": "VENERE  DUO AVORIO 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181905",
+"descrizione": "VENERE  DUO AVORIO 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181851",
+"descrizione": "VENERE  DUO GRIGIO 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181868",
+"descrizione": "VENERE  DUO GRIGIO 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181875",
+"descrizione": "VENERE  DUO GRIGIO 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181820",
+"descrizione": "VENERE  DUO BIANCO 80X190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181837",
+"descrizione": "VENERE  DUO BIANCO 120x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181844",
+"descrizione": "VENERE  DUO BIANCO 160x190",
+"categoria": "Letto Contenitore",
+"peso": 0.0
+},
+{
+"codice": "8050030181684",
+"descrizione": "SANSONE 80X190",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181721",
+"descrizione": "SANSONE 120X190",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181769",
+"descrizione": "SANSONE 160X190",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181554",
+"descrizione": "IRON 80X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181561",
+"descrizione": "IRON 90X190",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181578",
+"descrizione": "IRON 90X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181592",
+"descrizione": "IRON 120X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181608",
+"descrizione": "IRON 140X190",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181615",
+"descrizione": "IRON 140X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181646",
+"descrizione": "IRON 170X190",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181653",
+"descrizione": "IRON 170X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181660",
+"descrizione": "IRON 180X190",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181677",
+"descrizione": "IRON 180X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181547",
+"descrizione": "RETE IRON 80x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181585",
+"descrizione": "RETE IRON 120x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181622",
+"descrizione": "RETE IRON 160x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181639",
+"descrizione": "RETE IRON 160x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181417",
+"descrizione": "BEST PLUS ATPE 80X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181424",
+"descrizione": "BEST PLUS ATPE 90X190",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181431",
+"descrizione": "BEST PLUS ATPE 90X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181455",
+"descrizione": "BEST PLUS ATPE 120X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181462",
+"descrizione": "BEST PLUS ATPE 140X190",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181479",
+"descrizione": "BEST PLUS ATPE 140X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181493",
+"descrizione": "BEST PLUS ATPE 160X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181509",
+"descrizione": "BEST PLUS ATPE 170X190",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181516",
+"descrizione": "BEST PLUS ATPE 170X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181523",
+"descrizione": "BEST PLUS ATPE 180X190",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181530",
+"descrizione": "BEST PLUS ATPE 180X200",
+"categoria": "Reti",
+"peso": 0.0
+},
+{
+"codice": "8050030181400",
+"descrizione": "RETE BEST PLUS ATP ELETTRICA 80x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181448",
+"descrizione": "RETE BEST PLUS ATP ELETTRICA 120x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181486",
+"descrizione": "RETE BEST PLUS ATP ELETTRICA 160x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181264",
+"descrizione": "RETE BEST PLUS ATP MANUALE 80x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181271",
+"descrizione": "RETE BEST PLUS ATP MANUALE 80x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181288",
+"descrizione": "RETE BEST PLUS ATP MANUALE 90x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181295",
+"descrizione": "RETE BEST PLUS ATP MANUALE 90x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181301",
+"descrizione": "RETE BEST PLUS ATP MANUALE 120x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181318",
+"descrizione": "RETE BEST PLUS ATP MANUALE 120x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181325",
+"descrizione": "RETE BEST PLUS ATP MANUALE 140x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181332",
+"descrizione": "RETE BEST PLUS ATP MANUALE 140x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181349",
+"descrizione": "RETE BEST PLUS ATP MANUALE 160x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181356",
+"descrizione": "RETE BEST PLUS ATP MANUALE 160x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181363",
+"descrizione": "RETE BEST PLUS ATP MANUALE 170x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181370",
+"descrizione": "RETE BEST PLUS ATP MANUALE 170x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181387",
+"descrizione": "RETE BEST PLUS ATP MANUALE 180x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181394",
+"descrizione": "RETE BEST PLUS ATP MANUALE 180x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181127",
+"descrizione": "RETE BEST PLUS 80x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181134",
+"descrizione": "RETE BEST PLUS 80x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181141",
+"descrizione": "RETE BEST PLUS 90x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181158",
+"descrizione": "RETE BEST PLUS 90x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181165",
+"descrizione": "RETE BEST PLUS 120x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181172",
+"descrizione": "RETE BEST PLUS 120x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181189",
+"descrizione": "RETE BEST PLUS 140x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181196",
+"descrizione": "RETE BEST PLUS 140x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181202",
+"descrizione": "RETE BEST PLUS 160x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181219",
+"descrizione": "RETE BEST PLUS 160x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181226",
+"descrizione": "RETE BEST PLUS 170x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181233",
+"descrizione": "RETE BEST PLUS 170x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181240",
+"descrizione": "RETE BEST PLUS 180x190",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030181257",
+"descrizione": "RETE BEST PLUS 180x200",
+"categoria": "Reti",
+"peso": 10.0
+},
+{
+"codice": "8050030180984",
+"descrizione": "MATERASSO DIVANO  LETTO 80X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180991",
+"descrizione": "MATERASSO DIVANO  LETTO 80X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030181004",
+"descrizione": "MATERASSO DIVANO  LETTO 90X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030181011",
+"descrizione": "MATERASSO DIVANO  LETTO 90X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030181028",
+"descrizione": "MATERASSO DIVANO  LETTO 120X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030181035",
+"descrizione": "MATERASSO DIVANO  LETTO 120X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030181042",
+"descrizione": "MATERASSO DIVANO  LETTO 140X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030181059",
+"descrizione": "MATERASSO DIVANO  LETTO 140X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030181066",
+"descrizione": "MATERASSO DIVANO  LETTO 160X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030181073",
+"descrizione": "MATERASSO DIVANO  LETTO 160X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030181080",
+"descrizione": "MATERASSO DIVANO  LETTO 170X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030181097",
+"descrizione": "MATERASSO DIVANO  LETTO 170X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030181103",
+"descrizione": "MATERASSO DIVANO  LETTO 180X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030181110",
+"descrizione": "MATERASSO DIVANO  LETTO 180X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180847",
+"descrizione": "NATURAL LATEX 80X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180854",
+"descrizione": "NATURAL LATEX 80X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180861",
+"descrizione": "NATURAL LATEX 90X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180878",
+"descrizione": "NATURAL LATEX 90X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180885",
+"descrizione": "NATURAL LATEX 120X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180892",
+"descrizione": "NATURAL LATEX 120X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180908",
+"descrizione": "NATURAL LATEX 140X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180915",
+"descrizione": "NATURAL LATEX 140X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180922",
+"descrizione": "NATURAL LATEX 160X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180939",
+"descrizione": "NATURAL LATEX 160X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180946",
+"descrizione": "NATURAL LATEX 170X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180953",
+"descrizione": "NATURAL LATEX 170X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180960",
+"descrizione": "NATURAL LATEX 180X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180977",
+"descrizione": "NATURAL LATEX 180X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180700",
+"descrizione": "MATERASSO SEVEN GOLD 80x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180724",
+"descrizione": "MATERASSO SEVEN GOLD 90x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180731",
+"descrizione": "MATERASSO SEVEN GOLD 90x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180748",
+"descrizione": "MATERASSO SEVEN GOLD 120x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180762",
+"descrizione": "MATERASSO SEVEN GOLD 140x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180786",
+"descrizione": "MATERASSO SEVEN GOLD 160x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030180793",
+"descrizione": "MATERASSO SEVEN GOLD 160x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030180809",
+"descrizione": "MATERASSO SEVEN GOLD 170x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030180816",
+"descrizione": "MATERASSO SEVEN GOLD 170x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030180823",
+"descrizione": "MATERASSO SEVEN GOLD 180x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030180830",
+"descrizione": "MATERASSO SEVEN GOLD 180x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030180564",
+"descrizione": "MATERASSO CASHMERE SPRING 80x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180571",
+"descrizione": "MATERASSO CASHMERE SPRING 80x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180588",
+"descrizione": "MATERASSO CASHMERE SPRING 90x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180595",
+"descrizione": "MATERASSO CASHMERE SPRING 90x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180601",
+"descrizione": "MATERASSO CASHMERE SPRING 120x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180618",
+"descrizione": "MATERASSO CASHMERE SPRING 120x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180625",
+"descrizione": "MATERASSO CASHMERE SPRING 140x190",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180632",
+"descrizione": "MATERASSO CASHMERE SPRING 140x200",
+"categoria": "Materassi",
+"peso": 5.0
+},
+{
+"codice": "8050030180649",
+"descrizione": "MATERASSO CASHMERE SPRING 160x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030180656",
+"descrizione": "MATERASSO CASHMERE SPRING 160x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030180663",
+"descrizione": "MATERASSO CASHMERE SPRING 170x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030180670",
+"descrizione": "MATERASSO CASHMERE SPRING 170x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030180687",
+"descrizione": "MATERASSO CASHMERE SPRING 180x190",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030180694",
+"descrizione": "MATERASSO CASHMERE SPRING 180x200",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "8050030180427",
+"descrizione": "MATERASSO NEW MEMO MOLLE 80x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180434",
+"descrizione": "MATERASSO NEW MEMO MOLLE 80x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180441",
+"descrizione": "MATERASSO NEW MEMO MOLLE 90x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180458",
+"descrizione": "MATERASSO NEW MEMO MOLLE 90x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180465",
+"descrizione": "MATERASSO NEW MEMO MOLLE 120x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180472",
+"descrizione": "MATERASSO NEW MEMO MOLLE 120x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180489",
+"descrizione": "MATERASSO NEW MEMO MOLLE 140x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180496",
+"descrizione": "MATERASSO NEW MEMO MOLLE 140x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180502",
+"descrizione": "MATERASSO NEW MEMO MOLLE 160x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030180519",
+"descrizione": "MATERASSO NEW MEMO MOLLE 160x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030180526",
+"descrizione": "MATERASSO NEW MEMO MOLLE 170x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030180533",
+"descrizione": "MATERASSO NEW MEMO MOLLE 170x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030180540",
+"descrizione": "MATERASSO NEW MEMO MOLLE 180x190 + CUSCINI FIOCCO + COPRIMATERASSO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030180557",
+"descrizione": "MATERASSO NEW MEMO MOLLE 180x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030180281",
+"descrizione": "MATERASSO FIVE COMFORT 80x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180298",
+"descrizione": "MATERASSO FIVE COMFORT 80x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180304",
+"descrizione": "MATERASSO FIVE COMFORT 90x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180311",
+"descrizione": "MATERASSO FIVE COMFORT 90x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180328",
+"descrizione": "MATERASSO FIVE COMFORT 120x190 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180335",
+"descrizione": "MATERASSO FIVE COMFORT 120x200 + CUSCINO FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180342",
+"descrizione": "MATERASSO FIVE COMFORT 140x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180359",
+"descrizione": "MATERASSO FIVE COMFORT 140x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 5.0
+},
+{
+"codice": "8050030180366",
+"descrizione": "MATERASSO FIVE COMFORT 160x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030180373",
+"descrizione": "MATERASSO FIVE COMFORT 160x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030180380",
+"descrizione": "MATERASSO FIVE COMFORT 170x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030180397",
+"descrizione": "MATERASSO FIVE COMFORT 170x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030180403",
+"descrizione": "MATERASSO FIVE COMFORT 180x190 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030180410",
+"descrizione": "MATERASSO FIVE COMFORT 180x200 + CUSCINI FIOCCO",
+"categoria": "Materassi con omaggi",
+"peso": 20.0
+},
+{
+"codice": "8050030180144",
+"descrizione": "SUPER SILVER GEL 80X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180151",
+"descrizione": "SUPER SILVER GEL 80X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180168",
+"descrizione": "SUPER SILVER GEL 90X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180175",
+"descrizione": "SUPER SILVER GEL 90X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180182",
+"descrizione": "SUPER SILVER GEL 120X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180199",
+"descrizione": "SUPER SILVER GEL 120X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180205",
+"descrizione": "SUPER SILVER GEL 140X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180212",
+"descrizione": "SUPER SILVER GEL 140X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180229",
+"descrizione": "SUPER SILVER GEL 160X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180236",
+"descrizione": "SUPER SILVER GEL 160X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180243",
+"descrizione": "SUPER SILVER GEL 170X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180250",
+"descrizione": "SUPER SILVER GEL 170X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180267",
+"descrizione": "SUPER SILVER GEL 180X190",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030180274",
+"descrizione": "SUPER SILVER GEL 180X200",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "00002",
+"descrizione": "H30!! NEW MEMO MOLLE + ETIC.PERS. + RIV.ZIP MEC + DPSTV PIE + CRT QU 160X190X30",
+"categoria": "Materassi",
+"peso": 20.0
+},
+{
+"codice": "00001",
+"descrizione": "NEW MEMO MOLLE+ETIC.PERS.+RIV.ZIP MEC/ROSSO/DAINET +DPSTV PIE+CRT QU 160X190X26",
+"categoria": "Materassi",
+"peso": 0.0
+},
+{
+"codice": "8050030188546",
+"descrizione": "CUSCINO TULIPANO OMAGGIO",
+"categoria": "Cuscini",
+"peso": 0.0
+},
+{
+"codice": "8050030188553",
+"descrizione": "CUSCINO FIOCCO OMAGGIO",
+"categoria": "Cuscini",
+"peso": 0.0
+},
+{
+"codice": "8050030188560",
+"descrizione": "MATERASSO NEW MEMO MOLLE 80X90 + RETE IRON 80X190 + CUSCINO FIOCCO",
+"categoria": "Kit Sonno",
+"peso": 30.0
+},
+{
+"codice": "8050030188577",
+"descrizione": "MATERASSO NEW MEMO MOLLE 120X90 + RETE IRON 120X190 + CUSCINO FIOCCO",
+"categoria": "Kit Sonno",
+"peso": 30.0
+},
+{
+"codice": "8050030188584",
+"descrizione": "MATERASSO NEW MEMO MOLLE 160X90 + RETE IRON 160X190 + CUSCINI FIOCCO",
+"categoria": "Kit Sonno",
+"peso": 30.0
+},
+{
+"codice": "8050030188591",
+"descrizione": "MATERASSO AIR ALOE 80X190 + RETE IRON 80X190 + CUSCINO FIOCCO",
+"categoria": "Kit Sonno",
+"peso": 30.0
+},
+{
+"codice": "8050030188607",
+"descrizione": "MATERASSO AIR ALOE 120X190 + RETE IRON 120X190 + CUSCINO FIOCCO",
+"categoria": "Kit Sonno",
+"peso": 30.0
+},
+{
+"codice": "8050030188614",
+"descrizione": "MATERASSO AIR ALOE 160X190 + RETE IRON 160X190 + CUSCINI FIOCCO",
+"categoria": "Kit Sonno",
+"peso": 30.0
+},
+{
+"codice": "8050030188621",
+"descrizione": "MATERASSO INFINITY MEMORY 80X190 + RETE IRON 80X190 + CUSCINO FIOCCO",
+"categoria": "Kit Sonno",
+"peso": 30.0
+},
+{
+"codice": "8050030188638",
+"descrizione": "MATERASSO INFINITY MEMORY 120X190 + RETE IRON 120X190 + CUSCINO FIOCCO",
+"categoria": "Kit Sonno",
+"peso": 30.0
+},
+{
+"codice": "8050030188645",
+"descrizione": "MATERASSO INFINITY MEMORY 160X190 + RETE IRON 160X190 + CUSCINI FIOCCO",
+"categoria": "Kit Sonno",
+"peso": 30.0
+},
+{
+"codice": "8050030188652",
+"descrizione": "MATERASSO FIVE COMFORT 80X190 + RETE IRON 80X190 + CUSCINO FIOCCO",
+"categoria": "Kit Sonno",
+"peso": 30.0
+},
+{
+"codice": "8050030188669",
+"descrizione": "MATERASSO FIVE COMFORT 120X190 + RETE IRON 120X190 + CUSCINO FIOCCO",
+"categoria": "Kit Sonno",
+"peso": 30.0
+},
+{
+"codice": "8050030188676",
+"descrizione": "MATERASSO FIVE COMFORT 160X190 + RETE IRON 160X190 + CUSCINI FIOCCO",
+"categoria": "Kit Sonno",
+"peso": 30.0
+}
+]
