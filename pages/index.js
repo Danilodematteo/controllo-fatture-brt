@@ -323,6 +323,7 @@ export default function Home() {
   async function bulkToggleResolved(keys, value) {
     setResolved((r) => { const next = { ...r }; keys.forEach((k) => { next[k] = value; }); return next; });
     await fetch("/api/resolved", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ keys, value }) });
+    showToast(value ? `${keys.length} righe segnate come risolte` : `${keys.length} righe riaperte`);
   }
 
   async function saveTariff() {
