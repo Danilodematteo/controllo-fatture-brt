@@ -49,6 +49,7 @@ export default function Home() {
   const [pesoBatch, setPesoBatch] = useState(null); // {done, total, running}
   const [mostraRisolte, setMostraRisolte] = useState(false);
   const [expandedIds, setExpandedIds] = useState({});
+  const [archBatch, setArchBatch] = useState({}); // invoiceId -> {done,total,running}
   function toggleExpand(id) {
     setExpandedIds((e) => ({ ...e, [id]: !e[id] }));
   }
@@ -318,6 +319,79 @@ export default function Home() {
     if (!confirm("Eliminare questa fattura dall'archivio?")) return;
     await fetch(`/api/invoices/${id}`, { method: "DELETE" });
     setInvoices((inv) => inv.filter((i) => i.id !== id));
+  }
+
+  async function persistInvoiceRows(invId) {
+    setInvoices((current) => {
+      const inv = current.find((i) => i.id === invId);
+      if (inv) {
+        fetch(`/api/invoices/${invId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ rows: inv.rows }) });
+      }
+      return current;
+    });
+  }
+
+  function applyPesoRealeArchivio(invId, rowId, pesoReale, prodottoListino, manuale, dettaglio) {
+    setInvoices((invs) => invs.map((inv) => {
+      if (inv.id !== invId) return inv;
+      return {
+        ...inv, rows: inv.rows.map((r) => {
+          if (r.id !== rowId) return r;
+          const attesoReale = calcAtteso(pesoReale, r.zona, tariff);
+          const diffReale = r.fatturato - attesoReale;
+          return {
+            ...r, pesoReale, prodottoListino, pesoManuale: !!manuale, pesoStato: "trovato",
+            prodottiDettaglio: dettaglio || null,
+            pesoDichiarato: r.pesoDichiarato ?? r.peso, attesoDichiarato: r.attesoDichiarato ?? r.atteso,
+            atteso: attesoReale, diff: diffReale, flag: diffReale >= 0.5,
+          };
+        }),
+      };
+    }));
+  }
+
+  async function verificaPesoArchivio(invId, rowId, nominativo, dataFattura) {
+    setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoStato: "loading" } : r) }));
+    if (!nominativo) {
+      setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r) }));
+      return;
+    }
+    try {
+      const res = await fetch("/api/woo/find-order", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nominativo, dataSpedizione: dataFattura }),
+      });
+      const data = await res.json();
+      const ordine = (data.risultati || [])[0];
+      const prodotti = ordine ? ordine.prodotti.filter((p) => p.pesoTrovato) : [];
+      if (!prodotti.length) {
+        setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r) }));
+        return;
+      }
+      const pesoTotale = prodotti.reduce((s, p) => s + (p.pesoReale || 0) * (p.quantita || 1), 0);
+      const label = prodotti.length === 1 ? prodotti[0].prodottoListino : `${prodotti.length} prodotti — ${fmt2(pesoTotale)} kg totali`;
+      applyPesoRealeArchivio(invId, rowId, pesoTotale, label, false, prodotti);
+    } catch (e) {
+      setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r) }));
+    }
+  }
+
+  async function verificaTuttiIPesiArchivio(inv) {
+    const lista = inv.rows.filter((r) => r.nominativo && r.pesoStato !== "trovato");
+    if (!lista.length) { showToast("Non ci sono righe da verificare in questa fattura"); return; }
+    setArchBatch((b) => ({ ...b, [inv.id]: { done: 0, total: lista.length, running: true } }));
+    let idx = 0;
+    const worker = async () => {
+      while (idx < lista.length) {
+        const row = lista[idx++];
+        await verificaPesoArchivio(inv.id, row.id, row.nominativo, inv.data);
+        setArchBatch((b) => ({ ...b, [inv.id]: { ...b[inv.id], done: b[inv.id].done + 1 } }));
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(4, lista.length) }, worker));
+    setArchBatch((b) => ({ ...b, [inv.id]: { ...b[inv.id], running: false } }));
+    await persistInvoiceRows(inv.id);
+    showToast("Verifica pesi conclusa e salvata");
   }
 
   async function toggleResolved(key, value) {
@@ -785,19 +859,87 @@ export default function Home() {
                       </div>
                       {aperta && (
                       <div style={{ marginTop: 12 }}>
+                      {(() => {
+                        const daVerificare = inv.rows.filter((r) => r.nominativo && r.pesoStato !== "trovato").length;
+                        const batch = archBatch[inv.id];
+                        return (
+                          <div style={{ marginBottom: 10 }}>
+                            {daVerificare > 0 && !batch?.running && (
+                              <button className="btn secondary" onClick={() => verificaTuttiIPesiArchivio(inv)}>
+                                Verifica pesi mancanti ({daVerificare})
+                              </button>
+                            )}
+                            {batch?.running && (
+                              <div className="card blue" style={{ padding: 12 }}>
+                                <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Verifica pesi in corso… — {batch.done}/{batch.total}</div>
+                                <div style={{ height: 6, background: "var(--blue-mid)", borderRadius: 4, overflow: "hidden" }}>
+                                  <div style={{ height: "100%", width: `${(batch.done / batch.total) * 100}%`, background: "var(--blue)", transition: "width .3s" }}></div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
                       <div className="table-wrap">
                         <table>
-                          <thead><tr><th>Sped.</th><th>Cliente</th><th>CAP</th><th>Zona</th><th className="num">Peso</th><th className="num">Fatturato</th><th className="num">Atteso</th><th className="num">Diff.</th><th>Tipo</th></tr></thead>
+                          <thead><tr>
+                            <th>Sped.</th><th>Cliente</th><th>Zona</th>
+                            <th className="num">Peso BRT</th><th>Peso reale</th><th className="num">Diff. peso</th>
+                            <th className="num">Pagato</th><th className="num">Dovuto</th><th className="num">Da recuperare</th><th>Tipo</th>
+                          </tr></thead>
                           <tbody>
-                            {inv.rows.map((r) => (
+                            {inv.rows.map((r) => {
+                              const pesoBrt = r.pesoDichiarato ?? r.peso;
+                              const diffPeso = r.pesoReale != null ? pesoBrt - r.pesoReale : null;
+                              const mk = inv.id + "::" + r.id;
+                              return (
                               <tr key={r.id} className={r.flag ? "flag" : ""}>
                                 <td>{r.sped}{r.pianoAmount ? <span className="pill blue"> P</span> : ""}</td>
-                                <td>{r.nominativo || "—"}</td><td>{r.cap || "—"}</td><td>{r.zona}</td>
-                                <td className="num">{fmt2(r.peso)}</td><td className="num">{fmt(r.fatturato)}</td>
-                                <td className="num">{fmt(r.atteso)}</td><td className="num">{fmt2(r.diff)}</td>
+                                <td>{r.nominativo || "—"}</td>
+                                <td>{r.zona}</td>
+                                <td className="num">{fmt2(pesoBrt)} kg</td>
+                                <td style={{ minWidth: 170 }}>
+                                  {(!r.pesoStato || r.pesoStato === "idle") && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>—</span>}
+                                  {r.pesoStato === "loading" && <span className="mini-spinner"></span>}
+                                  {r.pesoStato === "nontrovato" && (
+                                    <div style={{ display: "flex", gap: 6 }}>
+                                      <button className="btn-tiny" onClick={() => verificaPesoArchivio(inv.id, r.id, r.nominativo, inv.data).then(() => persistInvoiceRows(inv.id))}>Riprova</button>
+                                      <button className="btn-tiny" onClick={() => toggleManualPick(mk)}>{manualOpenId === mk ? "annulla" : "Cerca a mano"}</button>
+                                    </div>
+                                  )}
+                                  {r.pesoStato === "trovato" && (
+                                    <div className="peso-cell" style={{ alignItems: "flex-start", textAlign: "left" }}>
+                                      <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                                        <b style={{ fontSize: 14 }}>{fmtKg(r.pesoReale)}</b>
+                                        {r.pesoManuale && <span className="pill grey">manuale</span>}
+                                        <button className="link" style={{ fontSize: 10.5 }} onClick={() => toggleManualPick(mk)}>{manualOpenId === mk ? "annulla" : "cambia"}</button>
+                                      </div>
+                                      <small style={{ color: "var(--ink-soft)" }}>{r.prodottoListino}</small>
+                                    </div>
+                                  )}
+                                  {manualOpenId === mk && (
+                                    <div style={{ position: "relative", marginTop: 4 }}>
+                                      <input value={manualQuery} onChange={(e) => setManualQuery(e.target.value)} placeholder="cerca materasso…" style={{ width: 150 }} autoFocus />
+                                      {manualQuery.trim().length >= 2 && (
+                                        <div style={{ position: "absolute", zIndex: 20, background: "#fff", border: "1px solid var(--line)", borderRadius: 8, maxHeight: 180, overflowY: "auto", width: 240, boxShadow: "0 4px 12px rgba(0,0,0,.08)" }}>
+                                          {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).slice(0, 8).map((p) => (
+                                            <div key={pesoKey(p)} style={{ padding: "6px 10px", fontSize: 11.5, cursor: "pointer", borderBottom: "1px solid var(--line)" }}
+                                              onClick={() => { applyPesoRealeArchivio(inv.id, r.id, p.peso, p.descrizione, true); persistInvoiceRows(inv.id); setManualOpenId(null); setManualQuery(""); }}>
+                                              {p.descrizione} — <b>{p.peso} kg</b>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </td>
+                                <td className="num">{diffPeso != null ? <b>{fmt2(diffPeso)} kg</b> : "—"}</td>
+                                <td className="num">{fmt(r.fatturato)}€</td>
+                                <td className="num">{fmt(r.atteso)}€</td>
+                                <td className="num">{r.flag ? <span className="pill rust">+{fmt2(r.diff)}€</span> : `${fmt2(r.diff)}€`}</td>
                                 <td>{r.tipo ? <span className="pill grey">{tipoLabel(r.tipo)}</span> : "—"}</td>
                               </tr>
-                            ))}
+                            );})}
                           </tbody>
                         </table>
                       </div>
