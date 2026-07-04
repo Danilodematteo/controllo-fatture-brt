@@ -755,11 +755,12 @@ export default function Home() {
             {[
               ["1", "Carica la fattura", "Vai su \"+ Aggiungi fattura\" e carica il PDF che arriva da BRT via mail. L'app legge da sola numero fattura, data e tutte le spedizioni."],
               ["2", "Controlla le righe rosse", "Prezzo più alto di almeno 0,50€ rispetto al tariffario. Correggi o aggiungi a mano se qualcosa non è stato letto bene."],
-              ["3", "Verifica il peso reale", "Sulle righe anomale, premi \"Verifica\" (o il pulsante in blocco) per confrontare il peso dichiarato da BRT con il peso vero del prodotto acquistato, preso dal listino."],
-              ["4", "Spunta ritardi, giacenze e consegne al piano", "Nella colonna \"Tipo\", confrontando col gestionale."],
-              ["5", "Salva in archivio", "La trovi sempre nella tab \"Archivio\", raggruppata per settimana."],
-              ["6", "Genera la mail per Daniele", "Scegli la fattura, premi \"Genera testo\", copia o apri direttamente in Mail."],
-              ["7", "Quando arriva la nota di credito", "Vai su \"Da verificare\" e spunta \"Nota credito ricevuta\"."],
+              ["3", "Verifica il peso reale", "Sulle righe anomale, premi \"Verifica\" (o il pulsante in blocco \"Verifica peso reale delle righe anomale\"). L'app cerca l'ordine del cliente su WooCommerce, trova il prodotto comprato e ne mostra il peso vero, preso dal listino — così vedi subito se BRT ha dichiarato un peso più alto di quello reale."],
+              ["4", "Se un prodotto risulta \"non trovato\"", "Vai sulla tab \"Pesi prodotti\", cerca il nome del materasso e aggiungilo (o correggine il peso se è sbagliato). Da quel momento l'app lo riconoscerà sempre."],
+              ["5", "Spunta ritardi, giacenze e consegne al piano", "Nella colonna \"Tipo\", confrontando col gestionale."],
+              ["6", "Salva in archivio", "La trovi sempre nella tab \"Archivio\", raggruppata per settimana."],
+              ["7", "Genera la mail per Daniele", "Scegli la fattura, premi \"Genera testo\", copia o apri direttamente in Mail."],
+              ["8", "Quando arriva la nota di credito", "Vai su \"Da verificare\" e spunta \"Nota credito ricevuta\"."],
             ].map(([num, title, text]) => (
               <div className="guide-step" key={num}>
                 <div className="num">{num}</div>
