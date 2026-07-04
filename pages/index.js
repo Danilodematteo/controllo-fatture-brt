@@ -213,6 +213,7 @@ export default function Home() {
     };
     await Promise.all(Array.from({ length: Math.min(CONCORRENZA_VERIFICA, lista.length) }, worker));
     setPesoBatch((b) => (b ? { ...b, running: false } : b));
+    showToast("Verifica pesi conclusa — guarda il riepilogo sopra la tabella");
   }
 
   function toggleManualPick(rowId) {
@@ -511,9 +512,21 @@ export default function Home() {
                         <div style={{ height: "100%", width: `${(pesoBatch.done / pesoBatch.total) * 100}%`, background: "var(--blue)", transition: "width .3s" }}></div>
                       </div>
                       {pesoBatch.running && <p className="sec-note" style={{ marginTop: 8, marginBottom: 0 }}>Può richiedere diversi minuti su fatture grandi — puoi continuare a lavorare, si aggiorna da sola.</p>}
-                      {!pesoBatch.running && draftRows.some((r) => r.pesoStato === "nontrovato") && (
-                        <button className="btn secondary" style={{ marginTop: 10 }} onClick={riprovaNonTrovate}>Riprova le righe non trovate</button>
-                      )}
+                      {!pesoBatch.running && (() => {
+                        const trovate = draftRows.filter((r) => r.pesoStato === "trovato").length;
+                        const nonTrovate = draftRows.filter((r) => r.pesoStato === "nontrovato").length;
+                        const anomalie = draftRows.filter((r) => r.flag).length;
+                        const totaleDaRecuperare = draftRows.filter((r) => r.flag).reduce((s, r) => s + r.diff, 0);
+                        return (
+                          <div style={{ marginTop: 10 }}>
+                            <p className="sec-note" style={{ marginBottom: 8 }}>
+                              <b>{trovate}</b> pesi verificati, <b>{nonTrovate}</b> non trovati (cercali a mano se vuoi) —
+                              <b> {anomalie} spedizioni</b> con differenza da recuperare, per un totale di <b style={{ color: "var(--red)" }}>{fmt2(totaleDaRecuperare)}€</b>.
+                            </p>
+                            {nonTrovate > 0 && <button className="btn secondary" onClick={riprovaNonTrovate}>Riprova le righe non trovate</button>}
+                          </div>
+                        );
+                      })()}
                     </div>
                   )}
                   <div className="table-wrap">
@@ -542,12 +555,22 @@ export default function Home() {
                                 {r.pesoStato === "idle" && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>in coda…</span>}
                                 {r.pesoStato === "loading" && <span className="mini-spinner"></span>}
                                 {r.pesoStato === "nontrovato" && (
-                                  <button className="btn-tiny" onClick={() => verificaPeso(r.id, r.nominativo)}>Riprova</button>
+                                  <div style={{ display: "flex", gap: 6 }}>
+                                    <button className="btn-tiny" onClick={() => verificaPeso(r.id, r.nominativo)}>Riprova</button>
+                                    <button className="btn-tiny" onClick={() => toggleManualPick(r.id)}>
+                                      {manualOpenId === r.id ? "annulla" : "Cerca a mano"}
+                                    </button>
+                                  </div>
                                 )}
                                 {r.pesoStato === "trovato" && (
                                   <div className="peso-cell" style={{ alignItems: "flex-start", textAlign: "left" }}>
-                                    <b style={{ fontSize: 14 }}>{fmtKg(r.pesoReale)}</b>
-                                    {r.pesoManuale && <span className="pill grey">manuale</span>}
+                                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                      <b style={{ fontSize: 14 }}>{fmtKg(r.pesoReale)}</b>
+                                      {r.pesoManuale && <span className="pill grey">manuale</span>}
+                                      <button className="link" style={{ fontSize: 10.5 }} onClick={() => toggleManualPick(r.id)}>
+                                        {manualOpenId === r.id ? "annulla" : "cambia"}
+                                      </button>
+                                    </div>
                                     {r.prodottiDettaglio && r.prodottiDettaglio.length > 1 ? (
                                       <details style={{ fontSize: 11 }}>
                                         <summary style={{ cursor: "pointer", color: "var(--ink-soft)" }}>{r.prodottiDettaglio.length} prodotti</summary>
@@ -562,11 +585,7 @@ export default function Home() {
                                     )}
                                   </div>
                                 )}
-                                <div>
-                                  <button className="link" style={{ fontSize: 10.5 }} onClick={() => toggleManualPick(r.id)}>
-                                    {manualOpenId === r.id ? "annulla" : "ordine dal gestionale? seleziona a mano"}
-                                  </button>
-                                  {manualOpenId === r.id && (
+                                {(manualOpenId === r.id) && (
                                     <div style={{ position: "relative", marginTop: 4 }}>
                                       <input value={manualQuery} onChange={(e) => setManualQuery(e.target.value)}
                                         placeholder="cerca materasso…" style={{ width: 160 }} autoFocus />
@@ -585,7 +604,6 @@ export default function Home() {
                                       )}
                                     </div>
                                   )}
-                                </div>
                               </td>
                               <td className="num">{diffPeso != null ? <b>{fmt2(diffPeso)} kg</b> : "—"}</td>
                               <td className="num">{fmt(r.fatturato)}€</td>
