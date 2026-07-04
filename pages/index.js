@@ -391,11 +391,15 @@ export default function Home() {
 
   function formatLine(inv, r) {
     const chi = r.nominativo ? ` — ${r.nominativo}` : "";
-    return `Fattura ${inv.numero} — Spedizione ${r.sped}${chi} (${r.zona}, CAP ${r.cap || "—"}, ${fmt2(r.peso)} kg)\nFatturato: ${fmt(r.fatturato)}€ — Atteso da contratto: ${fmt(r.atteso)}€ — Differenza: +${fmt2(r.diff)}€`;
+    const pesoBrt = r.pesoDichiarato ?? r.peso;
+    const pesoInfo = r.pesoReale != null
+      ? `Peso dichiarato: ${fmt2(pesoBrt)}kg — Peso reale: ${fmt2(r.pesoReale)}kg`
+      : `Peso dichiarato: ${fmt2(pesoBrt)}kg`;
+    return `Spedizione ${r.sped}${chi} (${r.zona})\n${pesoInfo}\nPagato: ${fmt(r.fatturato)}€ — Dovuto: ${fmt(r.atteso)}€ — Da recuperare: ${fmt2(r.diff)}€`;
   }
   function formatTag(inv, r) {
     const chi = r.nota || r.nominativo || "";
-    return `${r.sped}${chi ? " " + chi : ""} (fattura ${inv.numero})`;
+    return `- ${r.sped}${chi ? " " + chi : ""} (fattura ${inv.numero})`;
   }
 
   function generateEmail(invoicesOverride) {
@@ -410,11 +414,12 @@ export default function Home() {
     }
 
     const priceLines = [], ritardoLines = [], giacenzaLines = [], pianoLines = [];
+    let totaleDaRecuperare = 0;
     relevant.forEach((inv) => {
       inv.rows.forEach((r) => {
         const key = inv.id + "::" + r.id;
         if (resolved[key]) return;
-        if (r.flag) priceLines.push(formatLine(inv, r));
+        if (r.flag) { priceLines.push(formatLine(inv, r)); totaleDaRecuperare += r.diff; }
         if (r.tipo === "ritardo" || r.tipo === "annullata") ritardoLines.push(formatTag(inv, r));
         if (r.tipo === "giacenza") giacenzaLines.push(formatTag(inv, r));
         if (r.tipo === "piano_non_eseguita" || r.tipo === "piano_non_richiesta") pianoLines.push(formatTag(inv, r));
@@ -425,11 +430,20 @@ export default function Home() {
       showToast("Nessuna riga da segnalare");
       return;
     }
-    let body = "ciao Daniele,\n";
-    if (priceLines.length) body += `\nAnche qui c'è da rivedere:\n\n${priceLines.join("\n\n")}\n`;
-    if (ritardoLines.length) body += `\nda stornare per ritardo o annullamenti:\n\n${ritardoLines.join("\n")}\n`;
-    if (giacenzaLines.length) body += `\ngiacenze:\n\n${giacenzaLines.join("\n")}\n`;
-    if (pianoLines.length) body += `\nconsegne al piano non eseguite o non richieste da noi:\n\n${pianoLines.join("\n")}\n`;
+
+    const nomiFatture = [...new Set(relevant.map((i) => i.numero))];
+    const introFattura = nomiFatture.length === 1
+      ? `ho controllato la fattura ${nomiFatture[0]}${relevant[0]?.data ? ` del ${relevant[0].data}` : ""} e ci sono da rivedere queste spedizioni`
+      : `ho controllato le fatture ${nomiFatture.join(", ")} e ci sono da rivedere queste spedizioni`;
+
+    let body = `ciao Daniele,\n${introFattura}:\n`;
+    if (priceLines.length) body += `\n${priceLines.join("\n\n")}\n`;
+    if (ritardoLines.length) body += `\nDa stornare per ritardo o annullamento:\n${ritardoLines.join("\n")}\n`;
+    if (giacenzaLines.length) body += `\nGiacenze:\n${giacenzaLines.join("\n")}\n`;
+    if (pianoLines.length) body += `\nConsegne al piano non eseguite o non richieste da noi:\n${pianoLines.join("\n")}\n`;
+    if (priceLines.length) {
+      body += `\nRiepilogo: ${priceLines.length} spedizioni da rivedere, totale da recuperare ${fmt2(totaleDaRecuperare)}€.\n`;
+    }
     body += "\nAttendiamo nota credito\ngrazie saluti";
     setEmailText(body);
     setEmailSubject(subject);
@@ -598,21 +612,59 @@ export default function Home() {
                                 {r.pesoStato === "idle" && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>in coda…</span>}
                                 {r.pesoStato === "loading" && <span className="mini-spinner"></span>}
                                 {r.pesoStato === "nontrovato" && (
-                                  <div style={{ display: "flex", gap: 6 }}>
+                                  <div style={{ display: "flex", gap: 6, alignItems: "flex-start", flexWrap: "wrap" }}>
                                     <button className="btn-tiny" onClick={() => verificaPeso(r.id, r.nominativo)}>Riprova</button>
                                     <button className="btn-tiny" onClick={() => toggleManualPick(r.id)}>
                                       {manualOpenId === r.id ? "annulla" : "Cerca a mano"}
                                     </button>
+                                    {manualOpenId === r.id && (
+                                      <div style={{ position: "relative" }}>
+                                        <input value={manualQuery} onChange={(e) => setManualQuery(e.target.value)}
+                                          placeholder="cerca materasso…" style={{ width: 150 }} autoFocus />
+                                        {manualQuery.trim().length >= 2 && (
+                                          <div style={{ position: "absolute", zIndex: 20, background: "#fff", border: "1px solid var(--line)", borderRadius: 8, maxHeight: 180, overflowY: "auto", width: 240, boxShadow: "0 4px 12px rgba(0,0,0,.08)" }}>
+                                            {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).slice(0, 8).map((p) => (
+                                              <div key={pesoKey(p)} style={{ padding: "6px 10px", fontSize: 11.5, cursor: "pointer", borderBottom: "1px solid var(--line)" }}
+                                                onClick={() => pickManualProduct(r.id, p)}>
+                                                {p.descrizione} — <b>{p.peso} kg</b>
+                                              </div>
+                                            ))}
+                                            {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).length === 0 && (
+                                              <div style={{ padding: "6px 10px", fontSize: 11.5, color: "var(--ink-soft)" }}>Nessun prodotto trovato — aggiungilo prima in "Pesi prodotti".</div>
+                                            )}
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
                                   </div>
                                 )}
                                 {r.pesoStato === "trovato" && (
                                   <div className="peso-cell" style={{ alignItems: "flex-start", textAlign: "left" }}>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
                                       <b style={{ fontSize: 14 }}>{fmtKg(r.pesoReale)}</b>
                                       {r.pesoManuale && <span className="pill grey">manuale</span>}
                                       <button className="link" style={{ fontSize: 10.5 }} onClick={() => toggleManualPick(r.id)}>
                                         {manualOpenId === r.id ? "annulla" : "cambia"}
                                       </button>
+                                      {manualOpenId === r.id && (
+                                        <div style={{ position: "relative" }}>
+                                          <input value={manualQuery} onChange={(e) => setManualQuery(e.target.value)}
+                                            placeholder="cerca materasso…" style={{ width: 150 }} autoFocus />
+                                          {manualQuery.trim().length >= 2 && (
+                                            <div style={{ position: "absolute", zIndex: 20, background: "#fff", border: "1px solid var(--line)", borderRadius: 8, maxHeight: 180, overflowY: "auto", width: 240, boxShadow: "0 4px 12px rgba(0,0,0,.08)" }}>
+                                              {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).slice(0, 8).map((p) => (
+                                                <div key={pesoKey(p)} style={{ padding: "6px 10px", fontSize: 11.5, cursor: "pointer", borderBottom: "1px solid var(--line)" }}
+                                                  onClick={() => pickManualProduct(r.id, p)}>
+                                                  {p.descrizione} — <b>{p.peso} kg</b>
+                                                </div>
+                                              ))}
+                                              {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).length === 0 && (
+                                                <div style={{ padding: "6px 10px", fontSize: 11.5, color: "var(--ink-soft)" }}>Nessun prodotto trovato — aggiungilo prima in "Pesi prodotti".</div>
+                                              )}
+                                            </div>
+                                          )}
+                                        </div>
+                                      )}
                                     </div>
                                     {r.prodottiDettaglio && r.prodottiDettaglio.length > 1 ? (
                                       <details style={{ fontSize: 11 }}>
@@ -628,25 +680,6 @@ export default function Home() {
                                     )}
                                   </div>
                                 )}
-                                {(manualOpenId === r.id) && (
-                                    <div style={{ position: "relative", marginTop: 4 }}>
-                                      <input value={manualQuery} onChange={(e) => setManualQuery(e.target.value)}
-                                        placeholder="cerca materasso…" style={{ width: 160 }} autoFocus />
-                                      {manualQuery.trim().length >= 2 && (
-                                        <div style={{ position: "absolute", zIndex: 20, background: "#fff", border: "1px solid var(--line)", borderRadius: 8, maxHeight: 180, overflowY: "auto", width: 240, boxShadow: "0 4px 12px rgba(0,0,0,.08)" }}>
-                                          {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).slice(0, 8).map((p) => (
-                                            <div key={pesoKey(p)} style={{ padding: "6px 10px", fontSize: 11.5, cursor: "pointer", borderBottom: "1px solid var(--line)" }}
-                                              onClick={() => pickManualProduct(r.id, p)}>
-                                              {p.descrizione} — <b>{p.peso} kg</b>
-                                            </div>
-                                          ))}
-                                          {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).length === 0 && (
-                                            <div style={{ padding: "6px 10px", fontSize: 11.5, color: "var(--ink-soft)" }}>Nessun prodotto trovato — aggiungilo prima in "Pesi prodotti".</div>
-                                          )}
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
                               </td>
                               <td className="num">{diffPeso != null ? <b>{fmt2(diffPeso)} kg</b> : "—"}</td>
                               <td className="num">{fmt(r.fatturato)}€</td>
