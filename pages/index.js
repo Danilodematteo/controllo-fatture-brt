@@ -1163,14 +1163,15 @@ export default function Home() {
             <h3 style={{ fontSize: 15, fontWeight: 700, margin: "8px 0 14px" }}>Il percorso settimanale</h3>
             {[
               ["1", "Carica la fattura", "Vai su \"+ Aggiungi fattura\" e carica il PDF che arriva da BRT via mail. L'app legge da sola numero fattura, data e tutte le spedizioni (numero, cliente, CAP, peso dichiarato, importo)."],
-              ["2", "Controlla le righe rosse", "Sono le spedizioni con un prezzo più alto di almeno 0,50€ rispetto a quanto previsto dal tariffario contrattuale, calcolato sul peso che BRT ha dichiarato. Se qualche riga non è stata letta bene dal PDF, correggila o aggiungila a mano con \"+ Aggiungi o correggi una riga a mano\"."],
-              ["3", "Il peso reale si verifica da sola", "Appena carichi il PDF, l'app parte in automatico e controlla il peso reale di ogni riga: cerca l'ordine del cliente su WooCommerce, trova il materasso comprato e lo confronta col listino pesi. Su fatture grandi (300+ righe) può richiedere anche 10-15 minuti perché il sito risponde lentamente — vedi una barra di avanzamento e puoi continuare a lavorare nel frattempo, si aggiorna da sola."],
-              ["4", "Ordini fatti nel gestionale (non sul sito)", "Se un cliente ha ordinato direttamente tramite il gestionale invece che dal sito, l'app non lo trova su WooCommerce e la riga resta \"non trovata\". In questo caso clicca \"ordine dal gestionale? seleziona a mano\" sotto la riga, cerca il materasso giusto nella lista che compare e selezionalo: il peso reale viene impostato subito, con l'etichetta \"manuale\" per ricordarti che non è stato trovato in automatico."],
+              ["2", "Il peso reale si verifica da sola", "Appena carichi il PDF, l'app parte in automatico e controlla il peso reale di ogni riga: cerca l'ordine del cliente su WooCommerce, trova il materasso comprato e lo confronta col listino pesi. Su fatture grandi (300+ righe) può richiedere anche 10-15 minuti — vedi una barra di avanzamento e puoi continuare a lavorare nel frattempo."],
+              ["3", "Guarda le righe rosse", "Sono le spedizioni dove, calcolando la tariffa sul peso reale del prodotto (non su quello dichiarato da BRT), risulta una differenza di almeno 0,50€ da recuperare. Le colonne \"Peso BRT\", \"Peso reale\", \"Diff. peso\", \"Pagato\", \"Dovuto\" e \"Da recuperare\" ti mostrano tutti i numeri per capire subito la situazione, senza calcoli a mente."],
+              ["4", "Ordini fatti nel gestionale (non sul sito)", "Se un cliente ha ordinato direttamente tramite il gestionale invece che dal sito, l'app non trova l'ordine su WooCommerce e la riga resta \"non trovata\". In questo caso clicca \"Cerca a mano\" sotto la riga, cerca il materasso giusto nella lista che compare e selezionalo: il peso reale viene impostato subito, con l'etichetta \"manuale\" per ricordarti che non è stato trovato in automatico. Lo stesso pulsante \"cambia\" ti permette di correggere anche un abbinamento già trovato, se non è quello giusto."],
               ["5", "Se un prodotto risulta introvabile anche a mano", "Vai sulla tab \"Pesi prodotti\", cerca il nome del materasso: se manca dal listino, aggiungilo tu con nome e peso. Da quel momento sarà sempre disponibile, sia per la ricerca automatica che per quella manuale."],
               ["6", "Spunta ritardi, giacenze e consegne al piano", "Nella colonna \"Tipo\" di ogni riga, confrontando col gestionale (vedi sotto \"Cosa significa ogni etichetta\")."],
-              ["7", "Salva in archivio", "La trovi sempre nella tab \"Archivio\", raggruppata per settimana."],
-              ["8", "Genera la mail per Daniele", "Vai su \"Email a Daniele\", scegli la fattura (o \"tutte le anomalie non risolte\"), premi \"Genera testo\": esce già divisa nelle sezioni giuste (prezzi da rivedere, ritardi/annullamenti, giacenze, consegne al piano). Copiala o aprila direttamente in Mail."],
-              ["9", "Quando arriva la nota di credito", "Vai su \"Da verificare\" e spunta \"Nota credito ricevuta\" sulla riga risolta. Sparisce dal contatore delle cose in sospeso."],
+              ["7", "Salva ed eventualmente genera subito la mail", "In fondo trovi \"Salva fattura in archivio\", oppure — se ci sono anomalie — anche \"Scarica CSV anomalie\" (per tenerne una copia) e \"Salva e genera mail per Daniele\", che fa tutto in un click e ti porta già sulla tab Email con il testo pronto."],
+              ["8", "Genera la mail per Daniele (in qualsiasi momento)", "Vai su \"Email a Daniele\", scegli la fattura (o \"tutte le anomalie non risolte\"), premi \"Genera testo\": esce già con l'oggetto giusto, il numero fattura, tutte le sezioni (prezzi da rivedere, ritardi/annullamenti, giacenze, consegne al piano) e il totale da recuperare in fondo."],
+              ["9", "Invia dalla webmail", "Premi \"Apri in Mail (webmail)\" — si apre Roundcube con destinatario, oggetto e testo già compilati. Rileggi e premi Invia tu stessa: l'app non manda mai la mail da sola."],
+              ["10", "Quando arriva la nota di credito", "Vai su \"Da verificare\", apri la fattura giusta e spunta \"Nota credito ricevuta\" sulla riga risolta (o \"tutte\" per chiuderle in blocco). Sparisce dal conteggio delle cose in sospeso."],
             ].map(([num, title, text]) => (
               <div className="guide-step" key={num}>
                 <div className="num">{num}</div>
@@ -1182,9 +1183,9 @@ export default function Home() {
             <p className="sec-note">
               BRT può dichiarare il peso che vuole (anche gonfiato per via del calcolo volumetrico) — a voi interessa pagare la tariffa giusta
               per il peso vero del prodotto spedito. Per questo, appena l'app trova il peso reale di una spedizione (in automatico o a mano),
-              ricalcola da sola quanto avreste dovuto pagare sul peso vero e confronta con quanto vi hanno fatturato: quella è l'anomalia che conta,
-              non il confronto col peso dichiarato da BRT (che resta visibile solo come riferimento). Se un ordine ha più prodotti (es. materasso +
-              rete + cuscini), l'app ti chiede quale corrisponde a quella specifica spedizione, invece di sommarli alla cieca.
+              ricalcola da sola quanto avreste dovuto pagare sul peso vero e confronta con quanto vi hanno fatturato: quella è l'anomalia che conta.
+              Il peso dichiarato da BRT resta comunque visibile in ogni riga come riferimento. Se un ordine ha più prodotti (es. 2 materassi +
+              una rete), l'app li somma tutti da sola: una spedizione può contenere più pezzi insieme.
             </p>
 
             <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Cosa significa ogni etichetta "Tipo"</h3>
@@ -1202,13 +1203,23 @@ export default function Home() {
               tocca a te controllare nel gestionale se quella consegna al piano era stata davvero richiesta ed eseguita (vedi etichette sopra).
             </p>
 
+            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Archivio e Da verificare — organizzati per fattura</h3>
+            <p className="sec-note">
+              Entrambe le tab mostrano le fatture <b>chiuse di default</b>: clicca sull'intestazione di una fattura (▸/▾) per aprirla e vedere le sue righe,
+              senza dover scorrere tutte le altre. Ogni fattura mostra un'etichetta — <b>"Tutto risolto ✓"</b> se avete già chiuso tutto,
+              oppure <b>"X ancora aperte"</b> se manca qualcosa. In "Da verificare" puoi anche spuntare "Nota credito ricevuta (tutte)" nell'intestazione
+              della tabella per chiudere in blocco tutte le righe di quella fattura, e poi deselezionare singolarmente quelle che vuoi tenere aperte.
+              Le fatture già completamente risolte spariscono dalla vista di "Da verificare" — c'è un interruttore in alto per farle ricomparire se vuoi
+              rivedere lo storico. Se una fattura salvata ha righe con peso non ancora verificato (es. hai salvato prima che finisse tutta la verifica),
+              in Archivio trovi il pulsante <b>"Verifica pesi mancanti"</b> per riprendere da dove si era fermata.
+            </p>
+
             <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Le altre tab</h3>
             <p className="sec-note">
-              <b>Archivio</b>: tutte le fatture salvate, raggruppate per settimana, sola lettura.<br />
-              <b>Da verificare</b>: elenco di tutte le righe con un'anomalia di prezzo o un'etichetta "Tipo" assegnata, con la spunta "Nota credito ricevuta" per tenere traccia di cosa è ancora aperto.<br />
               <b>Tariffario</b>: le tariffe di trasporto BRT per fascia di peso e zona — da aggiornare solo quando cambia il contratto (di solito a gennaio).<br />
               <b>Pesi prodotti</b>: il listino con nome e peso reale di ogni materasso, usato per il confronto. Cercalo, correggilo, aggiungine di nuovi liberamente.<br />
-              <b>Email a Daniele</b>: genera il testo della mail di contestazione, pronto da copiare o aprire in Mail.
+              <b>Email a Daniele</b>: genera il testo della mail di contestazione, con oggetto e numero fattura già scritti, pronta da copiare o da aprire
+              direttamente nella webmail aziendale (Roundcube) con destinatario e testo già compilati — l'invio resta sempre manuale, un click tuo.
             </p>
           </section>
         )}
