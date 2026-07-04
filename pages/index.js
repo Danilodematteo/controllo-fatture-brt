@@ -46,6 +46,8 @@ export default function Home() {
   const [fNumero, setFNumero] = useState("");
   const [fData, setFData] = useState("");
   const [draftRows, setDraftRows] = useState([]);
+  const [pesoBatch, setPesoBatch] = useState(null); // {done, total, running}
+  const verifyStopRef = useRef(false);
   const [unparsedLines, setUnparsedLines] = useState([]);
   const [status, setStatus] = useState("");
   const [reviewing, setReviewing] = useState(false);
@@ -130,6 +132,7 @@ export default function Home() {
     setUnparsedLines([]);
     setReviewing(true);
     setStatus("loading");
+    verifyStopRef.current = false;
     try {
       const res = await fetch("/api/parse-invoice", { method: "POST", body: file });
       const data = await res.json();
@@ -141,15 +144,15 @@ export default function Home() {
       setDraftRows(rows);
       setUnparsedLines(data.unparsed || []);
       setStatus(`ok:${rows.length}:${(data.unparsed || []).length}`);
+      verificaTuttiIPesi(rows); // parte da sola in background, non blocca l'interfaccia
     } catch (e) {
       setStatus("error");
     }
   }
 
-  async function verificaPeso(rowId) {
+  async function verificaPeso(rowId, nominativo) {
     setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "loading" } : r)));
-    const row = draftRows.find((r) => r.id === rowId);
-    if (!row || !row.nominativo) {
+    if (!nominativo) {
       setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r)));
       return;
     }
@@ -157,7 +160,7 @@ export default function Home() {
       const res = await fetch("/api/woo/find-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nominativo: row.nominativo, dataSpedizione: fData }),
+        body: JSON.stringify({ nominativo, dataSpedizione: fData }),
       });
       const data = await res.json();
       const ordine = (data.risultati || [])[0];
@@ -176,11 +179,32 @@ export default function Home() {
     }
   }
 
-  async function verificaPesiAnomalie() {
-    const daControllare = draftRows.filter((r) => r.flag && r.pesoStato === "idle");
-    for (const r of daControllare) {
-      await verificaPeso(r.id);
-    }
+  const CONCORRENZA_VERIFICA = 4;
+  async function verificaTuttiIPesi(rows, listaCustom) {
+    const lista = listaCustom || rows.filter((r) => r.nominativo);
+    if (!lista.length) return;
+    setPesoBatch({ done: 0, total: lista.length, running: true });
+    let idx = 0;
+    const worker = async () => {
+      while (idx < lista.length) {
+        if (verifyStopRef.current) return;
+        const row = lista[idx++];
+        await verificaPeso(row.id, row.nominativo);
+        setPesoBatch((b) => (b ? { ...b, done: b.done + 1 } : b));
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(CONCORRENZA_VERIFICA, lista.length) }, worker));
+    setPesoBatch((b) => (b ? { ...b, running: false } : b));
+  }
+
+  function fermaVerifica() {
+    verifyStopRef.current = true;
+    setPesoBatch((b) => (b ? { ...b, running: false } : b));
+  }
+
+  function riprovaNonTrovate() {
+    verifyStopRef.current = false;
+    verificaTuttiIPesi(draftRows, draftRows.filter((r) => r.pesoStato === "nontrovato" && r.nominativo));
   }
 
   function addManualRow() {
@@ -444,14 +468,23 @@ export default function Home() {
                   <p className="sec-note" style={{ marginBottom: 12 }}>
                     Il "Peso" qui sotto è quello <b>dichiarato da BRT</b> per calcolare il prezzo — per contratto può essere più alto del peso vero
                     se il pacco è voluminoso. Un'"anomalia prezzo" a 0 significa solo che il prezzo torna rispetto a quel peso dichiarato,
-                    non che il peso dichiarato sia onesto. Premi "Verifica" su una riga qualsiasi per vedere il peso reale del prodotto comprato
-                    e confrontarlo — anche su righe senza anomalia di prezzo, se vuoi controllarle a campione.
+                    non che il peso dichiarato sia onesto. Per questo l'app confronta da sola il peso reale di ogni riga col listino prodotti.
                   </p>
-                  {draftRows.length > 0 && (
-                    <div style={{ marginBottom: 10 }}>
-                      <button className="btn secondary" onClick={verificaPesiAnomalie}>
-                        Verifica peso reale delle righe anomale ({draftRows.filter((r) => r.flag).length})
-                      </button>
+                  {pesoBatch && (
+                    <div className="card blue" style={{ marginBottom: 12, padding: 14 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                        <span style={{ fontSize: 13, fontWeight: 600 }}>
+                          {pesoBatch.running ? "Verifica pesi in corso…" : "Verifica pesi conclusa"} — {pesoBatch.done}/{pesoBatch.total}
+                        </span>
+                        {pesoBatch.running && <button className="link" onClick={fermaVerifica}>Ferma</button>}
+                      </div>
+                      <div style={{ height: 6, background: "var(--blue-mid)", borderRadius: 4, overflow: "hidden" }}>
+                        <div style={{ height: "100%", width: `${(pesoBatch.done / pesoBatch.total) * 100}%`, background: "var(--blue)", transition: "width .3s" }}></div>
+                      </div>
+                      {pesoBatch.running && <p className="sec-note" style={{ marginTop: 8, marginBottom: 0 }}>Può richiedere diversi minuti su fatture grandi — puoi continuare a lavorare, si aggiorna da sola.</p>}
+                      {!pesoBatch.running && draftRows.some((r) => r.pesoStato === "nontrovato") && (
+                        <button className="btn secondary" style={{ marginTop: 10 }} onClick={riprovaNonTrovate}>Riprova le righe non trovate</button>
+                      )}
                     </div>
                   )}
                   <div className="table-wrap">
@@ -475,9 +508,11 @@ export default function Home() {
                               <td className="num">{fmt(r.atteso)}</td>
                               <td className="num">{r.flag ? <span className="pill rust">+{fmt2(r.diff)}</span> : fmt2(r.diff)}</td>
                               <td>
-                                {r.pesoStato === "idle" && <button className="btn-tiny" onClick={() => verificaPeso(r.id)}>Verifica</button>}
+                                {r.pesoStato === "idle" && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>in coda…</span>}
                                 {r.pesoStato === "loading" && <span className="mini-spinner"></span>}
-                                {r.pesoStato === "nontrovato" && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>non trovato</span>}
+                                {r.pesoStato === "nontrovato" && (
+                                  <button className="btn-tiny" onClick={() => verificaPeso(r.id, r.nominativo)}>Riprova</button>
+                                )}
                                 {r.pesoStato === "trovato" && (
                                   <div className="peso-cell">
                                     <span className={pesoSospetto ? "pill amber" : "pill teal"}>{fmtKg(r.pesoReale)}</span>
@@ -761,7 +796,7 @@ export default function Home() {
             {[
               ["1", "Carica la fattura", "Vai su \"+ Aggiungi fattura\" e carica il PDF che arriva da BRT via mail. L'app legge da sola numero fattura, data e tutte le spedizioni."],
               ["2", "Controlla le righe rosse", "Prezzo più alto di almeno 0,50€ rispetto al tariffario. Correggi o aggiungi a mano se qualcosa non è stato letto bene."],
-              ["3", "Verifica il peso reale", "Sulle righe anomale, premi \"Verifica\" (o il pulsante in blocco \"Verifica peso reale delle righe anomale\"). L'app cerca l'ordine del cliente su WooCommerce, trova il prodotto comprato e ne mostra il peso vero, preso dal listino — così vedi subito se BRT ha dichiarato un peso più alto di quello reale."],
+              ["3", "Il peso reale si verifica da sola", "Appena carichi il PDF, l'app parte in automatico a controllare il peso reale di ogni riga (cerca l'ordine su WooCommerce e confronta col listino). Su fatture grandi può richiedere diversi minuti — vedi una barra di avanzamento, e puoi continuare a lavorare nel frattempo."],
               ["4", "Se un prodotto risulta \"non trovato\"", "Vai sulla tab \"Pesi prodotti\", cerca il nome del materasso e aggiungilo (o correggine il peso se è sbagliato). Da quel momento l'app lo riconoscerà sempre."],
               ["5", "Spunta ritardi, giacenze e consegne al piano", "Nella colonna \"Tipo\", confrontando col gestionale."],
               ["6", "Salva in archivio", "La trovi sempre nella tab \"Archivio\", raggruppata per settimana."],
