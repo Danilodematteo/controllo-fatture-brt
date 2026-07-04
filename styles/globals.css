@@ -94,13 +94,13 @@ input,select,textarea{
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-mid);}
 textarea{font-family:'IBM Plex Mono',monospace;font-size:12px;min-height:90px;resize:vertical;}
 
-button.btn{
+button.btn, a.btn{
   font-size:13.5px;font-weight:600;padding:10px 18px;border-radius:8px;border:none;
   background:var(--blue);color:#fff;cursor:pointer;
 }
-button.btn:hover{background:var(--blue-dark);}
-button.btn.secondary{background:#fff;color:var(--blue);border:1px solid var(--blue-mid);}
-button.btn.secondary:hover{background:var(--blue-light);}
+button.btn:hover, a.btn:hover{background:var(--blue-dark);color:#fff;}
+button.btn.secondary, a.btn.secondary{background:#fff;color:var(--blue);border:1px solid var(--blue-mid);}
+button.btn.secondary:hover, a.btn.secondary:hover{background:var(--blue-light);}
 button.btn:disabled{opacity:.4;cursor:not-allowed;}
 button.btn-sm{font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:6px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);cursor:pointer;}
 button.btn-sm:hover{border-color:var(--red);color:var(--red);}
