@@ -184,3 +184,6 @@ button.btn-tiny:disabled{opacity:.5;cursor:not-allowed;}
   padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
   white-space:pre-wrap;color:var(--ink-soft);margin-top:6px;max-width:320px;
 }
+
+/* --- codice isola (J) evidenziato nelle varie --- */
+.pill.isola{background:#7C3AED;color:#fff;font-weight:700;}
