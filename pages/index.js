@@ -638,7 +638,7 @@ export default function Home() {
                       <tbody>
                         {draftRows.map((r) => (
                           <tr key={r.id} className={r.flag ? "flag" : ""}>
-                            <td>{r.sped}</td>
+                            <td>{r.sped}{r.riferimento && <span className="rif-mittente">Rif. {r.riferimento}</span>}</td>
                             <td>{r.nominativo || "—"}</td>
                             <td>{r.provinciaNome}<br /><small style={{ color: "var(--ink)", fontWeight: 600 }}>{r.zona}</small></td>
                             <td className="num">{fmt2(r.pesoReale)} kg{r.colli > 1 && <><br /><span className="pill blue">{r.colli} colli</span></>}</td>
@@ -807,7 +807,7 @@ export default function Home() {
                               <tbody>
                                 {inv.rows.map((r) => (
                                   <tr key={r.id} className={r.flag ? "flag" : ""}>
-                                    <td>{r.sped}{r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
+                                    <td>{r.sped}{r.riferimento && <span className="rif-mittente">Rif. {r.riferimento}</span>}{r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
                                     <td>{r.nominativo || "—"}</td><td>{r.zona}</td>
                                     <td className="num">{fmt2(r.pesoReale)} kg{r.colli > 1 && <><br /><span className="pill blue">{r.colli} colli</span></>}</td>
                                     <td className="num">{fmt(r.trasporto)}€</td>
@@ -876,7 +876,7 @@ export default function Home() {
                           <tbody>
                             {visibili.sort((a, b) => (b.r.flag - a.r.flag) || (b.r.diff - a.r.diff)).map((it) => (
                               <tr key={it.key} className={it.resolved ? "resolved" : it.r.flag ? "flag" : ""}>
-                                <td>{it.r.sped}{it.r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
+                                <td>{it.r.sped}{it.r.riferimento && <span className="rif-mittente">Rif. {it.r.riferimento}</span>}{it.r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
                                 <td>{it.r.nominativo || "—"}</td>
                                 <td>{it.r.zona}</td>
                                 <td className="num">{fmt2(it.r.pesoReale)} kg</td>

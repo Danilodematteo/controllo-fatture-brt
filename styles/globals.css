@@ -177,8 +177,12 @@ button.btn-tiny:disabled{opacity:.5;cursor:not-allowed;}
 /* --- badge consegna al piano: visibile ma sobrio, niente sfondo pieno --- */
 .piano-badge{
   display:inline-block;background:#fff;color:var(--blue);font-size:10.5px;font-weight:700;
-  padding:2px 7px;border-radius:6px;margin-top:4px;white-space:nowrap;
+  padding:2px 7px;border-radius:6px;margin-top:4px;margin-left:6px;white-space:nowrap;
   border:1.5px solid var(--blue);letter-spacing:.02em;
+}
+/* --- riferimento mittente sotto il numero spedizione, per cercare l'ordine su WooCommerce --- */
+.rif-mittente{
+  display:block;color:var(--ink-soft);font-size:10.5px;font-weight:500;margin-top:2px;
 }
 .raw-block{
   background:var(--paper, #F4F5F7);border:1px solid var(--line);border-radius:8px;
