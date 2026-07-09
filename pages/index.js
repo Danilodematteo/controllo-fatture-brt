@@ -398,6 +398,10 @@ export default function Home() {
     if (!confirm("Eliminare questa fattura dall'archivio?")) return;
     await fetch(`/api/invoices/${id}`, { method: "DELETE" });
     setInvoices((inv) => inv.filter((i) => i.id !== id));
+    // il testo email potrebbe riferirsi anche alla fattura appena cancellata:
+    // lo svuoto per evitare di leggere/inviare un contenuto non più aggiornato.
+    setEmailText("");
+    setEmailSubject("");
   }
 
   async function persistInvoiceRows(invId) {
