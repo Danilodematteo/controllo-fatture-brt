@@ -149,7 +149,7 @@ export default function Home() {
     return {
       id: newRowId(), sped: r.sped, riferimento: r.riferimento || "", nominativo: r.nominativo || "",
       cap: r.cap, provincia: arrivoSigla, provinciaNome: pInfo.nome, zona: pInfo.zona,
-      pesoReale: r.pesoReale, pesoTassabile: r.peso, // peso tassabile BRT, solo riferimento
+      pesoReale: r.pesoReale, pesoTassabile: r.peso, colli: r.colli || 1, // peso tassabile BRT, solo riferimento
       trasporto: r.trasporto, varieSum: r.varieSum || 0, fatturato: r.fatturato,
       varieDettaglio: r.varieDettaglio || [], rawText: r.rawText || "",
       atteso, diff, flag,
@@ -641,7 +641,7 @@ export default function Home() {
                             <td>{r.sped}</td>
                             <td>{r.nominativo || "—"}</td>
                             <td>{r.provinciaNome}<br /><small style={{ color: "var(--ink)", fontWeight: 600 }}>{r.zona}</small></td>
-                            <td className="num">{fmt2(r.pesoReale)} kg</td>
+                            <td className="num">{fmt2(r.pesoReale)} kg{r.colli > 1 && <><br /><span className="pill blue">{r.colli} colli</span></>}</td>
                             <td className="num">{fmt(r.trasporto)}€</td>
                             <td className="num">{fmt(r.atteso)}€</td>
                             <td className="num">{r.flag ? <span className="pill rust" style={{ fontSize: 13 }}>+{fmt2(r.diff)}€</span> : `${fmt2(r.diff)}€`}</td>
@@ -809,7 +809,7 @@ export default function Home() {
                                   <tr key={r.id} className={r.flag ? "flag" : ""}>
                                     <td>{r.sped}{r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
                                     <td>{r.nominativo || "—"}</td><td>{r.zona}</td>
-                                    <td className="num">{fmt2(r.pesoReale)} kg</td>
+                                    <td className="num">{fmt2(r.pesoReale)} kg{r.colli > 1 && <><br /><span className="pill blue">{r.colli} colli</span></>}</td>
                                     <td className="num">{fmt(r.trasporto)}€</td>
                                     <td className="num">{fmt(r.atteso)}€</td>
                                     <td className="num">{r.flag ? <span className="pill rust">+{fmt2(r.diff)}€</span> : `${fmt2(r.diff)}€`}</td>
