@@ -518,6 +518,31 @@ export default function Home() {
 
   // ---------- email ----------
 
+  function apriMailPost(subject, body) {
+    // Le mail lunghe superano il limite di lunghezza che i server impongono agli
+    // URL — passando gli stessi dati come richiesta POST (invece che nell'indirizzo)
+    // quel limite praticamente non esiste, quindi il corpo si compila da solo anche
+    // per mail con tante spedizioni. Copio comunque negli appunti come rete di
+    // sicurezza, nel caso il server di Roundcube non accetti il POST per la compose.
+    navigator.clipboard.writeText(body).catch(() => {});
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "https://webmail.dematteohome.it/";
+    form.target = "_blank";
+    form.style.display = "none";
+    const campi = { _task: "mail", _action: "compose", _to: "daniele.derosa@brt.it", _subject: subject, _body: body };
+    Object.entries(campi).forEach(([nome, valore]) => {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = nome;
+      input.value = valore;
+      form.appendChild(input);
+    });
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+  }
+
   function formatTag(inv, r) {
     const chi = r.nominativo || "";
     const riga = `- ${r.sped}${chi ? " " + chi : ""} (fattura ${inv.numero}) — Motivazione: ${tipoLabel(r.tipo)}`;
@@ -1133,14 +1158,19 @@ export default function Home() {
                     const href = troppoLunga ? `${base}${to}${subj}` : full;
                     return (
                       <>
-                        <a className="btn" style={{ textDecoration: "none", display: "inline-block" }} target="_blank" rel="noopener noreferrer" href={href}
-                          onClick={() => { if (troppoLunga) navigator.clipboard.writeText(emailText); }}>
-                          Apri in Mail (webmail) →
-                        </a>
+                        {troppoLunga ? (
+                          <button className="btn" onClick={() => apriMailPost(emailSubject, emailText)}>
+                            Apri in Mail (webmail) →
+                          </button>
+                        ) : (
+                          <a className="btn" style={{ textDecoration: "none", display: "inline-block" }} target="_blank" rel="noopener noreferrer" href={href}>
+                            Apri in Mail (webmail) →
+                          </a>
+                        )}
                         {troppoLunga && (
                           <p className="sec-note" style={{ width: "100%", marginTop: 6, color: "var(--red)" }}>
-                            Questa mail è troppo lunga (tante spedizioni insieme) per essere trasferita automaticamente al testo —
-                            si aprirà con destinatario e oggetto già pronti e il testo già copiato negli appunti: incollalo (Ctrl+V) nel corpo della mail.
+                            Mail lunga (tante spedizioni insieme): provo ad aprirla già compilata passando i dati in un altro modo, che di solito supera il limite
+                            che blocca gli indirizzi troppo lunghi. Il testo è comunque già copiato negli appunti — se il corpo per caso arrivasse vuoto, incollalo tu con Ctrl+V.
                           </p>
                         )}
                       </>
