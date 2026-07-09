@@ -651,7 +651,7 @@ export default function Home() {
                                 <div style={{ display: "flex", flexWrap: "wrap", gap: 3, marginTop: 3 }}>
                                   {r.varieDettaglio.map((v, i) => (
                                     <span key={i} className={v.code === "J" ? "pill isola" : "pill grey"} title={v.label}>
-                                      {v.code} {fmt2(v.amount)}
+                                      {v.code}{v.amount != null ? ` ${fmt2(v.amount)}` : ""}
                                     </span>
                                   ))}
                                 </div>
@@ -1008,8 +1008,27 @@ export default function Home() {
                 </p>
                 <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <button className="btn secondary" onClick={() => { navigator.clipboard.writeText(emailText); showToast("Testo copiato"); }}>Copia testo</button>
-                  <a className="btn" style={{ textDecoration: "none", display: "inline-block" }} target="_blank" rel="noopener noreferrer"
-                    href={`https://webmail.dematteohome.it/?_task=mail&_action=compose&_to=${encodeURIComponent("daniele.derosa@brt.it")}&_subject=${encodeURIComponent(emailSubject)}&_body=${encodeURIComponent(emailText)}`}>Apri in Mail (webmail) →</a>
+                  {(() => {
+                    const base = "https://webmail.dematteohome.it/?_task=mail&_action=compose";
+                    const to = `&_to=${encodeURIComponent("daniele.derosa@brt.it")}`;
+                    const subj = `&_subject=${encodeURIComponent(emailSubject)}`;
+                    const full = `${base}${to}${subj}&_body=${encodeURIComponent(emailText)}`;
+                    const troppoLunga = full.length > 6000;
+                    const href = troppoLunga ? `${base}${to}${subj}` : full;
+                    return (
+                      <>
+                        <a className="btn" style={{ textDecoration: "none", display: "inline-block" }} target="_blank" rel="noopener noreferrer" href={href}>
+                          Apri in Mail (webmail) →
+                        </a>
+                        {troppoLunga && (
+                          <p className="sec-note" style={{ width: "100%", marginTop: 6, color: "var(--red)" }}>
+                            Questa mail è troppo lunga (tante spedizioni insieme) per essere trasferita automaticamente al testo —
+                            si aprirà solo con destinatario e oggetto già pronti: copia il testo con il pulsante qui sopra e incollalo tu nel corpo della mail.
+                          </p>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
             )}
