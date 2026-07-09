@@ -4,6 +4,7 @@ import { LEGENDA_CODICI } from "../lib/parseInvoice";
 import { provinciaInfo, risolviArrivo } from "../lib/province";
 
 const APP_PASSWORD = "DeMatteo2026"; // <-- cambia qui la password
+const WC_ADMIN_URL = "https://dematteohome.it"; // stesso dominio usato per l'integrazione WooCommerce (vedi pages/api/woo/find-order.js)
 const SOGLIA_ANOMALIA = 0.10; // euro
 
 const TIPO_OPTIONS = [
@@ -15,6 +16,25 @@ const TIPO_OPTIONS = [
   { value: "piano_non_richiesta", label: "Consegna al piano non richiesta da noi" },
 ];
 const tipoLabel = (v) => TIPO_OPTIONS.find((o) => o.value === v)?.label || "—";
+
+// Sotto-riga con data di partenza, riferimento mittente e link diretto
+// all'ordine WooCommerce (usa il riferimento come ID ordine — verificato
+// affidabile, vedi pages/api/woo/find-order.js).
+function spedExtra(r) {
+  const rifValido = r.riferimento && r.riferimento.length >= 4;
+  return (
+    <>
+      {r.dataSpedizione && <span className="rif-mittente">Partita il {r.dataSpedizione}</span>}
+      {r.riferimento && <span className="rif-mittente">Rif. {r.riferimento}</span>}
+      {rifValido && (
+        <a href={`${WC_ADMIN_URL}/wp-admin/post.php?post=${r.riferimento}&action=edit`}
+          target="_blank" rel="noopener noreferrer" className="rif-mittente wc-link">
+          Apri ordine ↗
+        </a>
+      )}
+    </>
+  );
+}
 
 const fmt = (n) => (Math.round((n || 0) * 1000) / 1000).toFixed(3).replace(".", ",");
 const fmt2 = (n) => (Math.round((n || 0) * 100) / 100).toFixed(2).replace(".", ",");
@@ -148,7 +168,7 @@ export default function Home() {
     const pInfo = provinciaInfo(arrivoSigla);
     const { atteso, diff, flag } = computeCalc(r.pesoReale, pInfo.zona, r.trasporto);
     return {
-      id: newRowId(), sped: r.sped, riferimento: r.riferimento || "", nominativo: r.nominativo || "",
+      id: newRowId(), sped: r.sped, dataSpedizione: r.dataSpedizione || "", riferimento: r.riferimento || "", nominativo: r.nominativo || "",
       cap: r.cap, provincia: arrivoSigla, provinciaNome: pInfo.nome, zona: pInfo.zona,
       pesoReale: r.pesoReale, pesoTassabile: r.peso, colli: r.colli || 1, // peso tassabile BRT, solo riferimento
       trasporto: r.trasporto, varieSum: r.varieSum || 0, fatturato: r.fatturato,
@@ -653,7 +673,7 @@ export default function Home() {
                       <tbody>
                         {draftRows.map((r) => (
                           <tr key={r.id} className={r.flag ? "flag" : ""}>
-                            <td>{r.sped}{r.riferimento && <span className="rif-mittente">Rif. {r.riferimento}</span>}</td>
+                            <td>{r.sped}{spedExtra(r)}</td>
                             <td>{r.nominativo || "—"}</td>
                             <td>{r.provinciaNome}<br /><small style={{ color: "var(--ink)", fontWeight: 600 }}>{r.zona}</small></td>
                             <td className="num">{fmt2(r.pesoReale)} kg{r.colli > 1 && <><br /><span className="pill blue">{r.colli} colli</span></>}</td>
@@ -826,7 +846,7 @@ export default function Home() {
                               <tbody>
                                 {inv.rows.map((r) => (
                                   <tr key={r.id} className={r.flag ? "flag" : ""}>
-                                    <td>{r.sped}{r.riferimento && <span className="rif-mittente">Rif. {r.riferimento}</span>}{r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
+                                    <td>{r.sped}{spedExtra(r)}{r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
                                     <td>{r.nominativo || "—"}</td><td>{r.zona}</td>
                                     <td className="num">{fmt2(r.pesoReale)} kg{r.colli > 1 && <><br /><span className="pill blue">{r.colli} colli</span></>}</td>
                                     <td className="num">{fmt(r.trasporto)}€</td>
@@ -895,7 +915,7 @@ export default function Home() {
                           <tbody>
                             {visibili.sort((a, b) => (b.r.flag - a.r.flag) || (b.r.diff - a.r.diff)).map((it) => (
                               <tr key={it.key} className={it.resolved ? "resolved" : it.r.flag ? "flag" : ""}>
-                                <td>{it.r.sped}{it.r.riferimento && <span className="rif-mittente">Rif. {it.r.riferimento}</span>}{it.r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
+                                <td>{it.r.sped}{spedExtra(it.r)}{it.r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
                                 <td>{it.r.nominativo || "—"}</td>
                                 <td>{it.r.zona}</td>
                                 <td className="num">{fmt2(it.r.pesoReale)} kg</td>

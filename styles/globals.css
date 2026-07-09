@@ -184,6 +184,10 @@ button.btn-tiny:disabled{opacity:.5;cursor:not-allowed;}
 .rif-mittente{
   display:block;color:var(--ink-soft);font-size:10.5px;font-weight:500;margin-top:2px;
 }
+.wc-link{
+  color:var(--blue)!important;text-decoration:underline;cursor:pointer;
+}
+.wc-link:hover{ color:var(--blue-dark, var(--blue))!important; }
 .raw-block{
   background:var(--paper, #F4F5F7);border:1px solid var(--line);border-radius:8px;
   padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
