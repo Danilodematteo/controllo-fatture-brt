@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { DEFAULT_TARIFF, calcAtteso, detectZona } from "../lib/tariff";
 import { LEGENDA_CODICI } from "../lib/parseInvoice";
+import { provinciaInfo, risolviArrivo } from "../lib/province";
 
 const APP_PASSWORD = "DeMatteo2026"; // <-- cambia qui la password
 const SOGLIA_ANOMALIA = 0.10; // euro
@@ -56,7 +57,7 @@ export default function Home() {
   const fileInputRef = useRef(null);
   const numeroRef = useRef(null);
 
-  const [manRow, setManRow] = useState({ sped: "", cap: "", zona: "Italia", peso: "", fatturato: "" });
+  const [manRow, setManRow] = useState({ sped: "", provincia: "", peso: "", fatturato: "" });
 
   const [tariffDraft, setTariffDraft] = useState(null);
   const [tariffSaved, setTariffSaved] = useState(false);
@@ -75,8 +76,9 @@ export default function Home() {
   const [expandedIds, setExpandedIds] = useState({});
   const [archBatch, setArchBatch] = useState({});
   const [manualOpenId, setManualOpenId] = useState(null);
+  const [pesoDMBatch, setPesoDMBatch] = useState(null);
+  const verifyStopRef = useRef(false);
   const [manualQuery, setManualQuery] = useState("");
-  const [rawOpenId, setRawOpenId] = useState(null);
 
   const [toast, setToast] = useState("");
   const toastTimer = useRef(null);
@@ -133,39 +135,33 @@ export default function Home() {
   }
 
   function calcRowFromParsed(r) {
-    const zona = detectZona(r.cap);
-    const { atteso, diff, flag } = computeCalc(r.pesoReale, zona, r.trasporto);
+    const arrivoSigla = risolviArrivo(r.provinciaArrivo, r.provinciaPartenza);
+    const pInfo = provinciaInfo(arrivoSigla);
+    const { atteso, diff, flag } = computeCalc(r.pesoReale, pInfo.zona, r.trasporto);
     return {
       id: newRowId(), sped: r.sped, riferimento: r.riferimento || "", nominativo: r.nominativo || "",
-      cap: r.cap, zona,
+      cap: r.cap, provincia: arrivoSigla, provinciaNome: pInfo.nome, zona: pInfo.zona,
       pesoReale: r.pesoReale, pesoTassabile: r.peso, // peso tassabile BRT, solo riferimento
       trasporto: r.trasporto, varieSum: r.varieSum || 0, fatturato: r.fatturato,
       varieDettaglio: r.varieDettaglio || [], rawText: r.rawText || "",
       atteso, diff, flag,
-      pianoAmount: r.pianoAmount || null, tipo: "", nota: "",
+      pianoAmount: r.pianoAmount || null, tipo: "",
       pesoDM: null, prodottoDM: null, pesoDMStato: "idle", pesoDMManuale: false, prodottiDettaglioDM: null,
     };
   }
 
-  function calcRowManual(sped, cap, zona, pesoReale, trasporto) {
-    const { atteso, diff, flag } = computeCalc(parseFloat(pesoReale) || 0, zona, parseFloat(trasporto) || 0);
+  function calcRowManual(sped, provincia, pesoReale, trasporto) {
+    const pInfo = provinciaInfo(provincia);
+    const { atteso, diff, flag } = computeCalc(parseFloat(pesoReale) || 0, pInfo.zona, parseFloat(trasporto) || 0);
     return {
-      id: newRowId(), sped, riferimento: "", nominativo: "", cap, zona,
+      id: newRowId(), sped, riferimento: "", nominativo: "", cap: "", provincia: provincia.toUpperCase(), provinciaNome: pInfo.nome, zona: pInfo.zona,
       pesoReale: parseFloat(pesoReale) || 0, pesoTassabile: null,
       trasporto: parseFloat(trasporto) || 0, varieSum: 0, fatturato: parseFloat(trasporto) || 0,
       varieDettaglio: [], rawText: "",
       atteso, diff, flag,
-      pianoAmount: null, tipo: "", nota: "",
+      pianoAmount: null, tipo: "",
       pesoDM: null, prodottoDM: null, pesoDMStato: "idle", pesoDMManuale: false, prodottiDettaglioDM: null,
     };
-  }
-
-  function updateRowZona(rowId, nuovaZona) {
-    setDraftRows((rows) => rows.map((r) => {
-      if (r.id !== rowId) return r;
-      const { atteso, diff, flag } = computeCalc(r.pesoReale, nuovaZona, r.trasporto);
-      return { ...r, zona: nuovaZona, atteso, diff, flag };
-    }));
   }
 
   // ---------- caricamento PDF ----------
@@ -185,6 +181,7 @@ export default function Home() {
       setDraftRows(rows);
       setUnparsedLines(data.unparsed || []);
       setStatus(`ok:${rows.length}:${(data.unparsed || []).length}`);
+      verificaTuttiIPesiDM(rows); // parte da sola, ora è veloce grazie alla ricerca per numero ordine
     } catch (e) {
       setStatus("error");
     }
@@ -224,6 +221,29 @@ export default function Home() {
     }
   }
 
+  const CONCORRENZA_DM = 5;
+  async function verificaTuttiIPesiDM(rows) {
+    const lista = rows.filter((r) => r.nominativo);
+    if (!lista.length) return;
+    verifyStopRef.current = false;
+    setPesoDMBatch({ done: 0, total: lista.length, running: true });
+    let idx = 0;
+    const worker = async () => {
+      while (idx < lista.length) {
+        if (verifyStopRef.current) return;
+        const row = lista[idx++];
+        await verificaPesoDM(row.id, row.nominativo, row.cap, row.riferimento);
+        setPesoDMBatch((b) => (b ? { ...b, done: b.done + 1 } : b));
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(CONCORRENZA_DM, lista.length) }, worker));
+    setPesoDMBatch((b) => (b ? { ...b, running: false } : b));
+  }
+  function fermaVerificaDM() {
+    verifyStopRef.current = true;
+    setPesoDMBatch((b) => (b ? { ...b, running: false } : b));
+  }
+
   function toggleManualPick(key) {
     setManualOpenId((id) => (id === key ? null : key));
     setManualQuery("");
@@ -241,7 +261,7 @@ export default function Home() {
       showToast("Compila spedizione, peso reale e trasporto fatturato");
       return;
     }
-    setDraftRows((rows) => [...rows, calcRowManual(manRow.sped, manRow.cap, manRow.zona, manRow.peso, manRow.fatturato)]);
+    setDraftRows((rows) => [...rows, calcRowManual(manRow.sped, manRow.provincia, manRow.peso, manRow.fatturato)]);
     setManRow({ sped: "", cap: "", zona: "Italia", peso: "", fatturato: "" });
   }
   function removeDraftRow(id) {
@@ -429,7 +449,7 @@ export default function Home() {
     return `Fattura ${inv.numero}:\n${testo}\n(peso reale ${fmt2(r.pesoReale)}kg → trasporto dovuto ${fmt(r.atteso)}€, fatturato ${fmt(r.trasporto)}€, differenza +${fmt2(r.diff)}€)`;
   }
   function formatTag(inv, r) {
-    const chi = r.nota || r.nominativo || "";
+    const chi = r.nominativo || "";
     const riga = `- ${r.sped}${chi ? " " + chi : ""} (fattura ${inv.numero}) — Motivazione: ${tipoLabel(r.tipo)}`;
     if (r.tipo === "giacenza") return `*** ${riga} ***`;
     return riga;
@@ -569,48 +589,61 @@ export default function Home() {
                   <p className="sec-note" style={{ marginBottom: 12 }}>
                     Il calcolo usa il <b>peso reale</b> dichiarato da BRT in fattura (non quello tassabile/volumetrico) per capire quanto
                     avreste dovuto pagare di trasporto. Segnaliamo una spedizione quando la differenza è di almeno {fmt2(SOGLIA_ANOMALIA)}€.
-                    Se la zona rilevata dal CAP non è corretta (es. piccole isole come Ischia), correggila tu dal menu a tendina.
+                    La provincia e il codice isola (evidenziato) vengono letti direttamente dalla fattura.
                   </p>
+                  {pesoDMBatch && (
+                    <div className="card blue" style={{ marginBottom: 12, padding: 12 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                        <span style={{ fontSize: 13, fontWeight: 600 }}>
+                          {pesoDMBatch.running ? "Confronto col catalogo De Matteo in corso…" : "Confronto concluso"} — {pesoDMBatch.done}/{pesoDMBatch.total}
+                        </span>
+                        {pesoDMBatch.running && <button className="link" onClick={fermaVerificaDM}>Ferma</button>}
+                      </div>
+                      <div style={{ height: 6, background: "var(--blue-mid)", borderRadius: 4, overflow: "hidden" }}>
+                        <div style={{ height: "100%", width: `${(pesoDMBatch.done / pesoDMBatch.total) * 100}%`, background: "var(--blue)", transition: "width .3s" }}></div>
+                      </div>
+                    </div>
+                  )}
                   <div className="table-wrap">
                     <table>
                       <thead><tr>
-                        <th>Sped.</th><th>Cliente</th><th>Zona</th>
+                        <th>Sped. / dati fattura</th><th>Cliente</th><th>Prov.</th>
                         <th className="num">Peso reale BRT</th>
                         <th className="num">Trasp. fatturato</th>
                         <th className="num">Trasp. dovuto</th>
                         <th className="num">Da recuperare</th>
-                        <th className="num">Varie</th>
+                        <th>Varie</th>
                         <th>Peso De Matteo</th>
-                        <th>Tipo</th><th>Nota</th><th></th>
+                        <th>Tipo</th><th></th>
                       </tr></thead>
                       <tbody>
                         {draftRows.map((r) => (
                           <tr key={r.id} className={r.flag ? "flag" : ""}>
-                            <td>
-                              {r.sped}
-                              {r.rawText && (
-                                <button className="link" style={{ fontSize: 10, display: "block" }} onClick={() => setRawOpenId(rawOpenId === r.id ? null : r.id)}>
-                                  {rawOpenId === r.id ? "nascondi testo" : "vedi testo fattura"}
-                                </button>
-                              )}
-                              {rawOpenId === r.id && <pre className="raw-block">{r.rawText}</pre>}
+                            <td style={{ minWidth: 200 }}>
+                              <b>{r.sped}</b>
+                              {r.rawText && <pre className="raw-block">{r.rawText}</pre>}
                             </td>
                             <td>{r.nominativo || "—"}</td>
-                            <td>
-                              <select value={r.zona} onChange={(e) => updateRowZona(r.id, e.target.value)} style={{ width: 92 }}>
-                                {ZONE.map((z) => <option key={z} value={z}>{z}</option>)}
-                              </select>
-                            </td>
+                            <td title={r.provinciaNome}>{r.provincia || "—"}<br /><small style={{ color: "var(--ink-soft)" }}>{r.zona}</small></td>
                             <td className="num">{fmt2(r.pesoReale)} kg</td>
                             <td className="num">{fmt(r.trasporto)}€</td>
                             <td className="num">{fmt(r.atteso)}€</td>
                             <td className="num">{r.flag ? <span className="pill rust" style={{ fontSize: 13 }}>+{fmt2(r.diff)}€</span> : `${fmt2(r.diff)}€`}</td>
-                            <td className="num">{fmt2(r.varieSum)}€</td>
+                            <td style={{ minWidth: 130 }}>
+                              <div>{fmt2(r.varieSum)}€</div>
+                              {r.varieDettaglio && r.varieDettaglio.length > 0 && (
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: 3, marginTop: 3 }}>
+                                  {r.varieDettaglio.map((v, i) => (
+                                    <span key={i} className={v.code === "J" ? "pill isola" : "pill grey"} title={v.label}>
+                                      {v.code} {fmt2(v.amount)}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </td>
                             <td style={{ minWidth: 170 }}>
                               {r.pianoAmount != null && <div className="piano-badge">🛗 CONSEGNA AL PIANO — {fmt2(r.pianoAmount)}€</div>}
-                              {r.pesoDMStato === "idle" && (
-                                <button className="btn-tiny" onClick={() => verificaPesoDM(r.id, r.nominativo, r.cap, r.riferimento)}>Confronta con catalogo</button>
-                              )}
+                              {r.pesoDMStato === "idle" && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>in coda…</span>}
                               {r.pesoDMStato === "loading" && <span className="mini-spinner"></span>}
                               {r.pesoDMStato === "nontrovato" && (
                                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -645,7 +678,6 @@ export default function Home() {
                                 {TIPO_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                               </select>
                             </td>
-                            <td><input value={r.nota} placeholder="nota (es. motivo)" style={{ width: 120 }} onChange={(e) => updateDraftRow(r.id, "nota", e.target.value)} /></td>
                             <td><button className="btn-sm" onClick={() => removeDraftRow(r.id)}>✕</button></td>
                           </tr>
                         ))}
@@ -685,16 +717,12 @@ export default function Home() {
                   <div className="card" style={{ marginTop: 10 }}>
                     <div className="grid g4">
                       <div><label>N. Spedizione</label><input value={manRow.sped} onChange={(e) => setManRow({ ...manRow, sped: e.target.value })} /></div>
-                      <div><label>CAP</label><input value={manRow.cap} maxLength={5}
-                        onChange={(e) => setManRow({ ...manRow, cap: e.target.value, zona: detectZona(e.target.value) })} /></div>
-                      <div><label>Zona</label>
-                        <select value={manRow.zona} onChange={(e) => setManRow({ ...manRow, zona: e.target.value })}>
-                          {ZONE.map((z) => <option key={z}>{z}</option>)}
-                        </select></div>
+                      <div><label>Sigla provincia (es. MI, AG, CE)</label><input value={manRow.provincia} maxLength={2} style={{ textTransform: "uppercase" }}
+                        onChange={(e) => setManRow({ ...manRow, provincia: e.target.value.toUpperCase() })} /></div>
                       <div><label>Peso reale (kg)</label><input type="number" value={manRow.peso} onChange={(e) => setManRow({ ...manRow, peso: e.target.value })} /></div>
+                      <div><label>Trasporto fatturato (€)</label><input type="number" value={manRow.fatturato} onChange={(e) => setManRow({ ...manRow, fatturato: e.target.value })} /></div>
                     </div>
                     <div className="grid g2" style={{ marginTop: 10 }}>
-                      <div><label>Trasporto fatturato (€)</label><input type="number" value={manRow.fatturato} onChange={(e) => setManRow({ ...manRow, fatturato: e.target.value })} /></div>
                       <div style={{ display: "flex", alignItems: "flex-end" }}><button className="btn secondary" style={{ width: "100%" }} onClick={addManualRow}>+ Aggiungi riga</button></div>
                     </div>
                   </div>
