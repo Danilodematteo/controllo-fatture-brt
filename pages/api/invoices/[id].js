@@ -8,6 +8,7 @@ export default async function handler(req, res) {
     const invoices = (await kv.get("invoices")) || [];
     const filtered = invoices.filter((i) => i.id !== id);
     await kv.set("invoices", filtered);
+    await kv.del(`pdf:${id}`);
     return res.status(200).json({ ok: true });
   }
 

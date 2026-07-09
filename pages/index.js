@@ -56,6 +56,7 @@ export default function Home() {
   const [fNumero, setFNumero] = useState("");
   const [fData, setFData] = useState("");
   const [draftRows, setDraftRows] = useState([]);
+  const [draftPdfBase64, setDraftPdfBase64] = useState(null);
   const [unparsedLines, setUnparsedLines] = useState([]);
   const [status, setStatus] = useState("");
   const [reviewing, setReviewing] = useState(false);
@@ -178,6 +179,7 @@ export default function Home() {
     if (!file) return;
     setDraftRows([]);
     setUnparsedLines([]);
+    setDraftPdfBase64(null);
     setReviewing(true);
     setStatus("loading");
     try {
@@ -190,6 +192,11 @@ export default function Home() {
       setUnparsedLines(data.unparsed || []);
       setStatus(`ok:${rows.length}:${(data.unparsed || []).length}`);
       verificaTuttiIPesiDM(rows); // parte da sola, ora è veloce grazie alla ricerca per numero ordine
+      // conserva anche il PDF originale (base64) per poterlo salvare in archivio
+      // e permettere un controllo "testa/croce" senza dover recuperare la mail
+      const reader = new FileReader();
+      reader.onload = () => setDraftPdfBase64(String(reader.result).split(",")[1] || null);
+      reader.readAsDataURL(file);
     } catch (e) {
       setStatus("error");
     }
@@ -293,8 +300,16 @@ export default function Home() {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(invoice),
     });
     const data = await res.json();
-    if (data.invoice) setInvoices((inv) => [...inv, data.invoice]);
-    setDraftRows([]); setUnparsedLines([]); setFNumero(""); setFData(""); setReviewing(false); setStatus("");
+    if (data.invoice) {
+      setInvoices((inv) => [...inv, data.invoice]);
+      if (draftPdfBase64) {
+        fetch(`/api/invoices/${data.invoice.id}/pdf`, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pdfBase64: draftPdfBase64 }),
+        }).catch(() => {}); // il PDF è un extra: se fallisce, la fattura resta comunque salvata
+      }
+    }
+    setDraftRows([]); setUnparsedLines([]); setDraftPdfBase64(null); setFNumero(""); setFData(""); setReviewing(false); setStatus("");
     if (fileInputRef.current) fileInputRef.current.value = "";
     showToast(`Fattura ${invoice.numero} salvata in archivio`);
     return data.invoice || null;
@@ -779,6 +794,10 @@ export default function Home() {
                           {daSegnalare.length > 0 && (
                             <span className={`pill ${ancoraAperte > 0 ? "amber" : "teal"}`}>{ancoraAperte > 0 ? `${ancoraAperte} ancora aperte` : "Tutto risolto ✓"}</span>
                           )}
+                          <a href={`/api/invoices/${inv.id}/pdf`} target="_blank" rel="noopener noreferrer"
+                            className="btn-sm" onClick={(e) => e.stopPropagation()} style={{ textDecoration: "none" }}>
+                            PDF originale
+                          </a>
                           <button className="btn-sm" onClick={(e) => { e.stopPropagation(); deleteInvoice(inv.id); }}>Elimina</button>
                         </span>
                       </div>
