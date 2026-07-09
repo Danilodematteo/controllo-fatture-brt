@@ -34,7 +34,7 @@ function spedExtra(r) {
   return (
     <>
       {r.dataSpedizione && <span className="rif-mittente">Partita il {r.dataSpedizione}</span>}
-      {r.riferimento && <span className="rif-mittente">Rif. {r.riferimento}</span>}
+      {rifValido && <span className="rif-mittente">Rif. {r.riferimento}</span>}
       {rifValido && (
         <a href={`${WC_ADMIN_URL}/wp-admin/post.php?post=${r.riferimento}&action=edit`}
           target="_blank" rel="noopener noreferrer" className="rif-mittente wc-link">
