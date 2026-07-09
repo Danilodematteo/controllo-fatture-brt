@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { DEFAULT_TARIFF, calcAtteso, detectZona } from "../lib/tariff";
+import { LEGENDA_CODICI } from "../lib/parseInvoice";
 
 const APP_PASSWORD = "DeMatteo2026"; // <-- cambia qui la password
+const SOGLIA_ANOMALIA = 0.10; // euro
 
 const TIPO_OPTIONS = [
   { value: "", label: "—" },
@@ -16,6 +18,7 @@ const tipoLabel = (v) => TIPO_OPTIONS.find((o) => o.value === v)?.label || "—"
 const fmt = (n) => (Math.round((n || 0) * 1000) / 1000).toFixed(3).replace(".", ",");
 const fmt2 = (n) => (Math.round((n || 0) * 100) / 100).toFixed(2).replace(".", ",");
 const fmtKg = (n) => (n === null || n === undefined ? "—" : `${n} kg`);
+const ZONE = ["Italia", "Calabria", "Sicilia", "Sardegna"];
 
 function isoWeek(dateStr) {
   if (!dateStr) return "—";
@@ -27,7 +30,6 @@ function isoWeek(dateStr) {
   const week = 1 + Math.round(((target - firstThursday) / 86400000 - 3 + (firstThursday.getUTCDay() + 6) % 7) / 7);
   return `${target.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
 }
-
 function newRowId() {
   return "r" + Date.now() + Math.random().toString(36).slice(2, 6);
 }
@@ -46,16 +48,6 @@ export default function Home() {
   const [fNumero, setFNumero] = useState("");
   const [fData, setFData] = useState("");
   const [draftRows, setDraftRows] = useState([]);
-  const [pesoBatch, setPesoBatch] = useState(null); // {done, total, running}
-  const [mostraRisolte, setMostraRisolte] = useState(false);
-  const [expandedIds, setExpandedIds] = useState({});
-  const [archBatch, setArchBatch] = useState({}); // invoiceId -> {done,total,running}
-  function toggleExpand(id) {
-    setExpandedIds((e) => ({ ...e, [id]: !e[id] }));
-  }
-  const [manualOpenId, setManualOpenId] = useState(null);
-  const [manualQuery, setManualQuery] = useState("");
-  const verifyStopRef = useRef(false);
   const [unparsedLines, setUnparsedLines] = useState([]);
   const [status, setStatus] = useState("");
   const [reviewing, setReviewing] = useState(false);
@@ -75,13 +67,23 @@ export default function Home() {
 
   const [pesi, setPesi] = useState([]);
   const [pesiSearch, setPesiSearch] = useState("");
-  const [pesiEdits, setPesiEdits] = useState({}); // codice||descrizione -> valore in modifica
+  const [pesiEdits, setPesiEdits] = useState({});
   const [pesiSavingKey, setPesiSavingKey] = useState(null);
   const [newProd, setNewProd] = useState({ codice: "", descrizione: "", categoria: "", peso: "" });
+
+  const [mostraRisolte, setMostraRisolte] = useState(false);
+  const [expandedIds, setExpandedIds] = useState({});
+  const [archBatch, setArchBatch] = useState({});
+  const [manualOpenId, setManualOpenId] = useState(null);
+  const [manualQuery, setManualQuery] = useState("");
+  const [rawOpenId, setRawOpenId] = useState(null);
 
   const [toast, setToast] = useState("");
   const toastTimer = useRef(null);
 
+  function toggleExpand(id) {
+    setExpandedIds((e) => ({ ...e, [id]: !e[id] }));
+  }
   function showToast(msg) {
     setToast(msg);
     clearTimeout(toastTimer.current);
@@ -122,17 +124,51 @@ export default function Home() {
     }
   }
 
-  function calcRow(sped, riferimento, nominativo, cap, peso, fatturato, pianoAmount) {
-    const zona = detectZona(cap);
-    const atteso = calcAtteso(peso, zona, tariff);
-    const diff = (parseFloat(fatturato) || 0) - atteso;
+  // ---------- riga: costruzione e ricalcolo ----------
+
+  function computeCalc(pesoReale, zona, fatturatoTrasporto) {
+    const atteso = calcAtteso(pesoReale, zona, tariff);
+    const diff = (fatturatoTrasporto || 0) - atteso;
+    return { atteso, diff, flag: diff >= SOGLIA_ANOMALIA };
+  }
+
+  function calcRowFromParsed(r) {
+    const zona = detectZona(r.cap);
+    const { atteso, diff, flag } = computeCalc(r.pesoReale, zona, r.trasporto);
     return {
-      id: newRowId(), sped, riferimento: riferimento || "", nominativo: nominativo || "",
-      cap, zona, peso: parseFloat(peso) || 0, fatturato: parseFloat(fatturato) || 0,
-      atteso, diff, flag: diff >= 0.5, pianoAmount: pianoAmount || null,
-      tipo: "", nota: "", pesoReale: null, prodottoListino: null, pesoStato: "idle",
+      id: newRowId(), sped: r.sped, riferimento: r.riferimento || "", nominativo: r.nominativo || "",
+      cap: r.cap, zona,
+      pesoReale: r.pesoReale, pesoTassabile: r.peso, // peso tassabile BRT, solo riferimento
+      trasporto: r.trasporto, varieSum: r.varieSum || 0, fatturato: r.fatturato,
+      varieDettaglio: r.varieDettaglio || [], rawText: r.rawText || "",
+      atteso, diff, flag,
+      pianoAmount: r.pianoAmount || null, tipo: "", nota: "",
+      pesoDM: null, prodottoDM: null, pesoDMStato: "idle", pesoDMManuale: false, prodottiDettaglioDM: null,
     };
   }
+
+  function calcRowManual(sped, cap, zona, pesoReale, trasporto) {
+    const { atteso, diff, flag } = computeCalc(parseFloat(pesoReale) || 0, zona, parseFloat(trasporto) || 0);
+    return {
+      id: newRowId(), sped, riferimento: "", nominativo: "", cap, zona,
+      pesoReale: parseFloat(pesoReale) || 0, pesoTassabile: null,
+      trasporto: parseFloat(trasporto) || 0, varieSum: 0, fatturato: parseFloat(trasporto) || 0,
+      varieDettaglio: [], rawText: "",
+      atteso, diff, flag,
+      pianoAmount: null, tipo: "", nota: "",
+      pesoDM: null, prodottoDM: null, pesoDMStato: "idle", pesoDMManuale: false, prodottiDettaglioDM: null,
+    };
+  }
+
+  function updateRowZona(rowId, nuovaZona) {
+    setDraftRows((rows) => rows.map((r) => {
+      if (r.id !== rowId) return r;
+      const { atteso, diff, flag } = computeCalc(r.pesoReale, nuovaZona, r.trasporto);
+      return { ...r, zona: nuovaZona, atteso, diff, flag };
+    }));
+  }
+
+  // ---------- caricamento PDF ----------
 
   async function handleFile(file) {
     if (!file) return;
@@ -140,125 +176,82 @@ export default function Home() {
     setUnparsedLines([]);
     setReviewing(true);
     setStatus("loading");
-    verifyStopRef.current = false;
     try {
       const res = await fetch("/api/parse-invoice", { method: "POST", body: file });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       if (data.header) { setFNumero(data.header.numero); setFData(data.header.data); }
-      const rows = (data.rows || []).map((r) =>
-        calcRow(r.sped, r.riferimento, r.nominativo, r.cap, r.peso, r.fatturato, r.pianoAmount)
-      );
+      const rows = (data.rows || []).map(calcRowFromParsed);
       setDraftRows(rows);
       setUnparsedLines(data.unparsed || []);
       setStatus(`ok:${rows.length}:${(data.unparsed || []).length}`);
-      verificaTuttiIPesi(rows); // parte da sola in background, non blocca l'interfaccia
     } catch (e) {
       setStatus("error");
     }
   }
 
-  function applyPesoReale(rowId, pesoReale, prodottoListino, manuale, dettaglio) {
-    setDraftRows((rows) => rows.map((r) => {
-      if (r.id !== rowId) return r;
-      const attesoReale = calcAtteso(pesoReale, r.zona, tariff);
-      const diffReale = r.fatturato - attesoReale;
-      return {
-        ...r,
-        pesoReale, prodottoListino, pesoManuale: !!manuale, pesoStato: "trovato",
-        prodottiDettaglio: dettaglio || null,
-        pesoDichiarato: r.pesoDichiarato ?? r.peso,
-        attesoDichiarato: r.attesoDichiarato ?? r.atteso,
-        atteso: attesoReale, diff: diffReale, flag: diffReale >= 0.5,
-      };
-    }));
+  // ---------- Peso De Matteo (verifica facoltativa contro il listino/WooCommerce) ----------
+
+  function applyPesoDM(rowId, pesoDM, prodottoDM, manuale, dettaglio) {
+    setDraftRows((rows) => rows.map((r) => (r.id === rowId
+      ? { ...r, pesoDM, prodottoDM, pesoDMManuale: !!manuale, pesoDMStato: "trovato", prodottiDettaglioDM: dettaglio || null }
+      : r)));
   }
 
-  async function verificaPeso(rowId, nominativo) {
-    setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "loading" } : r)));
+  async function verificaPesoDM(rowId, nominativo) {
+    setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoDMStato: "loading" } : r)));
     if (!nominativo) {
-      setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r)));
+      setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoDMStato: "nontrovato" } : r)));
       return;
     }
     try {
       const res = await fetch("/api/woo/find-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nominativo, dataSpedizione: fData }),
       });
       const data = await res.json();
       const ordine = (data.risultati || [])[0];
       const prodotti = ordine ? ordine.prodotti.filter((p) => p.pesoTrovato) : [];
       if (!prodotti.length) {
-        setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r)));
+        setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoDMStato: "nontrovato" } : r)));
         return;
       }
-      // Una spedizione BRT corrisponde a un ordine: sommiamo il peso di tutti i pezzi
-      // (un ordine può avere più materassi/accessori spediti insieme nello stesso collo).
       const pesoTotale = prodotti.reduce((s, p) => s + (p.pesoReale || 0) * (p.quantita || 1), 0);
-      const label = prodotti.length === 1 ? prodotti[0].prodottoListino : `${prodotti.length} prodotti — ${fmt2(pesoTotale)} kg totali`;
-      applyPesoReale(rowId, pesoTotale, label, false, prodotti);
+      const label = prodotti.length === 1 ? prodotti[0].prodottoListino : `${prodotti.length} prodotti — ${fmt2(pesoTotale)} kg tot.`;
+      applyPesoDM(rowId, pesoTotale, label, false, prodotti);
     } catch (e) {
-      setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r)));
+      setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoDMStato: "nontrovato" } : r)));
     }
   }
 
-  const CONCORRENZA_VERIFICA = 4;
-  async function verificaTuttiIPesi(rows, listaCustom) {
-    const lista = listaCustom || rows.filter((r) => r.nominativo);
-    if (!lista.length) return;
-    setPesoBatch({ done: 0, total: lista.length, running: true });
-    let idx = 0;
-    const worker = async () => {
-      while (idx < lista.length) {
-        if (verifyStopRef.current) return;
-        const row = lista[idx++];
-        await verificaPeso(row.id, row.nominativo);
-        setPesoBatch((b) => (b ? { ...b, done: b.done + 1 } : b));
-      }
-    };
-    await Promise.all(Array.from({ length: Math.min(CONCORRENZA_VERIFICA, lista.length) }, worker));
-    setPesoBatch((b) => (b ? { ...b, running: false } : b));
-    showToast("Verifica pesi conclusa — guarda il riepilogo sopra la tabella");
-  }
-
-  function toggleManualPick(rowId) {
-    setManualOpenId((id) => (id === rowId ? null : rowId));
+  function toggleManualPick(key) {
+    setManualOpenId((id) => (id === key ? null : key));
     setManualQuery("");
   }
-
   function pickManualProduct(rowId, prodotto) {
-    applyPesoReale(rowId, prodotto.peso, prodotto.descrizione, true);
+    applyPesoDM(rowId, prodotto.peso, prodotto.descrizione, true);
     setManualOpenId(null);
     setManualQuery("");
   }
 
-  function fermaVerifica() {
-    verifyStopRef.current = true;
-    setPesoBatch((b) => (b ? { ...b, running: false } : b));
-  }
-
-  function riprovaNonTrovate() {
-    verifyStopRef.current = false;
-    verificaTuttiIPesi(draftRows, draftRows.filter((r) => r.pesoStato === "nontrovato" && r.nominativo));
-  }
+  // ---------- righe manuali ----------
 
   function addManualRow() {
     if (!manRow.sped || !manRow.peso || !manRow.fatturato) {
-      showToast("Compila spedizione, peso e fatturato");
+      showToast("Compila spedizione, peso reale e trasporto fatturato");
       return;
     }
-    setDraftRows((rows) => [...rows, calcRow(manRow.sped, "", "", manRow.cap, manRow.peso, manRow.fatturato, null)]);
+    setDraftRows((rows) => [...rows, calcRowManual(manRow.sped, manRow.cap, manRow.zona, manRow.peso, manRow.fatturato)]);
     setManRow({ sped: "", cap: "", zona: "Italia", peso: "", fatturato: "" });
   }
-
   function removeDraftRow(id) {
     setDraftRows((rows) => rows.filter((r) => r.id !== id));
   }
-
   function updateDraftRow(id, field, value) {
     setDraftRows((rows) => rows.map((r) => (r.id === id ? { ...r, [field]: value } : r)));
   }
+
+  // ---------- salvataggio ----------
 
   async function saveInvoice() {
     setNumeroErr(!fNumero); setDataErr(!fData);
@@ -288,18 +281,14 @@ export default function Home() {
   }
 
   function csvAnomalie(rows) {
-    const header = ["Spedizione", "Cliente", "Zona", "Peso BRT (kg)", "Peso reale (kg)", "Diff peso (kg)", "Pagato (EUR)", "Dovuto (EUR)", "Da recuperare (EUR)"];
+    const header = ["Spedizione", "Cliente", "Zona", "Peso reale BRT (kg)", "Trasporto fatturato (EUR)", "Trasporto dovuto (EUR)", "Diff (EUR)", "Varie (EUR)", "Tipo"];
     const lines = [header.join(";")];
     rows.filter((r) => r.flag).forEach((r) => {
-      const pesoBrt = r.pesoDichiarato ?? r.peso;
-      const diffPeso = r.pesoReale != null ? pesoBrt - r.pesoReale : "";
-      const cols = [r.sped, r.nominativo || "", r.zona, fmt2(pesoBrt), r.pesoReale != null ? fmt2(r.pesoReale) : "",
-        diffPeso !== "" ? fmt2(diffPeso) : "", fmt2(r.fatturato), fmt2(r.atteso), fmt2(r.diff)];
+      const cols = [r.sped, r.nominativo || "", r.zona, fmt2(r.pesoReale), fmt2(r.trasporto), fmt2(r.atteso), fmt2(r.diff), fmt2(r.varieSum), tipoLabel(r.tipo)];
       lines.push(cols.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(";"));
     });
     return lines.join("\n");
   }
-
   function scaricaCsvAnomalie(rows, numero) {
     const csv = csvAnomalie(rows);
     const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
@@ -331,29 +320,16 @@ export default function Home() {
     });
   }
 
-  function applyPesoRealeArchivio(invId, rowId, pesoReale, prodottoListino, manuale, dettaglio) {
+  function applyPesoDMArchivio(invId, rowId, pesoDM, prodottoDM, manuale, dettaglio) {
     setInvoices((invs) => invs.map((inv) => {
       if (inv.id !== invId) return inv;
-      return {
-        ...inv, rows: inv.rows.map((r) => {
-          if (r.id !== rowId) return r;
-          const attesoReale = calcAtteso(pesoReale, r.zona, tariff);
-          const diffReale = r.fatturato - attesoReale;
-          return {
-            ...r, pesoReale, prodottoListino, pesoManuale: !!manuale, pesoStato: "trovato",
-            prodottiDettaglio: dettaglio || null,
-            pesoDichiarato: r.pesoDichiarato ?? r.peso, attesoDichiarato: r.attesoDichiarato ?? r.atteso,
-            atteso: attesoReale, diff: diffReale, flag: diffReale >= 0.5,
-          };
-        }),
-      };
+      return { ...inv, rows: inv.rows.map((r) => (r.id === rowId ? { ...r, pesoDM, prodottoDM, pesoDMManuale: !!manuale, pesoDMStato: "trovato", prodottiDettaglioDM: dettaglio || null } : r)) };
     }));
   }
-
-  async function verificaPesoArchivio(invId, rowId, nominativo, dataFattura) {
-    setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoStato: "loading" } : r) }));
+  async function verificaPesoDMArchivio(invId, rowId, nominativo, dataFattura) {
+    setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoDMStato: "loading" } : r) }));
     if (!nominativo) {
-      setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r) }));
+      setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoDMStato: "nontrovato" } : r) }));
       return;
     }
     try {
@@ -365,40 +341,38 @@ export default function Home() {
       const ordine = (data.risultati || [])[0];
       const prodotti = ordine ? ordine.prodotti.filter((p) => p.pesoTrovato) : [];
       if (!prodotti.length) {
-        setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r) }));
+        setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoDMStato: "nontrovato" } : r) }));
         return;
       }
       const pesoTotale = prodotti.reduce((s, p) => s + (p.pesoReale || 0) * (p.quantita || 1), 0);
-      const label = prodotti.length === 1 ? prodotti[0].prodottoListino : `${prodotti.length} prodotti — ${fmt2(pesoTotale)} kg totali`;
-      applyPesoRealeArchivio(invId, rowId, pesoTotale, label, false, prodotti);
+      const label = prodotti.length === 1 ? prodotti[0].prodottoListino : `${prodotti.length} prodotti — ${fmt2(pesoTotale)} kg tot.`;
+      applyPesoDMArchivio(invId, rowId, pesoTotale, label, false, prodotti);
     } catch (e) {
-      setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoStato: "nontrovato" } : r) }));
+      setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoDMStato: "nontrovato" } : r) }));
     }
   }
-
-  async function verificaTuttiIPesiArchivio(inv) {
-    const lista = inv.rows.filter((r) => r.nominativo && r.pesoStato !== "trovato");
+  async function verificaTuttiIPesiDMArchivio(inv) {
+    const lista = inv.rows.filter((r) => r.nominativo && r.pesoDMStato !== "trovato");
     if (!lista.length) { showToast("Non ci sono righe da verificare in questa fattura"); return; }
     setArchBatch((b) => ({ ...b, [inv.id]: { done: 0, total: lista.length, running: true } }));
     let idx = 0;
     const worker = async () => {
       while (idx < lista.length) {
         const row = lista[idx++];
-        await verificaPesoArchivio(inv.id, row.id, row.nominativo, inv.data);
+        await verificaPesoDMArchivio(inv.id, row.id, row.nominativo, inv.data);
         setArchBatch((b) => ({ ...b, [inv.id]: { ...b[inv.id], done: b[inv.id].done + 1 } }));
       }
     };
     await Promise.all(Array.from({ length: Math.min(4, lista.length) }, worker));
     setArchBatch((b) => ({ ...b, [inv.id]: { ...b[inv.id], running: false } }));
     await persistInvoiceRows(inv.id);
-    showToast("Verifica pesi conclusa e salvata");
+    showToast("Confronto col catalogo concluso e salvato");
   }
 
   async function toggleResolved(key, value) {
     setResolved((r) => ({ ...r, [key]: value }));
     await fetch("/api/resolved", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ key, value }) });
   }
-
   async function bulkToggleResolved(keys, value) {
     setResolved((r) => { const next = { ...r }; keys.forEach((k) => { next[k] = value; }); return next; });
     await fetch("/api/resolved", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ keys, value }) });
@@ -411,80 +385,54 @@ export default function Home() {
     setTariffSaved(true);
     setTimeout(() => setTariffSaved(false), 2000);
   }
-
   function updateBracket(idx, zona, value) {
-    setTariffDraft((t) => {
-      const next = JSON.parse(JSON.stringify(t));
-      next.brackets[idx][zona] = parseFloat(String(value).replace(",", ".")) || 0;
-      return next;
-    });
+    setTariffDraft((t) => { const next = JSON.parse(JSON.stringify(t)); next.brackets[idx][zona] = parseFloat(String(value).replace(",", ".")) || 0; return next; });
   }
   function updateOltre(zona, value) {
-    setTariffDraft((t) => {
-      const next = JSON.parse(JSON.stringify(t));
-      next.oltre[zona] = parseFloat(String(value).replace(",", ".")) || 0;
-      return next;
-    });
+    setTariffDraft((t) => { const next = JSON.parse(JSON.stringify(t)); next.oltre[zona] = parseFloat(String(value).replace(",", ".")) || 0; return next; });
   }
 
-  function pesoKey(p) {
-    return (p.codice || "") + "||" + p.descrizione;
-  }
-
+  function pesoKey(p) { return (p.codice || "") + "||" + p.descrizione; }
   async function salvaPeso(p) {
     const key = pesoKey(p);
     const nuovoPeso = pesiEdits[key] !== undefined ? pesiEdits[key] : p.peso;
     setPesiSavingKey(key);
-    const res = await fetch("/api/pesi", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ codice: p.codice, descrizione: p.descrizione, categoria: p.categoria, peso: nuovoPeso }),
-    });
+    const res = await fetch("/api/pesi", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ codice: p.codice, descrizione: p.descrizione, categoria: p.categoria, peso: nuovoPeso }) });
     const data = await res.json();
     if (data.listino) setPesi(data.listino);
     setPesiEdits((e) => { const next = { ...e }; delete next[key]; return next; });
     setPesiSavingKey(null);
     showToast("Peso aggiornato");
   }
-
   async function eliminaPeso(p) {
     if (!confirm(`Eliminare "${p.descrizione}" dal listino?`)) return;
-    const res = await fetch("/api/pesi", {
-      method: "DELETE", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ codice: p.codice, descrizione: p.descrizione }),
-    });
+    const res = await fetch("/api/pesi", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ codice: p.codice, descrizione: p.descrizione }) });
     const data = await res.json();
     if (data.listino) setPesi(data.listino);
   }
-
   async function aggiungiProdotto() {
-    if (!newProd.descrizione || newProd.peso === "") {
-      showToast("Servono almeno descrizione e peso");
-      return;
-    }
-    const res = await fetch("/api/pesi", {
-      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(newProd),
-    });
+    if (!newProd.descrizione || newProd.peso === "") { showToast("Servono almeno descrizione e peso"); return; }
+    const res = await fetch("/api/pesi", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(newProd) });
     const data = await res.json();
     if (data.listino) setPesi(data.listino);
     setNewProd({ codice: "", descrizione: "", categoria: "", peso: "" });
     showToast("Prodotto aggiunto al listino");
   }
-
   const pesiFiltrati = pesiSearch.trim().length >= 2
     ? pesi.filter((p) => p.descrizione.toUpperCase().includes(pesiSearch.trim().toUpperCase())).slice(0, 100)
     : [];
 
-  function formatLine(inv, r) {
-    const chi = r.nominativo ? ` — ${r.nominativo}` : "";
-    const pesoBrt = r.pesoDichiarato ?? r.peso;
-    const pesoInfo = r.pesoReale != null
-      ? `Peso dichiarato: ${fmt2(pesoBrt)}kg — Peso reale: ${fmt2(r.pesoReale)}kg`
-      : `Peso dichiarato: ${fmt2(pesoBrt)}kg`;
-    return `Spedizione ${r.sped}${chi} (${r.zona})\n${pesoInfo}\nPagato: ${fmt(r.fatturato)}€ — Dovuto: ${fmt(r.atteso)}€ — Da recuperare: ${fmt2(r.diff)}€`;
+  // ---------- email ----------
+
+  function formatShipmentBlock(inv, r) {
+    const testo = r.rawText || `${r.sped} — ${r.nominativo} (${r.zona}) — peso reale ${fmt2(r.pesoReale)}kg — fatturato ${fmt(r.trasporto)}€`;
+    return `Fattura ${inv.numero}:\n${testo}\n(peso reale ${fmt2(r.pesoReale)}kg → trasporto dovuto ${fmt(r.atteso)}€, fatturato ${fmt(r.trasporto)}€, differenza +${fmt2(r.diff)}€)`;
   }
   function formatTag(inv, r) {
     const chi = r.nota || r.nominativo || "";
-    return `- ${r.sped}${chi ? " " + chi : ""} (fattura ${inv.numero})`;
+    const riga = `- ${r.sped}${chi ? " " + chi : ""} (fattura ${inv.numero}) — Motivazione: ${tipoLabel(r.tipo)}`;
+    if (r.tipo === "giacenza") return `*** ${riga} ***`;
+    return riga;
   }
 
   function generateEmail(invoicesOverride) {
@@ -496,7 +444,7 @@ export default function Home() {
       inv.rows.forEach((r) => {
         const key = inv.id + "::" + r.id;
         if (resolved[key]) return;
-        if (r.flag) { priceLines.push(formatLine(inv, r)); totaleDaRecuperare += r.diff; }
+        if (r.flag) { priceLines.push(formatShipmentBlock(inv, r)); totaleDaRecuperare += r.diff; }
         if (r.tipo === "ritardo" || r.tipo === "annullata") ritardoLines.push(formatTag(inv, r));
         if (r.tipo === "giacenza") giacenzaLines.push(formatTag(inv, r));
         if (r.tipo === "piano_non_eseguita" || r.tipo === "piano_non_richiesta") pianoLines.push(formatTag(inv, r));
@@ -521,9 +469,7 @@ export default function Home() {
     if (ritardoLines.length) body += `\nDa stornare per ritardo o annullamento:\n${ritardoLines.join("\n")}\n`;
     if (giacenzaLines.length) body += `\nGiacenze:\n${giacenzaLines.join("\n")}\n`;
     if (pianoLines.length) body += `\nConsegne al piano non eseguite o non richieste da noi:\n${pianoLines.join("\n")}\n`;
-    if (priceLines.length) {
-      body += `\nRiepilogo: ${priceLines.length} spedizioni da rivedere, totale da recuperare ${fmt2(totaleDaRecuperare)}€.\n`;
-    }
+    if (priceLines.length) body += `\nRiepilogo: ${priceLines.length} spedizioni da rivedere, totale da recuperare ${fmt2(totaleDaRecuperare)}€.\n`;
     body += "\nAttendiamo nota credito, grazie.\nSaluti";
     setEmailText(body);
     setEmailSubject(subject);
@@ -546,18 +492,12 @@ export default function Home() {
       </div>
     );
   }
-
-  if (loadingApp) {
-    return <div style={{ padding: 40, fontFamily: "Inter, sans-serif", color: "#64748B" }}>Caricamento…</div>;
-  }
+  if (loadingApp) return <div style={{ padding: 40, fontFamily: "Inter, sans-serif", color: "#64748B" }}>Caricamento…</div>;
 
   const daVerificareItems = [];
   invoices.forEach((inv) => {
     (inv.rows || []).forEach((r) => {
-      if (r.flag || r.tipo) {
-        const key = inv.id + "::" + r.id;
-        daVerificareItems.push({ inv, r, key, resolved: !!resolved[key] });
-      }
+      if (r.flag || r.tipo) daVerificareItems.push({ inv, r, key: inv.id + "::" + r.id, resolved: !!resolved[inv.id + "::" + r.id] });
     });
   });
   const openCount = daVerificareItems.filter((i) => !i.resolved).length;
@@ -600,7 +540,7 @@ export default function Home() {
                 onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); }}>
                 <div className="icon">↑</div>
                 <h3>Carica la fattura BRT (PDF)</h3>
-                <p>Trascina il file qui o clicca per selezionarlo — l'app legge le spedizioni e controlla i prezzi da sola.</p>
+                <p>Trascina il file qui o clicca per selezionarlo — l'app legge le spedizioni e controlla i prezzi da sola, sul peso reale dichiarato da BRT.</p>
                 <input ref={fileInputRef} type="file" accept="application/pdf" onChange={(e) => handleFile(e.target.files[0])} />
               </div>
             )}
@@ -609,7 +549,7 @@ export default function Home() {
             {status === "error" && <div className="status-line">⚠ Non sono riuscito a leggere questo PDF. Aggiungi le righe a mano qui sotto.</div>}
             {status.startsWith("ok:") && (() => {
               const [, n, u] = status.split(":");
-              return <div className="status-line">✓ {n} spedizioni riconosciute{u > 0 ? ` — ${u} righe da controllare a mano` : ""}.</div>;
+              return <div className="status-line">✓ {n} spedizioni lette e calcolate all'istante{u > 0 ? ` — ${u} righe da controllare a mano` : ""}.</div>;
             })()}
 
             {reviewing && (
@@ -627,166 +567,107 @@ export default function Home() {
 
                 <div className="card">
                   <p className="sec-note" style={{ marginBottom: 12 }}>
-                    <b>Peso BRT</b> è quello dichiarato da loro in fattura. <b>Peso reale</b> è quello vero del prodotto, verificato dall'app.
-                    <b> Dovuto</b> è quanto avreste dovuto pagare in base al peso reale. <b>Da recuperare</b> è la differenza tra quanto avete
-                    pagato e quanto dovuto — quella è la cifra da chiedere indietro a BRT su ogni spedizione.
+                    Il calcolo usa il <b>peso reale</b> dichiarato da BRT in fattura (non quello tassabile/volumetrico) per capire quanto
+                    avreste dovuto pagare di trasporto. Segnaliamo una spedizione quando la differenza è di almeno {fmt2(SOGLIA_ANOMALIA)}€.
+                    Se la zona rilevata dal CAP non è corretta (es. piccole isole come Ischia), correggila tu dal menu a tendina.
                   </p>
-                  {pesoBatch && (
-                    <div className="card blue" style={{ marginBottom: 12, padding: 14 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                        <span style={{ fontSize: 13, fontWeight: 600 }}>
-                          {pesoBatch.running ? "Verifica pesi in corso…" : "Verifica pesi conclusa"} — {pesoBatch.done}/{pesoBatch.total}
-                        </span>
-                        {pesoBatch.running && <button className="link" onClick={fermaVerifica}>Ferma</button>}
-                      </div>
-                      <div style={{ height: 6, background: "var(--blue-mid)", borderRadius: 4, overflow: "hidden" }}>
-                        <div style={{ height: "100%", width: `${(pesoBatch.done / pesoBatch.total) * 100}%`, background: "var(--blue)", transition: "width .3s" }}></div>
-                      </div>
-                      {pesoBatch.running && <p className="sec-note" style={{ marginTop: 8, marginBottom: 0 }}>Può richiedere diversi minuti su fatture grandi — puoi continuare a lavorare, si aggiorna da sola.</p>}
-                      {!pesoBatch.running && (() => {
-                        const trovate = draftRows.filter((r) => r.pesoStato === "trovato").length;
-                        const nonTrovate = draftRows.filter((r) => r.pesoStato === "nontrovato").length;
-                        const anomalie = draftRows.filter((r) => r.flag).length;
-                        const totaleDaRecuperare = draftRows.filter((r) => r.flag).reduce((s, r) => s + r.diff, 0);
-                        return (
-                          <div style={{ marginTop: 10 }}>
-                            <p className="sec-note" style={{ marginBottom: 8 }}>
-                              <b>{trovate}</b> pesi verificati, <b>{nonTrovate}</b> non trovati (cercali a mano se vuoi) —
-                              <b> {anomalie} spedizioni</b> con differenza da recuperare, per un totale di <b style={{ color: "var(--red)" }}>{fmt2(totaleDaRecuperare)}€</b>.
-                            </p>
-                            {nonTrovate > 0 && <button className="btn secondary" onClick={riprovaNonTrovate}>Riprova le righe non trovate</button>}
-                            {anomalie > 0 && (
-                              <div style={{ display: "flex", gap: 10, marginTop: 10, flexWrap: "wrap" }}>
-                                <button className="btn secondary" onClick={() => scaricaCsvAnomalie(draftRows, fNumero)}>Scarica CSV anomalie</button>
-                                <button className="btn" onClick={saveAndEmail}>Salva e genera mail per Daniele →</button>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })()}
-                    </div>
-                  )}
                   <div className="table-wrap">
                     <table>
                       <thead><tr>
                         <th>Sped.</th><th>Cliente</th><th>Zona</th>
-                        <th className="num">Peso BRT</th>
-                        <th>Peso reale</th>
-                        <th className="num">Diff. peso</th>
-                        <th className="num">Pagato</th>
-                        <th className="num">Dovuto</th>
+                        <th className="num">Peso reale BRT</th>
+                        <th className="num">Trasp. fatturato</th>
+                        <th className="num">Trasp. dovuto</th>
                         <th className="num">Da recuperare</th>
+                        <th className="num">Varie</th>
+                        <th>Peso De Matteo</th>
                         <th>Tipo</th><th>Nota</th><th></th>
                       </tr></thead>
                       <tbody>
-                        {draftRows.map((r) => {
-                          const pesoBrt = r.pesoDichiarato ?? r.peso;
-                          const diffPeso = r.pesoReale != null ? pesoBrt - r.pesoReale : null;
-                          return (
-                            <tr key={r.id} className={r.flag ? "flag" : ""}>
-                              <td>{r.sped}{r.pianoAmount ? <span className="pill blue" title={`Consegna al piano addebitata: ${fmt(r.pianoAmount)}€`}> P</span> : ""}</td>
-                              <td>{r.nominativo || "—"}</td>
-                              <td>{r.zona}</td>
-                              <td className="num">{fmt2(pesoBrt)} kg</td>
-                              <td style={{ minWidth: 190 }}>
-                                {r.pesoStato === "idle" && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>in coda…</span>}
-                                {r.pesoStato === "loading" && <span className="mini-spinner"></span>}
-                                {r.pesoStato === "nontrovato" && (
-                                  <div style={{ display: "flex", gap: 6, alignItems: "flex-start", flexWrap: "wrap" }}>
-                                    <button className="btn-tiny" onClick={() => verificaPeso(r.id, r.nominativo)}>Riprova</button>
-                                    <button className="btn-tiny" onClick={() => toggleManualPick(r.id)}>
-                                      {manualOpenId === r.id ? "annulla" : "Cerca a mano"}
-                                    </button>
-                                    {manualOpenId === r.id && (
-                                      <div style={{ position: "relative" }}>
-                                        <input value={manualQuery} onChange={(e) => setManualQuery(e.target.value)}
-                                          placeholder="cerca materasso…" style={{ width: 150 }} autoFocus />
-                                        {manualQuery.trim().length >= 2 && (
-                                          <div style={{ position: "absolute", zIndex: 20, background: "#fff", border: "1px solid var(--line)", borderRadius: 8, maxHeight: 180, overflowY: "auto", width: 240, boxShadow: "0 4px 12px rgba(0,0,0,.08)" }}>
-                                            {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).slice(0, 8).map((p) => (
-                                              <div key={pesoKey(p)} style={{ padding: "6px 10px", fontSize: 11.5, cursor: "pointer", borderBottom: "1px solid var(--line)" }}
-                                                onClick={() => pickManualProduct(r.id, p)}>
-                                                {p.descrizione} — <b>{p.peso} kg</b>
-                                              </div>
-                                            ))}
-                                            {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).length === 0 && (
-                                              <div style={{ padding: "6px 10px", fontSize: 11.5, color: "var(--ink-soft)" }}>Nessun prodotto trovato — aggiungilo prima in "Pesi prodotti".</div>
-                                            )}
-                                          </div>
-                                        )}
-                                      </div>
-                                    )}
-                                  </div>
-                                )}
-                                {r.pesoStato === "trovato" && (
-                                  <div className="peso-cell" style={{ alignItems: "flex-start", textAlign: "left" }}>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                                      <b style={{ fontSize: 14 }}>{fmtKg(r.pesoReale)}</b>
-                                      {r.pesoManuale && <span className="pill grey">manuale</span>}
-                                      <button className="link" style={{ fontSize: 10.5 }} onClick={() => toggleManualPick(r.id)}>
-                                        {manualOpenId === r.id ? "annulla" : "cambia"}
-                                      </button>
-                                      {manualOpenId === r.id && (
-                                        <div style={{ position: "relative" }}>
-                                          <input value={manualQuery} onChange={(e) => setManualQuery(e.target.value)}
-                                            placeholder="cerca materasso…" style={{ width: 150 }} autoFocus />
-                                          {manualQuery.trim().length >= 2 && (
-                                            <div style={{ position: "absolute", zIndex: 20, background: "#fff", border: "1px solid var(--line)", borderRadius: 8, maxHeight: 180, overflowY: "auto", width: 240, boxShadow: "0 4px 12px rgba(0,0,0,.08)" }}>
-                                              {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).slice(0, 8).map((p) => (
-                                                <div key={pesoKey(p)} style={{ padding: "6px 10px", fontSize: 11.5, cursor: "pointer", borderBottom: "1px solid var(--line)" }}
-                                                  onClick={() => pickManualProduct(r.id, p)}>
-                                                  {p.descrizione} — <b>{p.peso} kg</b>
-                                                </div>
-                                              ))}
-                                              {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).length === 0 && (
-                                                <div style={{ padding: "6px 10px", fontSize: 11.5, color: "var(--ink-soft)" }}>Nessun prodotto trovato — aggiungilo prima in "Pesi prodotti".</div>
-                                              )}
-                                            </div>
-                                          )}
-                                        </div>
-                                      )}
+                        {draftRows.map((r) => (
+                          <tr key={r.id} className={r.flag ? "flag" : ""}>
+                            <td>
+                              {r.sped}
+                              {r.rawText && (
+                                <button className="link" style={{ fontSize: 10, display: "block" }} onClick={() => setRawOpenId(rawOpenId === r.id ? null : r.id)}>
+                                  {rawOpenId === r.id ? "nascondi testo" : "vedi testo fattura"}
+                                </button>
+                              )}
+                              {rawOpenId === r.id && <pre className="raw-block">{r.rawText}</pre>}
+                            </td>
+                            <td>{r.nominativo || "—"}</td>
+                            <td>
+                              <select value={r.zona} onChange={(e) => updateRowZona(r.id, e.target.value)} style={{ width: 92 }}>
+                                {ZONE.map((z) => <option key={z} value={z}>{z}</option>)}
+                              </select>
+                            </td>
+                            <td className="num">{fmt2(r.pesoReale)} kg</td>
+                            <td className="num">{fmt(r.trasporto)}€</td>
+                            <td className="num">{fmt(r.atteso)}€</td>
+                            <td className="num">{r.flag ? <span className="pill rust" style={{ fontSize: 13 }}>+{fmt2(r.diff)}€</span> : `${fmt2(r.diff)}€`}</td>
+                            <td className="num">{fmt2(r.varieSum)}€</td>
+                            <td style={{ minWidth: 170 }}>
+                              {r.pianoAmount != null && <div className="piano-badge">🛗 CONSEGNA AL PIANO — {fmt2(r.pianoAmount)}€</div>}
+                              {r.pesoDMStato === "idle" && (
+                                <button className="btn-tiny" onClick={() => verificaPesoDM(r.id, r.nominativo)}>Confronta con catalogo</button>
+                              )}
+                              {r.pesoDMStato === "loading" && <span className="mini-spinner"></span>}
+                              {r.pesoDMStato === "nontrovato" && (
+                                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                                  <button className="btn-tiny" onClick={() => verificaPesoDM(r.id, r.nominativo)}>Riprova</button>
+                                  <button className="btn-tiny" onClick={() => toggleManualPick(r.id)}>{manualOpenId === r.id ? "annulla" : "cerca a mano"}</button>
+                                </div>
+                              )}
+                              {r.pesoDMStato === "trovato" && (
+                                <div className="peso-cell" style={{ alignItems: "flex-start", textAlign: "left" }}>
+                                  <b style={{ fontSize: 13 }}>{fmtKg(r.pesoDM)}</b>
+                                  {r.pesoDMManuale && <span className="pill grey">manuale</span>}
+                                  <small style={{ color: "var(--ink-soft)" }}>{r.prodottoDM}</small>
+                                  <button className="link" style={{ fontSize: 10 }} onClick={() => toggleManualPick(r.id)}>{manualOpenId === r.id ? "annulla" : "cambia"}</button>
+                                </div>
+                              )}
+                              {manualOpenId === r.id && (
+                                <div style={{ position: "relative", marginTop: 4 }}>
+                                  <input value={manualQuery} onChange={(e) => setManualQuery(e.target.value)} placeholder="cerca materasso…" style={{ width: 150 }} autoFocus />
+                                  {manualQuery.trim().length >= 2 && (
+                                    <div style={{ position: "absolute", zIndex: 20, background: "#fff", border: "1px solid var(--line)", borderRadius: 8, maxHeight: 180, overflowY: "auto", width: 240, boxShadow: "0 4px 12px rgba(0,0,0,.08)" }}>
+                                      {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).slice(0, 8).map((p) => (
+                                        <div key={pesoKey(p)} style={{ padding: "6px 10px", fontSize: 11.5, cursor: "pointer", borderBottom: "1px solid var(--line)" }}
+                                          onClick={() => pickManualProduct(r.id, p)}>{p.descrizione} — <b>{p.peso} kg</b></div>
+                                      ))}
                                     </div>
-                                    {r.prodottiDettaglio && r.prodottiDettaglio.length > 1 ? (
-                                      <details style={{ fontSize: 11 }}>
-                                        <summary style={{ cursor: "pointer", color: "var(--ink-soft)" }}>{r.prodottiDettaglio.length} prodotti</summary>
-                                        <ul style={{ margin: "4px 0 0", paddingLeft: 14 }}>
-                                          {r.prodottiDettaglio.map((p, i) => (
-                                            <li key={i}>{p.prodottoListino} {p.quantita > 1 ? `×${p.quantita}` : ""} — {p.pesoReale} kg</li>
-                                          ))}
-                                        </ul>
-                                      </details>
-                                    ) : (
-                                      <small style={{ color: "var(--ink-soft)" }}>{r.prodottoListino}</small>
-                                    )}
-                                  </div>
-                                )}
-                              </td>
-                              <td className="num">{diffPeso != null ? <b>{fmt2(diffPeso)} kg</b> : "—"}</td>
-                              <td className="num">{fmt(r.fatturato)}€</td>
-                              <td className="num">{fmt(r.atteso)}€</td>
-                              <td className="num">{r.flag ? <span className="pill rust" style={{ fontSize: 13 }}>+{fmt2(r.diff)}€</span> : `${fmt2(r.diff)}€`}</td>
-                              <td>
-                                <select value={r.tipo} onChange={(e) => updateDraftRow(r.id, "tipo", e.target.value)} style={{ width: 118 }}>
-                                  {TIPO_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-                                </select>
-                              </td>
-                              <td><input value={r.nota} placeholder="nota (es. motivo)" style={{ width: 120 }}
-                                onChange={(e) => updateDraftRow(r.id, "nota", e.target.value)} /></td>
-                              <td><button className="btn-sm" onClick={() => removeDraftRow(r.id)}>✕</button></td>
-                            </tr>
-                          );
-                        })}
+                                  )}
+                                </div>
+                              )}
+                            </td>
+                            <td>
+                              <select value={r.tipo} onChange={(e) => updateDraftRow(r.id, "tipo", e.target.value)} style={{ width: 118 }}>
+                                {TIPO_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                              </select>
+                            </td>
+                            <td><input value={r.nota} placeholder="nota (es. motivo)" style={{ width: 120 }} onChange={(e) => updateDraftRow(r.id, "nota", e.target.value)} /></td>
+                            <td><button className="btn-sm" onClick={() => removeDraftRow(r.id)}>✕</button></td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
                   {draftRows.length === 0 && <div className="empty">Nessuna riga riconosciuta — usa "aggiungi riga a mano" qui sotto.</div>}
                   {draftRows.length > 0 && (
-                    <div className="totals">
-                      <div className="t"><span className="n">{draftRows.length}</span><span className="l">Righe</span></div>
-                      <div className="t"><span className="n">{draftTotals.flags}</span><span className="l">Anomalie</span></div>
-                      <div className="t"><span className="n">{draftTotals.piani}</span><span className="l">Consegne al piano</span></div>
-                      <div className="t"><span className="n">{fmt2(draftTotals.diff)}€</span><span className="l">Diff. totale</span></div>
-                    </div>
+                    <>
+                      <div className="totals">
+                        <div className="t"><span className="n">{draftRows.length}</span><span className="l">Righe</span></div>
+                        <div className="t"><span className="n">{draftTotals.flags}</span><span className="l">Anomalie</span></div>
+                        <div className="t"><span className="n">{draftTotals.piani}</span><span className="l">Consegne al piano</span></div>
+                        <div className="t"><span className="n" style={{ color: "var(--red)" }}>{fmt2(draftTotals.diff)}€</span><span className="l">Da recuperare (tot.)</span></div>
+                      </div>
+                      {draftTotals.flags > 0 && (
+                        <div style={{ display: "flex", gap: 10, marginTop: 14, flexWrap: "wrap" }}>
+                          <button className="btn secondary" onClick={() => scaricaCsvAnomalie(draftRows, fNumero)}>Scarica CSV anomalie</button>
+                          <button className="btn" onClick={saveAndEmail}>Salva e genera mail per Daniele →</button>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
 
@@ -808,9 +689,9 @@ export default function Home() {
                         onChange={(e) => setManRow({ ...manRow, cap: e.target.value, zona: detectZona(e.target.value) })} /></div>
                       <div><label>Zona</label>
                         <select value={manRow.zona} onChange={(e) => setManRow({ ...manRow, zona: e.target.value })}>
-                          <option>Italia</option><option>Calabria</option><option>Sicilia</option><option>Sardegna</option>
+                          {ZONE.map((z) => <option key={z}>{z}</option>)}
                         </select></div>
-                      <div><label>Peso tassabile (kg)</label><input type="number" value={manRow.peso} onChange={(e) => setManRow({ ...manRow, peso: e.target.value })} /></div>
+                      <div><label>Peso reale (kg)</label><input type="number" value={manRow.peso} onChange={(e) => setManRow({ ...manRow, peso: e.target.value })} /></div>
                     </div>
                     <div className="grid g2" style={{ marginTop: 10 }}>
                       <div><label>Trasporto fatturato (€)</label><input type="number" value={manRow.fatturato} onChange={(e) => setManRow({ ...manRow, fatturato: e.target.value })} /></div>
@@ -838,10 +719,12 @@ export default function Home() {
                 <div className="week-head">Settimana {week} — {byWeek[week].length} fattura/e</div>
                 {byWeek[week].map((inv) => {
                   const flags = inv.rows.filter((r) => r.flag).length;
-                  const totalDiff = inv.rows.reduce((s, r) => s + r.diff, 0);
+                  const totalDiff = inv.rows.reduce((s, r) => s + (r.flag ? r.diff : 0), 0);
                   const daSegnalare = inv.rows.filter((r) => r.flag || r.tipo);
                   const ancoraAperte = daSegnalare.filter((r) => !resolved[inv.id + "::" + r.id]).length;
                   const aperta = !!expandedIds[inv.id];
+                  const batch = archBatch[inv.id];
+                  const daVerificareDM = inv.rows.filter((r) => r.nominativo && r.pesoDMStato !== "trovato").length;
                   return (
                     <div className="card" key={inv.id} style={{ marginBottom: 10, marginTop: 10 }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
@@ -850,101 +733,51 @@ export default function Home() {
                         <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           <span className={`pill ${flags > 0 ? "rust" : "teal"}`}>{flags} anomalie</span>
                           {daSegnalare.length > 0 && (
-                            <span className={`pill ${ancoraAperte > 0 ? "amber" : "teal"}`}>
-                              {ancoraAperte > 0 ? `${ancoraAperte} ancora aperte` : "Tutto risolto ✓"}
-                            </span>
+                            <span className={`pill ${ancoraAperte > 0 ? "amber" : "teal"}`}>{ancoraAperte > 0 ? `${ancoraAperte} ancora aperte` : "Tutto risolto ✓"}</span>
                           )}
                           <button className="btn-sm" onClick={(e) => { e.stopPropagation(); deleteInvoice(inv.id); }}>Elimina</button>
                         </span>
                       </div>
                       {aperta && (
-                      <div style={{ marginTop: 12 }}>
-                      {(() => {
-                        const daVerificare = inv.rows.filter((r) => r.nominativo && r.pesoStato !== "trovato").length;
-                        const batch = archBatch[inv.id];
-                        return (
-                          <div style={{ marginBottom: 10 }}>
-                            {daVerificare > 0 && !batch?.running && (
-                              <button className="btn secondary" onClick={() => verificaTuttiIPesiArchivio(inv)}>
-                                Verifica pesi mancanti ({daVerificare})
-                              </button>
-                            )}
-                            {batch?.running && (
-                              <div className="card blue" style={{ padding: 12 }}>
-                                <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Verifica pesi in corso… — {batch.done}/{batch.total}</div>
-                                <div style={{ height: 6, background: "var(--blue-mid)", borderRadius: 4, overflow: "hidden" }}>
-                                  <div style={{ height: "100%", width: `${(batch.done / batch.total) * 100}%`, background: "var(--blue)", transition: "width .3s" }}></div>
-                                </div>
+                        <div style={{ marginTop: 12 }}>
+                          {daVerificareDM > 0 && !batch?.running && (
+                            <button className="btn secondary" style={{ marginBottom: 10 }} onClick={() => verificaTuttiIPesiDMArchivio(inv)}>
+                              Confronta col catalogo De Matteo ({daVerificareDM})
+                            </button>
+                          )}
+                          {batch?.running && (
+                            <div className="card blue" style={{ padding: 12, marginBottom: 10 }}>
+                              <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Confronto in corso… — {batch.done}/{batch.total}</div>
+                              <div style={{ height: 6, background: "var(--blue-mid)", borderRadius: 4, overflow: "hidden" }}>
+                                <div style={{ height: "100%", width: `${(batch.done / batch.total) * 100}%`, background: "var(--blue)", transition: "width .3s" }}></div>
                               </div>
-                            )}
+                            </div>
+                          )}
+                          <div className="table-wrap">
+                            <table>
+                              <thead><tr>
+                                <th>Sped.</th><th>Cliente</th><th>Zona</th><th className="num">Peso reale</th>
+                                <th className="num">Fatturato</th><th className="num">Dovuto</th><th className="num">Diff.</th>
+                                <th>Peso De Matteo</th><th>Tipo</th>
+                              </tr></thead>
+                              <tbody>
+                                {inv.rows.map((r) => (
+                                  <tr key={r.id} className={r.flag ? "flag" : ""}>
+                                    <td>{r.sped}{r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>🛗 PIANO {fmt2(r.pianoAmount)}€</div> : ""}</td>
+                                    <td>{r.nominativo || "—"}</td><td>{r.zona}</td>
+                                    <td className="num">{fmt2(r.pesoReale)} kg</td>
+                                    <td className="num">{fmt(r.trasporto)}€</td>
+                                    <td className="num">{fmt(r.atteso)}€</td>
+                                    <td className="num">{r.flag ? <span className="pill rust">+{fmt2(r.diff)}€</span> : `${fmt2(r.diff)}€`}</td>
+                                    <td>{r.pesoDMStato === "trovato" ? <span>{fmtKg(r.pesoDM)}</span> : "—"}</td>
+                                    <td>{r.tipo ? <span className="pill grey">{tipoLabel(r.tipo)}</span> : "—"}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
-                        );
-                      })()}
-                      <div className="table-wrap">
-                        <table>
-                          <thead><tr>
-                            <th>Sped.</th><th>Cliente</th><th>Zona</th>
-                            <th className="num">Peso BRT</th><th>Peso reale</th><th className="num">Diff. peso</th>
-                            <th className="num">Pagato</th><th className="num">Dovuto</th><th className="num">Da recuperare</th><th>Tipo</th>
-                          </tr></thead>
-                          <tbody>
-                            {inv.rows.map((r) => {
-                              const pesoBrt = r.pesoDichiarato ?? r.peso;
-                              const diffPeso = r.pesoReale != null ? pesoBrt - r.pesoReale : null;
-                              const mk = inv.id + "::" + r.id;
-                              return (
-                              <tr key={r.id} className={r.flag ? "flag" : ""}>
-                                <td>{r.sped}{r.pianoAmount ? <span className="pill blue"> P</span> : ""}</td>
-                                <td>{r.nominativo || "—"}</td>
-                                <td>{r.zona}</td>
-                                <td className="num">{fmt2(pesoBrt)} kg</td>
-                                <td style={{ minWidth: 170 }}>
-                                  {(!r.pesoStato || r.pesoStato === "idle") && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>—</span>}
-                                  {r.pesoStato === "loading" && <span className="mini-spinner"></span>}
-                                  {r.pesoStato === "nontrovato" && (
-                                    <div style={{ display: "flex", gap: 6 }}>
-                                      <button className="btn-tiny" onClick={() => verificaPesoArchivio(inv.id, r.id, r.nominativo, inv.data).then(() => persistInvoiceRows(inv.id))}>Riprova</button>
-                                      <button className="btn-tiny" onClick={() => toggleManualPick(mk)}>{manualOpenId === mk ? "annulla" : "Cerca a mano"}</button>
-                                    </div>
-                                  )}
-                                  {r.pesoStato === "trovato" && (
-                                    <div className="peso-cell" style={{ alignItems: "flex-start", textAlign: "left" }}>
-                                      <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                                        <b style={{ fontSize: 14 }}>{fmtKg(r.pesoReale)}</b>
-                                        {r.pesoManuale && <span className="pill grey">manuale</span>}
-                                        <button className="link" style={{ fontSize: 10.5 }} onClick={() => toggleManualPick(mk)}>{manualOpenId === mk ? "annulla" : "cambia"}</button>
-                                      </div>
-                                      <small style={{ color: "var(--ink-soft)" }}>{r.prodottoListino}</small>
-                                    </div>
-                                  )}
-                                  {manualOpenId === mk && (
-                                    <div style={{ position: "relative", marginTop: 4 }}>
-                                      <input value={manualQuery} onChange={(e) => setManualQuery(e.target.value)} placeholder="cerca materasso…" style={{ width: 150 }} autoFocus />
-                                      {manualQuery.trim().length >= 2 && (
-                                        <div style={{ position: "absolute", zIndex: 20, background: "#fff", border: "1px solid var(--line)", borderRadius: 8, maxHeight: 180, overflowY: "auto", width: 240, boxShadow: "0 4px 12px rgba(0,0,0,.08)" }}>
-                                          {pesi.filter((p) => p.descrizione.toUpperCase().includes(manualQuery.trim().toUpperCase())).slice(0, 8).map((p) => (
-                                            <div key={pesoKey(p)} style={{ padding: "6px 10px", fontSize: 11.5, cursor: "pointer", borderBottom: "1px solid var(--line)" }}
-                                              onClick={() => { applyPesoRealeArchivio(inv.id, r.id, p.peso, p.descrizione, true); persistInvoiceRows(inv.id); setManualOpenId(null); setManualQuery(""); }}>
-                                              {p.descrizione} — <b>{p.peso} kg</b>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
-                                </td>
-                                <td className="num">{diffPeso != null ? <b>{fmt2(diffPeso)} kg</b> : "—"}</td>
-                                <td className="num">{fmt(r.fatturato)}€</td>
-                                <td className="num">{fmt(r.atteso)}€</td>
-                                <td className="num">{r.flag ? <span className="pill rust">+{fmt2(r.diff)}€</span> : `${fmt2(r.diff)}€`}</td>
-                                <td>{r.tipo ? <span className="pill grey">{tipoLabel(r.tipo)}</span> : "—"}</td>
-                              </tr>
-                            );})}
-                          </tbody>
-                        </table>
-                      </div>
-                      <div style={{ fontSize: 11.5, color: "var(--ink-soft)", marginTop: 8 }}>Differenza totale fattura: <b style={{ color: "var(--ink)" }}>{fmt2(totalDiff)}€</b></div>
-                      </div>
+                          <div style={{ fontSize: 11.5, color: "var(--ink-soft)", marginTop: 8 }}>Differenza totale fattura: <b style={{ color: "var(--ink)" }}>{fmt2(totalDiff)}€</b></div>
+                        </div>
                       )}
                     </div>
                   );
@@ -957,7 +790,7 @@ export default function Home() {
         {activeTab === "verificare" && (
           <section className="active">
             <h2 className="sec-title">Righe da verificare</h2>
-            <p className="sec-note">Spedizioni con differenza ≥ 0,50€ o con un tipo assegnato, raggruppate per fattura — lavorane una alla volta.</p>
+            <p className="sec-note">Spedizioni con differenza ≥ {fmt2(SOGLIA_ANOMALIA)}€ o con un tipo assegnato, raggruppate per fattura.</p>
             <div className="card" style={{ padding: 14, marginBottom: 12 }}>
               <label className="checkbox-row">
                 <input type="checkbox" checked={mostraRisolte} onChange={(e) => setMostraRisolte(e.target.checked)} />
@@ -972,10 +805,7 @@ export default function Home() {
               });
               let gruppi = Object.values(byInvoice).sort((a, b) => new Date(b.inv.data) - new Date(a.inv.data));
               if (!mostraRisolte) gruppi = gruppi.filter((g) => g.items.some((i) => !i.resolved));
-
-              if (gruppi.length === 0) {
-                return <div className="empty">Tutto risolto — nessuna fattura in sospeso al momento.</div>;
-              }
+              if (gruppi.length === 0) return <div className="empty">Tutto risolto — nessuna fattura in sospeso al momento.</div>;
               return gruppi.map((g) => {
                 const visibili = mostraRisolte ? g.items : g.items.filter((i) => !i.resolved);
                 const aperte = g.items.filter((i) => !i.resolved).length;
@@ -988,34 +818,33 @@ export default function Home() {
                       <span className={`pill ${aperte > 0 ? "amber" : "teal"}`}>{aperte > 0 ? `${aperte} aperte` : "Tutto risolto ✓"}</span>
                     </div>
                     {espansa && (
-                    <div className="table-wrap" style={{ marginTop: 10 }}>
-                      <table>
-                        <thead><tr><th>Sped.</th><th>Cliente</th><th>Zona</th><th className="num">Peso</th><th className="num">Fatturato</th><th className="num">Diff.</th><th>Tipo</th>
-                          <th>
-                            <label className="checkbox-row">
-                              <input type="checkbox"
-                                checked={visibili.length > 0 && visibili.every((i) => i.resolved)}
-                                onChange={(e) => bulkToggleResolved(visibili.map((i) => i.key), e.target.checked)} />
-                              Nota credito ricevuta (tutte)
-                            </label>
-                          </th>
-                        </tr></thead>
-                        <tbody>
-                          {visibili.sort((a, b) => (b.r.flag - a.r.flag) || (b.r.diff - a.r.diff)).map((it) => (
-                            <tr key={it.key} className={it.resolved ? "resolved" : it.r.flag ? "flag" : ""}>
-                              <td>{it.r.sped}{it.r.pianoAmount ? <span className="pill blue"> P</span> : ""}</td>
-                              <td>{it.r.nominativo || "—"}</td>
-                              <td>{it.r.zona}</td>
-                              <td className="num">{fmt2(it.r.peso)}</td>
-                              <td className="num">{fmt(it.r.fatturato)}</td>
-                              <td className="num">{it.r.flag ? `+${fmt2(it.r.diff)}€` : "—"}</td>
-                              <td>{tipoLabel(it.r.tipo)}</td>
-                              <td><label className="checkbox-row"><input type="checkbox" checked={it.resolved} onChange={(e) => toggleResolved(it.key, e.target.checked)} /> {it.resolved ? "Risolto" : "—"}</label></td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                      <div className="table-wrap" style={{ marginTop: 10 }}>
+                        <table>
+                          <thead><tr><th>Sped.</th><th>Cliente</th><th>Zona</th><th className="num">Peso reale</th><th className="num">Fatturato</th><th className="num">Diff.</th><th>Tipo</th>
+                            <th>
+                              <label className="checkbox-row">
+                                <input type="checkbox" checked={visibili.length > 0 && visibili.every((i) => i.resolved)}
+                                  onChange={(e) => bulkToggleResolved(visibili.map((i) => i.key), e.target.checked)} />
+                                Nota credito ricevuta (tutte)
+                              </label>
+                            </th>
+                          </tr></thead>
+                          <tbody>
+                            {visibili.sort((a, b) => (b.r.flag - a.r.flag) || (b.r.diff - a.r.diff)).map((it) => (
+                              <tr key={it.key} className={it.resolved ? "resolved" : it.r.flag ? "flag" : ""}>
+                                <td>{it.r.sped}{it.r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>🛗 PIANO</div> : ""}</td>
+                                <td>{it.r.nominativo || "—"}</td>
+                                <td>{it.r.zona}</td>
+                                <td className="num">{fmt2(it.r.pesoReale)} kg</td>
+                                <td className="num">{fmt(it.r.trasporto)}€</td>
+                                <td className="num">{it.r.flag ? `+${fmt2(it.r.diff)}€` : "—"}</td>
+                                <td>{tipoLabel(it.r.tipo)}</td>
+                                <td><label className="checkbox-row"><input type="checkbox" checked={it.resolved} onChange={(e) => toggleResolved(it.key, e.target.checked)} /> {it.resolved ? "Risolto" : "—"}</label></td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     )}
                   </div>
                 );
@@ -1036,23 +865,21 @@ export default function Home() {
                     {tariffDraft.brackets.map((b, idx) => (
                       <tr key={idx}>
                         <td>{b.label}</td>
-                        {["Italia", "Calabria", "Sicilia", "Sardegna"].map((z) => (
-                          <td className="num" key={z}><input value={b[z]} style={{ width: 70, textAlign: "right" }}
-                            onChange={(e) => updateBracket(idx, z, e.target.value)} /></td>
+                        {ZONE.map((z) => (
+                          <td className="num" key={z}><input value={b[z]} style={{ width: 70, textAlign: "right" }} onChange={(e) => updateBracket(idx, z, e.target.value)} /></td>
                         ))}
                       </tr>
                     ))}
                     <tr>
                       <td>Oltre 80 (al q.le)</td>
-                      {["Italia", "Calabria", "Sicilia", "Sardegna"].map((z) => (
-                        <td className="num" key={z}><input value={tariffDraft.oltre[z]} style={{ width: 70, textAlign: "right" }}
-                          onChange={(e) => updateOltre(z, e.target.value)} /></td>
+                      {ZONE.map((z) => (
+                        <td className="num" key={z}><input value={tariffDraft.oltre[z]} style={{ width: 70, textAlign: "right" }} onChange={(e) => updateOltre(z, e.target.value)} /></td>
                       ))}
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <p className="sec-note" style={{ marginTop: 12, marginBottom: 0 }}>Oltre 80 kg: tariffa "oltre a quintale" × (peso tassabile / 100).</p>
+              <p className="sec-note" style={{ marginTop: 12, marginBottom: 0 }}>Oltre 80 kg: tariffa "oltre a quintale" × (peso reale / 100).</p>
             </div>
             <button className="btn" onClick={saveTariff}>Salva tariffario</button>
             {tariffSaved && <span style={{ marginLeft: 10, fontSize: 12.5, color: "var(--green)", fontWeight: 600 }}>✓ Salvato</span>}
@@ -1061,18 +888,15 @@ export default function Home() {
 
         {activeTab === "pesi" && (
           <section className="active">
-            <h2 className="sec-title">Pesi prodotti</h2>
+            <h2 className="sec-title">Pesi prodotti (catalogo De Matteo)</h2>
             <p className="sec-note">
-              Elenco di {pesi.length} prodotti usato per confrontare il peso dichiarato da BRT con il peso reale.
-              Cerca un prodotto per correggerne il peso, o aggiungine uno nuovo se manca.
+              Elenco di {pesi.length} prodotti usato solo per il confronto facoltativo "Peso De Matteo" — un controllo aggiuntivo
+              rispetto al peso reale già dichiarato da BRT in fattura. Cerca un prodotto per correggerne il peso, o aggiungine uno nuovo se manca.
             </p>
-
             <div className="card">
               <label>Cerca prodotto</label>
-              <input placeholder="Scrivi almeno 2 lettere del nome (es. New Memo Molle)"
-                value={pesiSearch} onChange={(e) => setPesiSearch(e.target.value)} />
+              <input placeholder="Scrivi almeno 2 lettere del nome (es. New Memo Molle)" value={pesiSearch} onChange={(e) => setPesiSearch(e.target.value)} />
             </div>
-
             {pesiSearch.trim().length >= 2 && (
               <div className="card">
                 <div className="table-wrap">
@@ -1085,19 +909,10 @@ export default function Home() {
                         const dirty = pesiEdits[key] !== undefined && String(pesiEdits[key]) !== String(p.peso);
                         return (
                           <tr key={key}>
-                            <td>{p.codice || "—"}</td>
-                            <td>{p.descrizione}</td>
-                            <td>{p.categoria || "—"}</td>
-                            <td className="num">
-                              <input value={val} style={{ width: 80, textAlign: "right" }}
-                                onChange={(e) => setPesiEdits((ed) => ({ ...ed, [key]: e.target.value }))} />
-                            </td>
+                            <td>{p.codice || "—"}</td><td>{p.descrizione}</td><td>{p.categoria || "—"}</td>
+                            <td className="num"><input value={val} style={{ width: 80, textAlign: "right" }} onChange={(e) => setPesiEdits((ed) => ({ ...ed, [key]: e.target.value }))} /></td>
                             <td style={{ display: "flex", gap: 6 }}>
-                              {dirty && (
-                                <button className="btn-tiny" disabled={pesiSavingKey === key} onClick={() => salvaPeso(p)}>
-                                  {pesiSavingKey === key ? "…" : "Salva"}
-                                </button>
-                              )}
+                              {dirty && <button className="btn-tiny" disabled={pesiSavingKey === key} onClick={() => salvaPeso(p)}>{pesiSavingKey === key ? "…" : "Salva"}</button>}
                               <button className="btn-sm" onClick={() => eliminaPeso(p)}>✕</button>
                             </td>
                           </tr>
@@ -1109,7 +924,6 @@ export default function Home() {
                 </div>
               </div>
             )}
-
             <details className="advanced">
               <summary>+ Aggiungi un prodotto nuovo al listino</summary>
               <div className="card" style={{ marginTop: 10 }}>
@@ -1130,7 +944,7 @@ export default function Home() {
         {activeTab === "email" && (
           <section className="active">
             <h2 className="sec-title">Email a Daniele</h2>
-            <p className="sec-note">Genera il testo pronto per la mail di contestazione, nello stesso stile usato finora.</p>
+            <p className="sec-note">Genera il testo pronto per la mail di contestazione, con la riga originale della fattura per ogni spedizione.</p>
             <div className="card">
               <label>Seleziona fattura</label>
               <select value={emailInvoiceId} onChange={(e) => setEmailInvoiceId(e.target.value)}>
@@ -1144,7 +958,10 @@ export default function Home() {
             {emailText && (
               <div className="card">
                 <label>Testo email</label>
-                <textarea value={emailText} onChange={(e) => setEmailText(e.target.value)} style={{ minHeight: 260 }} />
+                <textarea value={emailText} onChange={(e) => setEmailText(e.target.value)} style={{ minHeight: 300 }} />
+                <p className="sec-note" style={{ marginTop: 8 }}>
+                  Nota: le righe di "Giacenze" sono racchiuse tra *** *** perché una vera colorazione rossa non è possibile in una mail di solo testo.
+                </p>
                 <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <button className="btn secondary" onClick={() => { navigator.clipboard.writeText(emailText); showToast("Testo copiato"); }}>Copia testo</button>
                   <a className="btn" style={{ textDecoration: "none", display: "inline-block" }} target="_blank" rel="noopener noreferrer"
@@ -1162,16 +979,15 @@ export default function Home() {
 
             <h3 style={{ fontSize: 15, fontWeight: 700, margin: "8px 0 14px" }}>Il percorso settimanale</h3>
             {[
-              ["1", "Carica la fattura", "Vai su \"+ Aggiungi fattura\" e carica il PDF che arriva da BRT via mail. L'app legge da sola numero fattura, data e tutte le spedizioni (numero, cliente, CAP, peso dichiarato, importo)."],
-              ["2", "Il peso reale si verifica da sola", "Appena carichi il PDF, l'app parte in automatico e controlla il peso reale di ogni riga: cerca l'ordine del cliente su WooCommerce, trova il materasso comprato e lo confronta col listino pesi. Su fatture grandi (300+ righe) può richiedere anche 10-15 minuti — vedi una barra di avanzamento e puoi continuare a lavorare nel frattempo."],
-              ["3", "Guarda le righe rosse", "Sono le spedizioni dove, calcolando la tariffa sul peso reale del prodotto (non su quello dichiarato da BRT), risulta una differenza di almeno 0,50€ da recuperare. Le colonne \"Peso BRT\", \"Peso reale\", \"Diff. peso\", \"Pagato\", \"Dovuto\" e \"Da recuperare\" ti mostrano tutti i numeri per capire subito la situazione, senza calcoli a mente."],
-              ["4", "Ordini fatti nel gestionale (non sul sito)", "Se un cliente ha ordinato direttamente tramite il gestionale invece che dal sito, l'app non trova l'ordine su WooCommerce e la riga resta \"non trovata\". In questo caso clicca \"Cerca a mano\" sotto la riga, cerca il materasso giusto nella lista che compare e selezionalo: il peso reale viene impostato subito, con l'etichetta \"manuale\" per ricordarti che non è stato trovato in automatico. Lo stesso pulsante \"cambia\" ti permette di correggere anche un abbinamento già trovato, se non è quello giusto."],
-              ["5", "Se un prodotto risulta introvabile anche a mano", "Vai sulla tab \"Pesi prodotti\", cerca il nome del materasso: se manca dal listino, aggiungilo tu con nome e peso. Da quel momento sarà sempre disponibile, sia per la ricerca automatica che per quella manuale."],
-              ["6", "Spunta ritardi, giacenze e consegne al piano", "Nella colonna \"Tipo\" di ogni riga, confrontando col gestionale (vedi sotto \"Cosa significa ogni etichetta\")."],
-              ["7", "Salva ed eventualmente genera subito la mail", "In fondo trovi \"Salva fattura in archivio\", oppure — se ci sono anomalie — anche \"Scarica CSV anomalie\" (per tenerne una copia) e \"Salva e genera mail per Daniele\", che fa tutto in un click e ti porta già sulla tab Email con il testo pronto."],
-              ["8", "Genera la mail per Daniele (in qualsiasi momento)", "Vai su \"Email a Daniele\", scegli la fattura (o \"tutte le anomalie non risolte\"), premi \"Genera testo\": esce già con l'oggetto giusto, il numero fattura, tutte le sezioni (prezzi da rivedere, ritardi/annullamenti, giacenze, consegne al piano) e il totale da recuperare in fondo."],
-              ["9", "Invia dalla webmail", "Premi \"Apri in Mail (webmail)\" — si apre Roundcube con destinatario, oggetto e testo già compilati. Rileggi e premi Invia tu stessa: l'app non manda mai la mail da sola."],
-              ["10", "Quando arriva la nota di credito", "Vai su \"Da verificare\", apri la fattura giusta e spunta \"Nota credito ricevuta\" sulla riga risolta (o \"tutte\" per chiuderle in blocco). Sparisce dal conteggio delle cose in sospeso."],
+              ["1", "Carica la fattura", "Vai su \"+ Aggiungi fattura\" e carica il PDF che arriva da BRT via mail. L'app legge da sola numero fattura, data e tutte le spedizioni — comprese le due colonne di peso (reale e tassabile) e tutte le voci \"varie\"."],
+              ["2", "I calcoli sono già pronti, all'istante", "Il confronto usa il peso reale dichiarato da BRT (non quello tassabile/volumetrico) per calcolare quanto avreste dovuto pagare di trasporto. Non serve aspettare nessuna verifica: appena carichi il PDF, vedi già tutte le anomalie."],
+              ["3", "Correggi la zona se serve", "La zona (Italia/Calabria/Sicilia/Sardegna) si deduce dal CAP, ma per le piccole isole (Ischia, Procida, Elba, ecc.) può non essere precisa — correggila tu dal menu a tendina sulla riga se lo sai."],
+              ["4", "\"Confronta con catalogo\" (facoltativo)", "Su ogni riga puoi anche chiedere un secondo controllo: cerca l'ordine su WooCommerce e confronta il peso reale dichiarato da BRT con quello del prodotto nel vostro catalogo. È un controllo extra, non obbligatorio, utile se hai dubbi che anche il \"peso reale\" scritto da BRT non torni."],
+              ["5", "Spunta ritardi, giacenze e consegne al piano", "Nella colonna \"Tipo\" di ogni riga. Le consegne al piano sono già segnalate da sole con il badge \"🛗 CONSEGNA AL PIANO\"."],
+              ["6", "Salva, scarica il CSV o genera subito la mail", "In fondo trovi \"Salva fattura in archivio\", oppure — se ci sono anomalie — \"Scarica CSV anomalie\" e \"Salva e genera mail per Daniele\" che fa tutto in un click."],
+              ["7", "Genera la mail per Daniele (in qualsiasi momento)", "Vai su \"Email a Daniele\": il testo include, per ogni spedizione anomala, la riga originale così come appare in fattura, e per ogni riga con un \"Tipo\" assegnato la motivazione della richiesta."],
+              ["8", "Invia dalla webmail", "Premi \"Apri in Mail (webmail)\" — si apre Roundcube con tutto già scritto. Rileggi e premi Invia tu stessa."],
+              ["9", "Quando arriva la nota di credito", "Vai su \"Da verificare\", apri la fattura e spunta \"Nota credito ricevuta\"."],
             ].map(([num, title, text]) => (
               <div className="guide-step" key={num}>
                 <div className="num">{num}</div>
@@ -1179,53 +995,42 @@ export default function Home() {
               </div>
             ))}
 
-            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Il prezzo si calcola sul peso reale, non su quello dichiarato da BRT</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Peso reale vs peso tassabile — la differenza che conta</h3>
             <p className="sec-note">
-              BRT può dichiarare il peso che vuole (anche gonfiato per via del calcolo volumetrico) — a voi interessa pagare la tariffa giusta
-              per il peso vero del prodotto spedito. Per questo, appena l'app trova il peso reale di una spedizione (in automatico o a mano),
-              ricalcola da sola quanto avreste dovuto pagare sul peso vero e confronta con quanto vi hanno fatturato: quella è l'anomalia che conta.
-              Il peso dichiarato da BRT resta comunque visibile in ogni riga come riferimento. Se un ordine ha più prodotti (es. 2 materassi +
-              una rete), l'app li somma tutti da sola: una spedizione può contenere più pezzi insieme.
+              Ogni spedizione in fattura ha due pesi: quello <b>reale</b> (il peso vero dichiarato da BRT) e quello <b>tassabile</b>
+              (usato per calcolare il trasporto, spesso più alto per via del calcolo volumetrico). L'app confronta sempre quanto avreste
+              dovuto pagare in base al <b>peso reale</b> con quanto vi hanno effettivamente fatturato per il trasporto — quella differenza,
+              da almeno {fmt2(SOGLIA_ANOMALIA)}€ in su, è l'anomalia da segnalare a Daniele.
+            </p>
+
+            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Le "varie" (handling, carburante, ecc.)</h3>
+            <p className="sec-note">
+              Oltre al trasporto, ogni spedizione ha piccole spese accessorie (gestione, carburante, ISTAT...) che l'app somma nella colonna
+              "Varie", a titolo informativo — non fanno parte del confronto peso/prezzo perché sono dovute comunque, indipendentemente dal peso.
             </p>
 
             <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Cosa significa ogni etichetta "Tipo"</h3>
             <p className="sec-note">
-              <b>Ritardo</b>: la consegna ha superato i tempi contrattuali (24/48h terraferma, 48/72h isole) — lo sai solo tu dal tuo tracciamento manuale, la fattura BRT non lo dice.<br />
-              <b>Annullata / rimborsata</b>: l'ordine è stato annullato o il cliente rimborsato per un disagio.<br />
-              <b>Giacenza</b>: importo certo da stornare, sempre incluso nella mail di nota di credito.<br />
-              <b>Piano non eseguita</b>: il cliente ha pagato la consegna al piano ma BRT non l'ha eseguita — va anche registrata nel gestionale/file resi per il rimborso al cliente.<br />
-              <b>Piano non richiesta da noi</b>: il cliente l'ha chiesta direttamente al corriere alla consegna, non tramite voi — si contesta comunque l'addebito a Daniele.
-            </p>
-
-            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Il codice "P" accanto al numero spedizione</h3>
-            <p className="sec-note">
-              Significa che BRT ha addebitato un supplemento per consegna al piano su quella spedizione. L'app lo segnala da sola leggendo il PDF —
-              tocca a te controllare nel gestionale se quella consegna al piano era stata davvero richiesta ed eseguita (vedi etichette sopra).
-            </p>
-
-            <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Archivio e Da verificare — organizzati per fattura</h3>
-            <p className="sec-note">
-              Entrambe le tab mostrano le fatture <b>chiuse di default</b>: clicca sull'intestazione di una fattura (▸/▾) per aprirla e vedere le sue righe,
-              senza dover scorrere tutte le altre. Ogni fattura mostra un'etichetta — <b>"Tutto risolto ✓"</b> se avete già chiuso tutto,
-              oppure <b>"X ancora aperte"</b> se manca qualcosa. In "Da verificare" puoi anche spuntare "Nota credito ricevuta (tutte)" nell'intestazione
-              della tabella per chiudere in blocco tutte le righe di quella fattura, e poi deselezionare singolarmente quelle che vuoi tenere aperte.
-              Le fatture già completamente risolte spariscono dalla vista di "Da verificare" — c'è un interruttore in alto per farle ricomparire se vuoi
-              rivedere lo storico. Se una fattura salvata ha righe con peso non ancora verificato (es. hai salvato prima che finisse tutta la verifica),
-              in Archivio trovi il pulsante <b>"Verifica pesi mancanti"</b> per riprendere da dove si era fermata.
+              <b>Ritardo</b>: consegna oltre i tempi contrattuali — lo sai solo tu.<br />
+              <b>Annullata / rimborsata</b>: ordine annullato o cliente rimborsato.<br />
+              <b>Giacenza</b>: importo certo da stornare.<br />
+              <b>Piano non eseguita</b>: pagata dal cliente ma non eseguita da BRT.<br />
+              <b>Piano non richiesta da noi</b>: il cliente l'ha chiesta direttamente al corriere.
             </p>
 
             <h3 style={{ fontSize: 15, fontWeight: 700, margin: "32px 0 14px" }}>Le altre tab</h3>
             <p className="sec-note">
-              <b>Tariffario</b>: le tariffe di trasporto BRT per fascia di peso e zona — da aggiornare solo quando cambia il contratto (di solito a gennaio).<br />
-              <b>Pesi prodotti</b>: il listino con nome e peso reale di ogni materasso, usato per il confronto. Cercalo, correggilo, aggiungine di nuovi liberamente.<br />
-              <b>Email a Daniele</b>: genera il testo della mail di contestazione, con oggetto e numero fattura già scritti, pronta da copiare o da aprire
-              direttamente nella webmail aziendale (Roundcube) con destinatario e testo già compilati — l'invio resta sempre manuale, un click tuo.
+              <b>Archivio</b> e <b>Da verificare</b>: fatture chiuse di default, clicca per aprirle.<br />
+              <b>Tariffario</b>: le tariffe BRT per peso/zona.<br />
+              <b>Pesi prodotti</b>: il catalogo usato solo per il confronto facoltativo "Peso De Matteo".<br />
+              <b>Email a Daniele</b>: testo pronto con la riga originale di ogni spedizione e la motivazione per ogni "Tipo" assegnato.
             </p>
           </section>
         )}
 
         <footer className="note">
-          Il controllo automatico dei prezzi copre la tariffa base di trasporto (fascia peso/zona). Il peso reale viene confrontato con il listino prodotti collegato a WooCommerce — se un prodotto non viene trovato, va verificato a mano. Ritardi, annullamenti, giacenze e consegne al piano vanno confermati con l'etichetta "Tipo" su ogni riga.
+          Il controllo automatico confronta il peso reale dichiarato da BRT con la tariffa contrattuale, calcolato all'istante appena carichi il PDF.
+          Il "Peso De Matteo" (catalogo prodotti) è un controllo aggiuntivo facoltativo. Ritardi, annullamenti, giacenze e consegne al piano vanno confermati con l'etichetta "Tipo".
         </footer>
       </main>
 
