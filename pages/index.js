@@ -1133,13 +1133,14 @@ export default function Home() {
                     const href = troppoLunga ? `${base}${to}${subj}` : full;
                     return (
                       <>
-                        <a className="btn" style={{ textDecoration: "none", display: "inline-block" }} target="_blank" rel="noopener noreferrer" href={href}>
+                        <a className="btn" style={{ textDecoration: "none", display: "inline-block" }} target="_blank" rel="noopener noreferrer" href={href}
+                          onClick={() => { if (troppoLunga) navigator.clipboard.writeText(emailText); }}>
                           Apri in Mail (webmail) →
                         </a>
                         {troppoLunga && (
                           <p className="sec-note" style={{ width: "100%", marginTop: 6, color: "var(--red)" }}>
                             Questa mail è troppo lunga (tante spedizioni insieme) per essere trasferita automaticamente al testo —
-                            si aprirà solo con destinatario e oggetto già pronti: copia il testo con il pulsante qui sopra e incollalo tu nel corpo della mail.
+                            si aprirà con destinatario e oggetto già pronti e il testo già copiato negli appunti: incollalo (Ctrl+V) nel corpo della mail.
                           </p>
                         )}
                       </>
