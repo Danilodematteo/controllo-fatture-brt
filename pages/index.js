@@ -639,10 +639,7 @@ export default function Home() {
                       <tbody>
                         {draftRows.map((r) => (
                           <tr key={r.id} className={r.flag ? "flag" : ""}>
-                            <td style={{ minWidth: 200 }}>
-                              <b>{r.sped}</b>
-                              {r.rawText && <pre className="raw-block">{r.rawText}</pre>}
-                            </td>
+                            <td>{r.sped}</td>
                             <td>{r.nominativo || "—"}</td>
                             <td>{r.provinciaNome}<br /><small style={{ color: "var(--ink)", fontWeight: 600 }}>{r.zona}</small></td>
                             <td className="num">{fmt2(r.pesoReale)} kg</td>
