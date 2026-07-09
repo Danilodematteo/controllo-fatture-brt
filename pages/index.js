@@ -333,6 +333,15 @@ export default function Home() {
       numeroRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       return null;
     }
+    const giaPresente = invoices.find((i) => i.numero === fNumero);
+    if (giaPresente) {
+      const continua = confirm(
+        `Attenzione: in archivio esiste già una fattura numero ${fNumero} (del ${fmtData(giaPresente.data)}, ${giaPresente.rows.length} righe).\n\n` +
+        `Salvando di nuovo, questa fattura si sommerà a quella già presente (verranno contate due volte, anche nella mail a Daniele).\n\n` +
+        `Vuoi salvare comunque? Annulla per controllare prima l'Archivio.`
+      );
+      if (!continua) return null;
+    }
     const invoice = { numero: fNumero, data: fData, settimana: isoWeek(fData), rows: draftRows, createdAt: new Date().toISOString() };
     const res = await fetch("/api/invoices", {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(invoice),
@@ -1116,7 +1125,7 @@ export default function Home() {
                     const to = `&_to=${encodeURIComponent("daniele.derosa@brt.it")}`;
                     const subj = `&_subject=${encodeURIComponent(emailSubject)}`;
                     const full = `${base}${to}${subj}&_body=${encodeURIComponent(emailText)}`;
-                    const troppoLunga = full.length > 6000;
+                    const troppoLunga = full.length > 7000;
                     const href = troppoLunga ? `${base}${to}${subj}` : full;
                     return (
                       <>
