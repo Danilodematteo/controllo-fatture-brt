@@ -31,17 +31,24 @@ function matchRicerca(r, query) {
 // affidabile, vedi pages/api/woo/find-order.js).
 function spedExtra(r) {
   const rifValido = r.riferimento && r.riferimento.length >= 4;
+  const parti = [];
+  if (r.dataSpedizione) parti.push(`Partita il ${r.dataSpedizione}`);
+  if (rifValido) parti.push(`Rif. ${r.riferimento}`);
+  if (!parti.length) return null;
+  return <span className="rif-mittente">{parti.join(" · ")}</span>;
+}
+
+// Colonna dedicata "Apri ordine": link diretto alla scheda ordine WooCommerce
+// (via riferimento mittente, verificato affidabile). Se non c'è un riferimento
+// valido (es. spedizioni non legate a un ordine e-commerce) mostra un trattino.
+function OrdineBtn({ r }) {
+  const rifValido = r.riferimento && r.riferimento.length >= 4;
+  if (!rifValido) return <span style={{ color: "var(--ink-soft)", fontSize: 12 }}>—</span>;
   return (
-    <>
-      {r.dataSpedizione && <span className="rif-mittente">Partita il {r.dataSpedizione}</span>}
-      {rifValido && <span className="rif-mittente">Rif. {r.riferimento}</span>}
-      {rifValido && (
-        <a href={`${WC_ADMIN_URL}/wp-admin/post.php?post=${r.riferimento}&action=edit`}
-          target="_blank" rel="noopener noreferrer" className="rif-mittente wc-link">
-          Apri ordine ↗
-        </a>
-      )}
-    </>
+    <a href={`${WC_ADMIN_URL}/wp-admin/post.php?post=${r.riferimento}&action=edit`}
+      target="_blank" rel="noopener noreferrer" className="btn-sm pdf-btn">
+      Apri ordine ↗
+    </a>
   );
 }
 
@@ -679,12 +686,12 @@ export default function Home() {
                           )}
                         </th>
                         <th>Peso De Matteo</th>
-                        <th>Tipo</th><th></th>
+                        <th>Tipo</th><th>Ordine</th><th></th>
                       </tr></thead>
                       <tbody>
                         {draftRows.map((r) => (
                           <tr key={r.id} className={r.flag ? "flag" : ""}>
-                            <td>{r.sped}{spedExtra(r)}{r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
+                            <td>{r.sped}{spedExtra(r)}</td>
                             <td>{r.nominativo || "—"}</td>
                             <td>{r.provinciaNome}<br /><small style={{ color: "var(--ink)", fontWeight: 600 }}>{r.zona}</small></td>
                             <td className="num">{fmt2(r.pesoReale)} kg{r.colli > 1 && <><br /><span className="pill blue">{r.colli} colli</span></>}</td>
@@ -696,8 +703,8 @@ export default function Home() {
                               {r.varieDettaglio && r.varieDettaglio.length > 0 && (
                                 <div style={{ display: "flex", flexWrap: "wrap", gap: 3, marginTop: 3 }}>
                                   {r.varieDettaglio.map((v, i) => (
-                                    <span key={i} className={v.code === "J" ? "pill isola" : "pill grey"} title={v.label}>
-                                      {v.code}{v.amount != null ? ` ${fmt2(v.amount)}` : ""}
+                                    <span key={i} className={v.code === "J" ? "pill isola" : v.code === "P" ? "pill piano" : "pill grey"} title={v.label}>
+                                      {v.code === "P" ? "Piano" : v.code}{v.amount != null ? ` ${fmt2(v.amount)}` : ""}
                                     </span>
                                   ))}
                                 </div>
@@ -749,6 +756,7 @@ export default function Home() {
                                 {TIPO_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                               </select>
                             </td>
+                            <td><OrdineBtn r={r} /></td>
                             <td><button className="btn-sm" onClick={() => removeDraftRow(r.id)}>✕</button></td>
                           </tr>
                         ))}
@@ -877,19 +885,24 @@ export default function Home() {
                               <thead><tr>
                                 <th>Sped.</th><th>Cliente</th><th>Zona</th><th className="num">Peso reale</th>
                                 <th className="num">Fatturato</th><th className="num">Dovuto</th><th className="num">Diff.</th>
-                                <th>Peso De Matteo</th><th>Tipo</th>
+                                <th>Peso De Matteo</th><th>Tipo</th><th>Ordine</th>
                               </tr></thead>
                               <tbody>
                                 {righeVisibili.map((r) => (
                                   <tr key={r.id} className={r.flag ? "flag" : ""}>
-                                    <td>{r.sped}{spedExtra(r)}{r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
+                                    <td>{r.sped}{spedExtra(r)}</td>
                                     <td>{r.nominativo || "—"}</td><td>{r.zona}</td>
                                     <td className="num">{fmt2(r.pesoReale)} kg{r.colli > 1 && <><br /><span className="pill blue">{r.colli} colli</span></>}</td>
                                     <td className="num">{fmt(r.trasporto)}€</td>
                                     <td className="num">{fmt(r.atteso)}€</td>
                                     <td className="num">{r.flag ? <span className="pill rust">+{fmt2(r.diff)}€</span> : `${fmt2(r.diff)}€`}</td>
                                     <td>{r.pesoDMStato === "trovato" ? <span>{fmtKg(r.pesoDM)}</span> : "—"}</td>
-                                    <td>{r.tipo ? <span className="pill grey">{tipoLabel(r.tipo)}</span> : "—"}</td>
+                                    <td>
+                                      {r.tipo && <span className="pill grey">{tipoLabel(r.tipo)}</span>}
+                                      {r.pianoAmount != null && <span className="pill piano" style={{ marginLeft: r.tipo ? 4 : 0 }} title="Consegna ai piani">Piano</span>}
+                                      {!r.tipo && r.pianoAmount == null && "—"}
+                                    </td>
+                                    <td><OrdineBtn r={r} /></td>
                                   </tr>
                                 ))}
                               </tbody>
@@ -946,7 +959,7 @@ export default function Home() {
                     {espansa && (
                       <div className="table-wrap" style={{ marginTop: 10 }}>
                         <table>
-                          <thead><tr><th>Sped.</th><th>Cliente</th><th>Zona</th><th className="num">Peso reale</th><th className="num">Fatturato</th><th className="num">Diff.</th><th>Tipo</th>
+                          <thead><tr><th>Sped.</th><th>Cliente</th><th>Zona</th><th className="num">Peso reale</th><th className="num">Fatturato</th><th className="num">Diff.</th><th>Tipo</th><th>Ordine</th>
                             <th>
                               <label className="checkbox-row">
                                 <input type="checkbox" checked={visibili.length > 0 && visibili.every((i) => i.resolved)}
@@ -958,13 +971,18 @@ export default function Home() {
                           <tbody>
                             {visibili.sort((a, b) => (b.r.flag - a.r.flag) || (b.r.diff - a.r.diff)).map((it) => (
                               <tr key={it.key} className={it.resolved ? "resolved" : it.r.flag ? "flag" : ""}>
-                                <td>{it.r.sped}{spedExtra(it.r)}{it.r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
+                                <td>{it.r.sped}{spedExtra(it.r)}</td>
                                 <td>{it.r.nominativo || "—"}</td>
                                 <td>{it.r.zona}</td>
                                 <td className="num">{fmt2(it.r.pesoReale)} kg</td>
                                 <td className="num">{fmt(it.r.trasporto)}€</td>
                                 <td className="num">{it.r.flag ? `+${fmt2(it.r.diff)}€` : "—"}</td>
-                                <td>{tipoLabel(it.r.tipo)}</td>
+                                <td>
+                                  {it.r.tipo && tipoLabel(it.r.tipo)}
+                                  {it.r.pianoAmount != null && <span className="pill piano" style={{ marginLeft: it.r.tipo ? 4 : 0 }} title="Consegna ai piani">Piano</span>}
+                                  {!it.r.tipo && it.r.pianoAmount == null && "—"}
+                                </td>
+                                <td><OrdineBtn r={it.r} /></td>
                                 <td><label className="checkbox-row"><input type="checkbox" checked={it.resolved} onChange={(e) => toggleResolved(it.key, e.target.checked)} /> {it.resolved ? "Risolto" : "—"}</label></td>
                               </tr>
                             ))}

@@ -184,11 +184,6 @@ button.btn-tiny:disabled{opacity:.5;cursor:not-allowed;}
 .peso-cell small{color:var(--ink-soft);font-size:10px;}
 
 /* --- badge consegna al piano: visibile ma sobrio, niente sfondo pieno --- */
-.piano-badge{
-  display:inline-block;background:#fff;color:var(--blue);font-size:10.5px;font-weight:700;
-  padding:2px 7px;border-radius:6px;margin-top:4px;margin-left:6px;white-space:nowrap;
-  border:1.5px solid var(--blue);letter-spacing:.02em;
-}
 /* --- riferimento mittente sotto il numero spedizione, per cercare l'ordine su WooCommerce --- */
 .rif-mittente{
   display:block;color:var(--ink-soft);font-size:10.5px;font-weight:500;margin-top:2px;
@@ -205,6 +200,8 @@ button.btn-tiny:disabled{opacity:.5;cursor:not-allowed;}
 
 /* --- codice isola (J) evidenziato nelle varie --- */
 .pill.isola{background:#7C3AED;color:#fff;font-weight:700;}
+/* --- consegna al piano: costo aggiuntivo, evidenziato come le altre voci varie ma con outline dedicato --- */
+.pill.piano{background:#fff;color:var(--blue);border:1.5px solid var(--blue);font-weight:700;}
 
 /* --- icona informazioni con popup legenda BRT --- */
 .info-icon{
