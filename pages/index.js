@@ -497,7 +497,6 @@ export default function Home() {
     if (ritardoLines.length) body += `\nDa stornare per ritardo o annullamento:\n${ritardoLines.join("\n")}\n`;
     if (giacenzaLines.length) body += `\nGiacenze:\n${giacenzaLines.join("\n")}\n`;
     if (pianoLines.length) body += `\nConsegne al piano non eseguite o non richieste da noi:\n${pianoLines.join("\n")}\n`;
-    if (priceLines.length) body += `\nRiepilogo: ${priceLines.length} spedizioni da rivedere, totale da recuperare ${fmt2(totaleDaRecuperare)}€.\n`;
     body += "\nAttendiamo nota credito, grazie.\nSaluti";
     setEmailText(body);
     setEmailSubject(subject);
