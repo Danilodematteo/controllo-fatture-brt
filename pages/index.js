@@ -212,14 +212,14 @@ export default function Home() {
 
   async function verificaPesoDM(rowId, nominativo, cap, riferimento) {
     setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoDMStato: "loading" } : r)));
-    if (!nominativo) {
+    if (!riferimento || riferimento.length < 4) {
       setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoDMStato: "nontrovato" } : r)));
       return;
     }
     try {
       const res = await fetch("/api/woo/find-order", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nominativo, dataSpedizione: fData, cap, riferimento }),
+        body: JSON.stringify({ riferimento }),
       });
       const data = await res.json();
       const ordine = (data.risultati || [])[0];
@@ -238,7 +238,7 @@ export default function Home() {
 
   const CONCORRENZA_DM = 5;
   async function verificaTuttiIPesiDM(rows) {
-    const lista = rows.filter((r) => r.nominativo);
+    const lista = rows.filter((r) => r.riferimento && r.riferimento.length >= 4);
     if (!lista.length) return;
     verifyStopRef.current = false;
     setPesoDMBatch({ done: 0, total: lista.length, running: true });
@@ -395,7 +395,7 @@ export default function Home() {
     }
   }
   async function verificaTuttiIPesiDMArchivio(inv) {
-    const lista = inv.rows.filter((r) => r.nominativo && r.pesoDMStato !== "trovato");
+    const lista = inv.rows.filter((r) => r.riferimento && r.riferimento.length >= 4 && r.pesoDMStato !== "trovato");
     if (!lista.length) { showToast("Non ci sono righe da verificare in questa fattura"); return; }
     setArchBatch((b) => ({ ...b, [inv.id]: { done: 0, total: lista.length, running: true } }));
     let idx = 0;
@@ -783,7 +783,7 @@ export default function Home() {
                   const ancoraAperte = daSegnalare.filter((r) => !resolved[inv.id + "::" + r.id]).length;
                   const aperta = !!expandedIds[inv.id];
                   const batch = archBatch[inv.id];
-                  const daVerificareDM = inv.rows.filter((r) => r.nominativo && r.pesoDMStato !== "trovato").length;
+                  const daVerificareDM = inv.rows.filter((r) => r.riferimento && r.riferimento.length >= 4 && r.pesoDMStato !== "trovato").length;
                   return (
                     <div className="card" key={inv.id} style={{ marginBottom: 10, marginTop: 10 }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
