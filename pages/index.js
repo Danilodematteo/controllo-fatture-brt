@@ -198,7 +198,7 @@ export default function Home() {
       : r)));
   }
 
-  async function verificaPesoDM(rowId, nominativo, cap) {
+  async function verificaPesoDM(rowId, nominativo, cap, riferimento) {
     setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoDMStato: "loading" } : r)));
     if (!nominativo) {
       setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoDMStato: "nontrovato" } : r)));
@@ -207,7 +207,7 @@ export default function Home() {
     try {
       const res = await fetch("/api/woo/find-order", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nominativo, dataSpedizione: fData, cap }),
+        body: JSON.stringify({ nominativo, dataSpedizione: fData, cap, riferimento }),
       });
       const data = await res.json();
       const ordine = (data.risultati || [])[0];
@@ -326,7 +326,7 @@ export default function Home() {
       return { ...inv, rows: inv.rows.map((r) => (r.id === rowId ? { ...r, pesoDM, prodottoDM, pesoDMManuale: !!manuale, pesoDMStato: "trovato", prodottiDettaglioDM: dettaglio || null } : r)) };
     }));
   }
-  async function verificaPesoDMArchivio(invId, rowId, nominativo, dataFattura, cap) {
+  async function verificaPesoDMArchivio(invId, rowId, nominativo, dataFattura, cap, riferimento) {
     setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoDMStato: "loading" } : r) }));
     if (!nominativo) {
       setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoDMStato: "nontrovato" } : r) }));
@@ -335,7 +335,7 @@ export default function Home() {
     try {
       const res = await fetch("/api/woo/find-order", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nominativo, dataSpedizione: dataFattura, cap }),
+        body: JSON.stringify({ nominativo, dataSpedizione: dataFattura, cap, riferimento }),
       });
       const data = await res.json();
       const ordine = (data.risultati || [])[0];
@@ -359,7 +359,7 @@ export default function Home() {
     const worker = async () => {
       while (idx < lista.length) {
         const row = lista[idx++];
-        await verificaPesoDMArchivio(inv.id, row.id, row.nominativo, inv.data, row.cap);
+        await verificaPesoDMArchivio(inv.id, row.id, row.nominativo, inv.data, row.cap, row.riferimento);
         setArchBatch((b) => ({ ...b, [inv.id]: { ...b[inv.id], done: b[inv.id].done + 1 } }));
       }
     };
@@ -609,12 +609,12 @@ export default function Home() {
                             <td style={{ minWidth: 170 }}>
                               {r.pianoAmount != null && <div className="piano-badge">🛗 CONSEGNA AL PIANO — {fmt2(r.pianoAmount)}€</div>}
                               {r.pesoDMStato === "idle" && (
-                                <button className="btn-tiny" onClick={() => verificaPesoDM(r.id, r.nominativo, r.cap)}>Confronta con catalogo</button>
+                                <button className="btn-tiny" onClick={() => verificaPesoDM(r.id, r.nominativo, r.cap, r.riferimento)}>Confronta con catalogo</button>
                               )}
                               {r.pesoDMStato === "loading" && <span className="mini-spinner"></span>}
                               {r.pesoDMStato === "nontrovato" && (
                                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                                  <button className="btn-tiny" onClick={() => verificaPesoDM(r.id, r.nominativo, r.cap)}>Riprova</button>
+                                  <button className="btn-tiny" onClick={() => verificaPesoDM(r.id, r.nominativo, r.cap, r.riferimento)}>Riprova</button>
                                   <button className="btn-tiny" onClick={() => toggleManualPick(r.id)}>{manualOpenId === r.id ? "annulla" : "cerca a mano"}</button>
                                 </div>
                               )}
