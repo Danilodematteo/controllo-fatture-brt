@@ -446,7 +446,7 @@ export default function Home() {
 
   function formatShipmentBlock(inv, r) {
     const testo = r.rawText || `${r.sped} — ${r.nominativo} (${r.zona}) — peso reale ${fmt2(r.pesoReale)}kg — fatturato ${fmt(r.trasporto)}€`;
-    return `Fattura ${inv.numero}:\n${testo}\n(peso reale ${fmt2(r.pesoReale)}kg → trasporto dovuto ${fmt(r.atteso)}€, fatturato ${fmt(r.trasporto)}€, differenza +${fmt2(r.diff)}€)`;
+    return `Fattura ${inv.numero}:\n${testo}`;
   }
   function formatTag(inv, r) {
     const chi = r.nominativo || "";
@@ -642,7 +642,7 @@ export default function Home() {
                               )}
                             </td>
                             <td style={{ minWidth: 170 }}>
-                              {r.pianoAmount != null && <div className="piano-badge">🛗 CONSEGNA AL PIANO — {fmt2(r.pianoAmount)}€</div>}
+                              {r.pianoAmount != null && <div className="piano-badge">CONSEGNA AL PIANO</div>}
                               {r.pesoDMStato === "idle" && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>in coda…</span>}
                               {r.pesoDMStato === "loading" && <span className="mini-spinner"></span>}
                               {r.pesoDMStato === "nontrovato" && (
@@ -791,7 +791,7 @@ export default function Home() {
                               <tbody>
                                 {inv.rows.map((r) => (
                                   <tr key={r.id} className={r.flag ? "flag" : ""}>
-                                    <td>{r.sped}{r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>🛗 PIANO {fmt2(r.pianoAmount)}€</div> : ""}</td>
+                                    <td>{r.sped}{r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
                                     <td>{r.nominativo || "—"}</td><td>{r.zona}</td>
                                     <td className="num">{fmt2(r.pesoReale)} kg</td>
                                     <td className="num">{fmt(r.trasporto)}€</td>
@@ -860,7 +860,7 @@ export default function Home() {
                           <tbody>
                             {visibili.sort((a, b) => (b.r.flag - a.r.flag) || (b.r.diff - a.r.diff)).map((it) => (
                               <tr key={it.key} className={it.resolved ? "resolved" : it.r.flag ? "flag" : ""}>
-                                <td>{it.r.sped}{it.r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>🛗 PIANO</div> : ""}</td>
+                                <td>{it.r.sped}{it.r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
                                 <td>{it.r.nominativo || "—"}</td>
                                 <td>{it.r.zona}</td>
                                 <td className="num">{fmt2(it.r.pesoReale)} kg</td>
@@ -1011,7 +1011,7 @@ export default function Home() {
               ["2", "I calcoli sono già pronti, all'istante", "Il confronto usa il peso reale dichiarato da BRT (non quello tassabile/volumetrico) per calcolare quanto avreste dovuto pagare di trasporto. Non serve aspettare nessuna verifica: appena carichi il PDF, vedi già tutte le anomalie."],
               ["3", "Correggi la zona se serve", "La zona (Italia/Calabria/Sicilia/Sardegna) si deduce dal CAP, ma per le piccole isole (Ischia, Procida, Elba, ecc.) può non essere precisa — correggila tu dal menu a tendina sulla riga se lo sai."],
               ["4", "\"Confronta con catalogo\" (facoltativo)", "Su ogni riga puoi anche chiedere un secondo controllo: cerca l'ordine su WooCommerce e confronta il peso reale dichiarato da BRT con quello del prodotto nel vostro catalogo. È un controllo extra, non obbligatorio, utile se hai dubbi che anche il \"peso reale\" scritto da BRT non torni."],
-              ["5", "Spunta ritardi, giacenze e consegne al piano", "Nella colonna \"Tipo\" di ogni riga. Le consegne al piano sono già segnalate da sole con il badge \"🛗 CONSEGNA AL PIANO\"."],
+              ["5", "Spunta ritardi, giacenze e consegne al piano", "Nella colonna \"Tipo\" di ogni riga. Le consegne al piano sono già segnalate da sole con il badge \"CONSEGNA AL PIANO\" — l'importo esatto è nel testo originale della fattura, mostrato sotto ogni riga, perché non sempre l'app riesce ad abbinarlo con certezza al codice giusto."],
               ["6", "Salva, scarica il CSV o genera subito la mail", "In fondo trovi \"Salva fattura in archivio\", oppure — se ci sono anomalie — \"Scarica CSV anomalie\" e \"Salva e genera mail per Daniele\" che fa tutto in un click."],
               ["7", "Genera la mail per Daniele (in qualsiasi momento)", "Vai su \"Email a Daniele\": il testo include, per ogni spedizione anomala, la riga originale così come appare in fattura, e per ogni riga con un \"Tipo\" assegnato la motivazione della richiesta."],
               ["8", "Invia dalla webmail", "Premi \"Apri in Mail (webmail)\" — si apre Roundcube con tutto già scritto. Rileggi e premi Invia tu stessa."],
