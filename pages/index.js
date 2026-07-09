@@ -11,14 +11,21 @@ const TIPO_OPTIONS = [
   { value: "ritardo", label: "Ritardo" },
   { value: "annullata", label: "Annullata / rimborsata" },
   { value: "giacenza", label: "Giacenza" },
-  { value: "piano_non_eseguita", label: "Piano non eseguita" },
-  { value: "piano_non_richiesta", label: "Piano non richiesta da noi" },
+  { value: "piano_non_eseguita", label: "Consegna al piano non eseguita" },
+  { value: "piano_non_richiesta", label: "Consegna al piano non richiesta da noi" },
 ];
 const tipoLabel = (v) => TIPO_OPTIONS.find((o) => o.value === v)?.label || "—";
 
 const fmt = (n) => (Math.round((n || 0) * 1000) / 1000).toFixed(3).replace(".", ",");
 const fmt2 = (n) => (Math.round((n || 0) * 100) / 100).toFixed(2).replace(".", ",");
 const fmtKg = (n) => (n === null || n === undefined ? "—" : `${n} kg`);
+const fmtData = (iso) => {
+  if (!iso) return "—";
+  const parts = iso.split("-");
+  if (parts.length !== 3) return iso;
+  const [y, m, d] = parts;
+  return `${d}/${m}/${y}`;
+};
 const ZONE = ["Italia", "Calabria", "Sicilia", "Sardegna"];
 
 function isoWeek(dateStr) {
@@ -79,6 +86,7 @@ export default function Home() {
   const [pesoDMBatch, setPesoDMBatch] = useState(null);
   const verifyStopRef = useRef(false);
   const [manualQuery, setManualQuery] = useState("");
+  const [legendaOpen, setLegendaOpen] = useState(false);
 
   const [toast, setToast] = useState("");
   const toastTimer = useRef(null);
@@ -481,7 +489,7 @@ export default function Home() {
       ? `Fattura BRT n. ${nomiFatture[0]} — richiesta verifica prezzi`
       : `Fatture BRT n. ${nomiFatture.join(", ")} — richiesta verifica prezzi`;
     const introFattura = nomiFatture.length === 1
-      ? `ho controllato la fattura ${nomiFatture[0]}${relevant[0]?.data ? ` del ${relevant[0].data}` : ""} e ci sono da rivedere queste spedizioni`
+      ? `ho controllato la fattura ${nomiFatture[0]}${relevant[0]?.data ? ` del ${fmtData(relevant[0].data)}` : ""} e ci sono da rivedere queste spedizioni`
       : `ho controllato le fatture ${nomiFatture.join(", ")} e ci sono da rivedere queste spedizioni`;
 
     let body = `Ciao Daniele,\n${introFattura}:\n`;
@@ -612,7 +620,19 @@ export default function Home() {
                         <th className="num">Trasp. fatturato</th>
                         <th className="num">Trasp. dovuto</th>
                         <th className="num">Da recuperare</th>
-                        <th>Varie</th>
+                        <th style={{ position: "relative" }}>
+                          Varie
+                          <button className="info-icon" onClick={() => setLegendaOpen((v) => !v)}>i</button>
+                          {legendaOpen && (
+                            <div className="legenda-popup" style={{ top: 24, left: 0 }} onClick={(e) => e.stopPropagation()}>
+                              <h5>Legenda codici BRT</h5>
+                              {Object.entries(LEGENDA_CODICI).map(([code, label]) => (
+                                <div className="riga" key={code}><b>{code}</b><span>{label}</span></div>
+                              ))}
+                              <button className="link" style={{ marginTop: 8, fontSize: 11 }} onClick={() => setLegendaOpen(false)}>Chiudi</button>
+                            </div>
+                          )}
+                        </th>
                         <th>Peso De Matteo</th>
                         <th>Tipo</th><th></th>
                       </tr></thead>
@@ -624,7 +644,7 @@ export default function Home() {
                               {r.rawText && <pre className="raw-block">{r.rawText}</pre>}
                             </td>
                             <td>{r.nominativo || "—"}</td>
-                            <td title={r.provinciaNome}>{r.provincia || "—"}<br /><small style={{ color: "var(--ink-soft)" }}>{r.zona}</small></td>
+                            <td>{r.provinciaNome}<br /><small style={{ color: "var(--ink)", fontWeight: 600 }}>{r.zona}</small></td>
                             <td className="num">{fmt2(r.pesoReale)} kg</td>
                             <td className="num">{fmt(r.trasporto)}€</td>
                             <td className="num">{fmt(r.atteso)}€</td>
@@ -757,7 +777,7 @@ export default function Home() {
                     <div className="card" key={inv.id} style={{ marginBottom: 10, marginTop: 10 }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
                         onClick={() => toggleExpand(inv.id)}>
-                        <span>{aperta ? "▾" : "▸"} Fattura {inv.numero} <span style={{ color: "var(--ink-soft)", fontWeight: 500 }}>— {inv.data} — {inv.rows.length} righe</span></span>
+                        <span>{aperta ? "▾" : "▸"} Fattura {inv.numero} <span style={{ color: "var(--ink)", fontWeight: 500 }}>— {fmtData(inv.data)} — {inv.rows.length} righe</span></span>
                         <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           <span className={`pill ${flags > 0 ? "rust" : "teal"}`}>{flags} anomalie</span>
                           {daSegnalare.length > 0 && (
@@ -842,7 +862,7 @@ export default function Home() {
                   <div className="card" key={g.inv.id} style={{ marginBottom: 14 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
                       onClick={() => toggleExpand(g.inv.id)}>
-                      <span>{espansa ? "▾" : "▸"} Fattura {g.inv.numero} <span style={{ color: "var(--ink-soft)", fontWeight: 500 }}>— {g.inv.data} — {g.items.length} righe</span></span>
+                      <span>{espansa ? "▾" : "▸"} Fattura {g.inv.numero} <span style={{ color: "var(--ink)", fontWeight: 500 }}>— {fmtData(g.inv.data)} — {g.items.length} righe</span></span>
                       <span className={`pill ${aperte > 0 ? "amber" : "teal"}`}>{aperte > 0 ? `${aperte} aperte` : "Tutto risolto ✓"}</span>
                     </div>
                     {espansa && (
@@ -978,7 +998,7 @@ export default function Home() {
               <select value={emailInvoiceId} onChange={(e) => setEmailInvoiceId(e.target.value)}>
                 <option value="__all__">Tutte le anomalie non risolte</option>
                 {invoices.slice().sort((a, b) => new Date(b.data) - new Date(a.data)).map((inv) => (
-                  <option key={inv.id} value={inv.id}>Fattura {inv.numero} — {inv.data}</option>
+                  <option key={inv.id} value={inv.id}>Fattura {inv.numero} — {fmtData(inv.data)}</option>
                 ))}
               </select>
               <div style={{ marginTop: 12 }}><button className="btn" onClick={() => generateEmail()}>Genera testo</button></div>
