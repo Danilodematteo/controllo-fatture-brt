@@ -846,7 +846,12 @@ export default function Home() {
                             <span className={`pill ${ancoraAperte > 0 ? "amber" : "teal"}`}>{ancoraAperte > 0 ? `${ancoraAperte} ancora aperte` : "Tutto risolto ✓"}</span>
                           )}
                           <a href={`/api/invoices/${inv.id}/pdf`} target="_blank" rel="noopener noreferrer"
-                            className="btn-sm" onClick={(e) => e.stopPropagation()} style={{ textDecoration: "none" }}>
+                            className="btn-sm pdf-btn" onClick={(e) => e.stopPropagation()}>
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M7 2h7l5 5v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
+                              <path d="M14 2v5h5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
+                              <path d="M8.5 12.5h7M8.5 15.5h7M8.5 9.5h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                            </svg>
                             PDF originale
                           </a>
                           <button className="btn-sm" onClick={(e) => { e.stopPropagation(); deleteInvoice(inv.id); }}>Elimina</button>
