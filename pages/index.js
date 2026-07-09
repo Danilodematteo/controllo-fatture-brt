@@ -505,10 +505,6 @@ export default function Home() {
 
   // ---------- email ----------
 
-  function formatShipmentBlock(inv, r) {
-    const testo = r.rawText || `${r.sped} — ${r.nominativo} (${r.zona}) — peso reale ${fmt2(r.pesoReale)}kg — fatturato ${fmt(r.trasporto)}€`;
-    return `Fattura ${inv.numero}:\n${testo}`;
-  }
   function formatTag(inv, r) {
     const chi = r.nominativo || "";
     const riga = `- ${r.sped}${chi ? " " + chi : ""} (fattura ${inv.numero}) — Motivazione: ${tipoLabel(r.tipo)}`;
@@ -519,20 +515,27 @@ export default function Home() {
   function generateEmail(invoicesOverride) {
     const relevant = invoicesOverride || (emailInvoiceId === "__all__" ? invoices : invoices.filter((i) => i.id === emailInvoiceId));
 
-    const priceLines = [], ritardoLines = [], giacenzaLines = [], pianoLines = [];
+    const priceGroups = []; // una voce per fattura, con dentro tutte le sue spedizioni segnalate
+    const ritardoLines = [], giacenzaLines = [], pianoLines = [];
     let totaleDaRecuperare = 0;
     relevant.forEach((inv) => {
+      const blocchiFattura = [];
       inv.rows.forEach((r) => {
         const key = inv.id + "::" + r.id;
         if (resolved[key]) return;
-        if (r.flag) { priceLines.push(formatShipmentBlock(inv, r)); totaleDaRecuperare += r.diff; }
+        if (r.flag) {
+          const testo = r.rawText || `${r.sped} — ${r.nominativo} (${r.zona}) — peso reale ${fmt2(r.pesoReale)}kg — fatturato ${fmt(r.trasporto)}€`;
+          blocchiFattura.push(testo);
+          totaleDaRecuperare += r.diff;
+        }
         if (r.tipo === "ritardo" || r.tipo === "annullata") ritardoLines.push(formatTag(inv, r));
         if (r.tipo === "giacenza") giacenzaLines.push(formatTag(inv, r));
         if (r.tipo === "piano_non_eseguita" || r.tipo === "piano_non_richiesta") pianoLines.push(formatTag(inv, r));
       });
+      if (blocchiFattura.length) priceGroups.push(`Fattura ${inv.numero}:\n${blocchiFattura.join("\n\n")}`);
     });
 
-    if (!priceLines.length && !ritardoLines.length && !giacenzaLines.length && !pianoLines.length) {
+    if (!priceGroups.length && !ritardoLines.length && !giacenzaLines.length && !pianoLines.length) {
       showToast("Nessuna riga da segnalare");
       return;
     }
@@ -546,7 +549,7 @@ export default function Home() {
       : `ho controllato le fatture ${nomiFatture.join(", ")} e ci sono da rivedere queste spedizioni`;
 
     let body = `Ciao Daniele,\n${introFattura}:\n`;
-    if (priceLines.length) body += `\n${priceLines.join("\n\n")}\n`;
+    if (priceGroups.length) body += `\n${priceGroups.join("\n\n")}\n`;
     if (ritardoLines.length) body += `\nDa stornare per ritardo o annullamento:\n${ritardoLines.join("\n")}\n`;
     if (giacenzaLines.length) body += `\nGiacenze:\n${giacenzaLines.join("\n")}\n`;
     if (pianoLines.length) body += `\nConsegne al piano non eseguite o non richieste da noi:\n${pianoLines.join("\n")}\n`;
