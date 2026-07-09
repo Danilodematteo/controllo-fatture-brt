@@ -117,7 +117,7 @@ tr.resolved td{background:var(--green-bg);opacity:.75;}
 .pill{display:inline-block;padding:2px 8px;font-size:10.5px;font-weight:700;border-radius:20px;}
 .pill.rust{background:var(--red);color:#fff;}
 .pill.teal{background:var(--green);color:#fff;}
-.pill.grey{background:var(--line);color:var(--ink-soft);}
+.pill.grey{background:var(--line);color:var(--ink);}
 .pill.blue{background:var(--blue-mid);color:var(--blue-dark);}
 
 .totals{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap;}
@@ -183,8 +183,22 @@ button.btn-tiny:disabled{opacity:.5;cursor:not-allowed;}
 .raw-block{
   background:var(--paper, #F4F5F7);border:1px solid var(--line);border-radius:8px;
   padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
-  white-space:pre-wrap;color:var(--ink-soft);margin-top:6px;max-width:320px;
+  white-space:pre-wrap;color:var(--ink);margin-top:6px;max-width:320px;
 }
 
 /* --- codice isola (J) evidenziato nelle varie --- */
 .pill.isola{background:#7C3AED;color:#fff;font-weight:700;}
+
+/* --- icona informazioni con popup legenda BRT --- */
+.info-icon{
+  display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;
+  border-radius:50%;background:var(--blue-mid);color:var(--blue-dark);font-size:10px;font-weight:700;
+  cursor:pointer;border:none;margin-left:4px;vertical-align:middle;
+}
+.legenda-popup{
+  position:absolute;z-index:50;background:#fff;border:1px solid var(--line);border-radius:10px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);padding:14px 16px;width:260px;font-size:11.5px;color:var(--ink);
+}
+.legenda-popup h5{margin:0 0 8px;font-size:12.5px;}
+.legenda-popup .riga{display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid var(--line);}
+.legenda-popup .riga:last-child{border-bottom:none;}
