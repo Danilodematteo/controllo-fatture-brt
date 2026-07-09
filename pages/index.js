@@ -17,6 +17,15 @@ const TIPO_OPTIONS = [
 ];
 const tipoLabel = (v) => TIPO_OPTIONS.find((o) => o.value === v)?.label || "—";
 
+// Filtro di ricerca condiviso tra Archivio e Da verificare: cerca per numero
+// spedizione o per nome cliente (case-insensitive, corrispondenza parziale).
+function matchRicerca(r, query) {
+  if (!query) return true;
+  const q = query.trim().toUpperCase();
+  if (!q) return true;
+  return (r.sped || "").toUpperCase().includes(q) || (r.nominativo || "").toUpperCase().includes(q);
+}
+
 // Sotto-riga con data di partenza, riferimento mittente e link diretto
 // all'ordine WooCommerce (usa il riferimento come ID ordine — verificato
 // affidabile, vedi pages/api/woo/find-order.js).
@@ -70,6 +79,8 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("nuova");
   const [tariff, setTariff] = useState(DEFAULT_TARIFF);
   const [invoices, setInvoices] = useState([]);
+  const [ricercaArchivio, setRicercaArchivio] = useState("");
+  const [ricercaVerificare, setRicercaVerificare] = useState("");
   const [resolved, setResolved] = useState({});
   const [loadingApp, setLoadingApp] = useState(true);
 
@@ -249,7 +260,7 @@ export default function Home() {
         return;
       }
       const pesoTotale = prodotti.reduce((s, p) => s + (p.pesoReale || 0) * (p.quantita || 1), 0);
-      const label = prodotti.length === 1 ? prodotti[0].prodottoListino : `${prodotti.length} prodotti — ${fmt2(pesoTotale)} kg tot.`;
+      const label = prodotti.map((p) => p.prodottoListino).join(" + ");
       applyPesoDM(rowId, pesoTotale, label, false, prodotti);
     } catch (e) {
       setDraftRows((rows) => rows.map((r) => (r.id === rowId ? { ...r, pesoDMStato: "nontrovato" } : r)));
@@ -408,7 +419,7 @@ export default function Home() {
         return;
       }
       const pesoTotale = prodotti.reduce((s, p) => s + (p.pesoReale || 0) * (p.quantita || 1), 0);
-      const label = prodotti.length === 1 ? prodotti[0].prodottoListino : `${prodotti.length} prodotti — ${fmt2(pesoTotale)} kg tot.`;
+      const label = prodotti.map((p) => p.prodottoListino).join(" + ");
       applyPesoDMArchivio(invId, rowId, pesoTotale, label, false, prodotti);
     } catch (e) {
       setInvoices((invs) => invs.map((inv) => inv.id !== invId ? inv : { ...inv, rows: inv.rows.map((r) => r.id === rowId ? { ...r, pesoDMStato: "nontrovato" } : r) }));
@@ -673,7 +684,7 @@ export default function Home() {
                       <tbody>
                         {draftRows.map((r) => (
                           <tr key={r.id} className={r.flag ? "flag" : ""}>
-                            <td>{r.sped}{spedExtra(r)}</td>
+                            <td>{r.sped}{spedExtra(r)}{r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
                             <td>{r.nominativo || "—"}</td>
                             <td>{r.provinciaNome}<br /><small style={{ color: "var(--ink)", fontWeight: 600 }}>{r.zona}</small></td>
                             <td className="num">{fmt2(r.pesoReale)} kg{r.colli > 1 && <><br /><span className="pill blue">{r.colli} colli</span></>}</td>
@@ -693,7 +704,6 @@ export default function Home() {
                               )}
                             </td>
                             <td style={{ minWidth: 170 }}>
-                              {r.pianoAmount != null && <div className="piano-badge">CONSEGNA AL PIANO</div>}
                               {r.pesoDMStato === "idle" && <span style={{ color: "var(--ink-soft)", fontSize: 11 }}>in coda…</span>}
                               {r.pesoDMStato === "loading" && <span className="mini-spinner"></span>}
                               {r.pesoDMStato === "nontrovato" && (
@@ -706,7 +716,17 @@ export default function Home() {
                                 <div className="peso-cell" style={{ alignItems: "flex-start", textAlign: "left" }}>
                                   <b style={{ fontSize: 13 }}>{fmtKg(r.pesoDM)}</b>
                                   {r.pesoDMManuale && <span className="pill grey">manuale</span>}
-                                  <small style={{ color: "var(--ink-soft)" }}>{r.prodottoDM}</small>
+                                  {r.prodottiDettaglioDM && r.prodottiDettaglioDM.length > 1 ? (
+                                    <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                                      {r.prodottiDettaglioDM.map((p, i) => (
+                                        <small key={i} style={{ color: "var(--ink-soft)" }}>
+                                          {p.prodottoListino}{p.quantita > 1 ? ` ×${p.quantita}` : ""}
+                                        </small>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <small style={{ color: "var(--ink-soft)" }}>{r.prodottoDM}</small>
+                                  )}
                                   <button className="link" style={{ fontSize: 10 }} onClick={() => toggleManualPick(r.id)}>{manualOpenId === r.id ? "annulla" : "cambia"}</button>
                                 </div>
                               )}
@@ -792,16 +812,27 @@ export default function Home() {
           <section className="active">
             <h2 className="sec-title">Archivio fatture</h2>
             <p className="sec-note">Tutte le fatture caricate, raggruppate per settimana.</p>
+            <div className="card" style={{ padding: 12, marginBottom: 14 }}>
+              <input type="text" value={ricercaArchivio} onChange={(e) => setRicercaArchivio(e.target.value)}
+                placeholder="Cerca per numero spedizione o nome cliente…" style={{ width: "100%" }} />
+            </div>
             {invoices.length === 0 && <div className="empty">Nessuna fattura in archivio.</div>}
-            {Object.keys(byWeek).sort().reverse().map((week) => (
+            {Object.keys(byWeek).sort().reverse().map((week) => {
+              const qArchivio = ricercaArchivio.trim();
+              const fattureSettimana = qArchivio
+                ? byWeek[week].filter((inv) => inv.rows.some((r) => matchRicerca(r, qArchivio)))
+                : byWeek[week];
+              if (fattureSettimana.length === 0) return null;
+              return (
               <div className="week-group" key={week}>
-                <div className="week-head">Settimana {week} — {byWeek[week].length} fattura/e</div>
-                {byWeek[week].map((inv) => {
+                <div className="week-head">Settimana {week} — {fattureSettimana.length} fattura/e</div>
+                {fattureSettimana.map((inv) => {
+                  const righeVisibili = qArchivio ? inv.rows.filter((r) => matchRicerca(r, qArchivio)) : inv.rows;
                   const flags = inv.rows.filter((r) => r.flag).length;
                   const totalDiff = inv.rows.reduce((s, r) => s + (r.flag ? r.diff : 0), 0);
                   const daSegnalare = inv.rows.filter((r) => r.flag || r.tipo);
                   const ancoraAperte = daSegnalare.filter((r) => !resolved[inv.id + "::" + r.id]).length;
-                  const aperta = !!expandedIds[inv.id];
+                  const aperta = qArchivio ? true : !!expandedIds[inv.id];
                   const batch = archBatch[inv.id];
                   const daVerificareDM = inv.rows.filter((r) => r.riferimento && r.riferimento.length >= 4 && r.pesoDMStato !== "trovato").length;
                   return (
@@ -844,7 +875,7 @@ export default function Home() {
                                 <th>Peso De Matteo</th><th>Tipo</th>
                               </tr></thead>
                               <tbody>
-                                {inv.rows.map((r) => (
+                                {righeVisibili.map((r) => (
                                   <tr key={r.id} className={r.flag ? "flag" : ""}>
                                     <td>{r.sped}{spedExtra(r)}{r.pianoAmount != null ? <div className="piano-badge" style={{ marginTop: 4 }}>PIANO</div> : ""}</td>
                                     <td>{r.nominativo || "—"}</td><td>{r.zona}</td>
@@ -866,7 +897,8 @@ export default function Home() {
                   );
                 })}
               </div>
-            ))}
+              );
+            })}
           </section>
         )}
 
@@ -874,6 +906,10 @@ export default function Home() {
           <section className="active">
             <h2 className="sec-title">Righe da verificare</h2>
             <p className="sec-note">Spedizioni con differenza ≥ {fmt2(SOGLIA_ANOMALIA)}€ o con un tipo assegnato, raggruppate per fattura.</p>
+            <div className="card" style={{ padding: 12, marginBottom: 12 }}>
+              <input type="text" value={ricercaVerificare} onChange={(e) => setRicercaVerificare(e.target.value)}
+                placeholder="Cerca per numero spedizione o nome cliente…" style={{ width: "100%" }} />
+            </div>
             <div className="card" style={{ padding: 14, marginBottom: 12 }}>
               <label className="checkbox-row">
                 <input type="checkbox" checked={mostraRisolte} onChange={(e) => setMostraRisolte(e.target.checked)} />
@@ -881,18 +917,20 @@ export default function Home() {
               </label>
             </div>
             {(() => {
+              const qVerificare = ricercaVerificare.trim();
               const byInvoice = {};
               daVerificareItems.forEach((it) => {
+                if (qVerificare && !matchRicerca(it.r, qVerificare)) return;
                 if (!byInvoice[it.inv.id]) byInvoice[it.inv.id] = { inv: it.inv, items: [] };
                 byInvoice[it.inv.id].items.push(it);
               });
               let gruppi = Object.values(byInvoice).sort((a, b) => new Date(b.inv.data) - new Date(a.inv.data));
               if (!mostraRisolte) gruppi = gruppi.filter((g) => g.items.some((i) => !i.resolved));
-              if (gruppi.length === 0) return <div className="empty">Tutto risolto — nessuna fattura in sospeso al momento.</div>;
+              if (gruppi.length === 0) return <div className="empty">{qVerificare ? "Nessun risultato per questa ricerca." : "Tutto risolto — nessuna fattura in sospeso al momento."}</div>;
               return gruppi.map((g) => {
                 const visibili = mostraRisolte ? g.items : g.items.filter((i) => !i.resolved);
                 const aperte = g.items.filter((i) => !i.resolved).length;
-                const espansa = !!expandedIds[g.inv.id];
+                const espansa = qVerificare ? true : !!expandedIds[g.inv.id];
                 return (
                   <div className="card" key={g.inv.id} style={{ marginBottom: 14 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
