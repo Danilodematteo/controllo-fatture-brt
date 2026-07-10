@@ -111,6 +111,7 @@ export default function Home() {
   const [emailInvoiceId, setEmailInvoiceId] = useState("__all__");
   const [emailText, setEmailText] = useState("");
   const [emailSubject, setEmailSubject] = useState("");
+  const [inviandoEmail, setInviandoEmail] = useState(false);
 
   const [pesi, setPesi] = useState([]);
   const [pesiSearch, setPesiSearch] = useState("");
@@ -517,6 +518,31 @@ export default function Home() {
     : [];
 
   // ---------- email ----------
+
+  async function inviaDirettamente(subject, body) {
+    const anteprima = body.length > 300 ? body.slice(0, 300) + "\n…" : body;
+    const conferma = confirm(
+      `Stai per inviare questa mail direttamente a daniele.derosa@brt.it (nessun altro passaggio dopo questo).\n\n` +
+      `Oggetto: ${subject}\n\n` +
+      `Anteprima:\n${anteprima}\n\n` +
+      `Confermi l'invio?`
+    );
+    if (!conferma) return;
+    setInviandoEmail(true);
+    try {
+      const res = await fetch("/api/send-email", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject, body }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Invio fallito");
+      showToast("Mail inviata a Daniele ✓");
+    } catch (err) {
+      alert("Invio non riuscito: " + err.message + "\n\nPuoi comunque usare \"Copia testo\" + \"Apri in Mail\" come alternativa.");
+    } finally {
+      setInviandoEmail(false);
+    }
+  }
 
   function formatTag(inv, r) {
     const chi = r.nominativo || "";
@@ -1123,6 +1149,9 @@ export default function Home() {
                   Nota: le righe di "Giacenze" sono racchiuse tra *** *** perché una vera colorazione rossa non è possibile in una mail di solo testo.
                 </p>
                 <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <button className="btn" disabled={inviandoEmail} onClick={() => inviaDirettamente(emailSubject, emailText)}>
+                    {inviandoEmail ? "Invio in corso…" : "Invia direttamente a Daniele ✉"}
+                  </button>
                   <button className="btn secondary" onClick={() => { navigator.clipboard.writeText(emailText); showToast("Testo copiato"); }}>Copia testo</button>
                   {(() => {
                     const base = "https://webmail.dematteohome.it/?_task=mail&_action=compose";
@@ -1166,7 +1195,7 @@ export default function Home() {
               ["5", "Spunta ritardi, giacenze e consegne al piano", "Nella colonna \"Tipo\" di ogni riga. Le consegne al piano sono già segnalate da sole con il badge \"CONSEGNA AL PIANO\" — l'importo esatto è nel testo originale della fattura, mostrato sotto ogni riga, perché non sempre l'app riesce ad abbinarlo con certezza al codice giusto."],
               ["6", "Salva, scarica il CSV o genera subito la mail", "In fondo trovi \"Salva fattura in archivio\", oppure — se ci sono anomalie — \"Scarica CSV anomalie\" e \"Salva e genera mail per Daniele\" che fa tutto in un click."],
               ["7", "Genera la mail per Daniele (in qualsiasi momento)", "Vai su \"Email a Daniele\": il testo include, per ogni spedizione anomala, la riga originale così come appare in fattura, e per ogni riga con un \"Tipo\" assegnato la motivazione della richiesta."],
-              ["8", "Invia dalla webmail", "Premi \"Apri in Mail (webmail)\" — si apre Roundcube con tutto già scritto. Rileggi e premi Invia tu stessa."],
+              ["8", "Invia la mail", "Premi \"Invia direttamente a Daniele\" per spedirla subito (ti chiede conferma prima di partire), oppure \"Apri in Mail (webmail)\" se preferisci rileggerla e inviarla tu da Roundcube."],
               ["9", "Quando arriva la nota di credito", "Vai su \"Da verificare\", apri la fattura e spunta \"Nota credito ricevuta\"."],
             ].map(([num, title, text]) => (
               <div className="guide-step" key={num}>
