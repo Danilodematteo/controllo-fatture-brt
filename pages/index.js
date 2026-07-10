@@ -88,6 +88,7 @@ export default function Home() {
   const [invoices, setInvoices] = useState([]);
   const [ricercaArchivio, setRicercaArchivio] = useState("");
   const [ricercaVerificare, setRicercaVerificare] = useState("");
+  const [ricercaBozza, setRicercaBozza] = useState("");
   const [resolved, setResolved] = useState({});
   const [loadingApp, setLoadingApp] = useState(true);
 
@@ -706,6 +707,10 @@ export default function Home() {
                       </div>
                     </div>
                   )}
+                  <div className="card" style={{ padding: 12, marginBottom: 12 }}>
+                    <input type="text" value={ricercaBozza} onChange={(e) => setRicercaBozza(e.target.value)}
+                      placeholder="Cerca per numero spedizione o nome cliente…" style={{ width: "100%" }} />
+                  </div>
                   <div className="table-wrap">
                     <table>
                       <thead><tr>
@@ -731,7 +736,7 @@ export default function Home() {
                         <th>Tipo</th><th>Ordine</th><th></th>
                       </tr></thead>
                       <tbody>
-                        {draftRows.map((r) => (
+                        {draftRows.filter((r) => matchRicerca(r, ricercaBozza)).map((r) => (
                           <tr key={r.id} className={r.flag ? "flag" : ""}>
                             <td>{r.sped}{spedExtra(r)}</td>
                             <td>{r.nominativo || "—"}</td>
@@ -1150,7 +1155,7 @@ export default function Home() {
                 </p>
                 <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <button className="btn" disabled={inviandoEmail} onClick={() => inviaDirettamente(emailSubject, emailText)}>
-                    {inviandoEmail ? "Invio in corso…" : "Invia direttamente a Daniele ✉"}
+                    {inviandoEmail ? "Invio in corso…" : <>Invia direttamente a Daniele <span style={{ fontSize: 18 }}>✉️</span></>}
                   </button>
                   <button className="btn secondary" onClick={() => { navigator.clipboard.writeText(emailText); showToast("Testo copiato"); }}>Copia testo</button>
                   {(() => {
@@ -1167,9 +1172,9 @@ export default function Home() {
                           Apri in Mail (webmail) →
                         </a>
                         {troppoLunga && (
-                          <p className="sec-note" style={{ width: "100%", marginTop: 6, color: "var(--red)" }}>
-                            Questa mail è troppo lunga (tante spedizioni insieme) per essere trasferita automaticamente al testo —
-                            si aprirà con destinatario e oggetto già pronti e il testo già copiato negli appunti: incollalo (Ctrl+V) nel corpo della mail.
+                          <p className="sec-note" style={{ width: "100%", marginTop: 6 }}>
+                            Nota su "Apri in Mail": con tante spedizioni insieme il corpo non si compila da solo — si aprirà solo con destinatario/oggetto pronti,
+                            testo già negli appunti pronto per Ctrl+V. Non riguarda "Invia direttamente", che funziona normalmente.
                           </p>
                         )}
                       </>
