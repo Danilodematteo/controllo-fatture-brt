@@ -720,7 +720,7 @@ export default function Home() {
                                 <div style={{ display: "flex", flexWrap: "wrap", gap: 3, marginTop: 3 }}>
                                   {r.varieDettaglio.map((v, i) => (
                                     <span key={i} className={v.code === "J" ? "pill isola" : v.code === "P" ? "pill piano" : "pill grey"} title={v.label}>
-                                      {v.code === "P" ? "Piano" : v.code}{v.amount != null ? ` ${fmt2(v.amount)}` : ""}
+                                      {v.code === "P" ? "Piano" : `${v.code}${v.amount != null ? ` ${fmt2(v.amount)}` : ""}`}
                                     </span>
                                   ))}
                                 </div>
