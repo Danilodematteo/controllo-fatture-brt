@@ -187,6 +187,11 @@ export default function Home() {
     const arrivoSigla = risolviArrivo(r.provinciaArrivo, r.provinciaPartenza);
     const pInfo = provinciaInfo(arrivoSigla);
     const { atteso, diff, flag } = computeCalc(r.pesoReale, pInfo.zona, r.trasporto);
+    // Le spedizioni "giacenza" (codice I = SPESE GIACENZA) hanno trasporto a 0,
+    // quindi il controllo differenza non le segnalerebbe mai da sole (non sono
+    // un sovrapprezzo). Ma vanno comunque sempre controllate e segnalate a
+    // Daniele, quindi le classifichiamo in automatico appena le troviamo.
+    const isGiacenza = (r.varieDettaglio || []).some((v) => v.code === "I");
     return {
       id: newRowId(), sped: r.sped, dataSpedizione: r.dataSpedizione || "", riferimento: r.riferimento || "", nominativo: r.nominativo || "",
       cap: r.cap, provincia: arrivoSigla, provinciaNome: pInfo.nome, zona: pInfo.zona,
@@ -194,7 +199,7 @@ export default function Home() {
       trasporto: r.trasporto, varieSum: r.varieSum || 0, fatturato: r.fatturato,
       varieDettaglio: r.varieDettaglio || [], rawText: r.rawText || "",
       atteso, diff, flag,
-      pianoAmount: r.pianoAmount || null, tipo: "",
+      pianoAmount: r.pianoAmount || null, tipo: isGiacenza ? "giacenza" : "",
       pesoDM: null, prodottoDM: null, pesoDMStato: "idle", pesoDMManuale: false, prodottiDettaglioDM: null,
     };
   }
